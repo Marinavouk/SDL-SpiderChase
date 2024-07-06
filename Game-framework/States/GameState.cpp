@@ -125,3 +125,4 @@ void GameState::Render(void)
 
 	menuButton->Render(renderer, application->GetInputHandler()->GetMousePosition());
 }
+//need to delete stuff here
