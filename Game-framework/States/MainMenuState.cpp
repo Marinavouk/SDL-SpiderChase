@@ -122,6 +122,7 @@ void MainMenuState::Render(void)
 
 	SDL_Renderer*		renderer		= application->GetWindow()->GetRenderer();
 	FontHandler*		fontHandler		= application->GetFontHandler();
+	
 	const SDL_FPoint	mousePosition	= application->GetInputHandler()->GetMousePosition();
 	const std::string	message			= "You're in the menu state";
 	const SDL_FPoint	windowSize		= application->GetWindow()->GetSize();
@@ -131,7 +132,7 @@ void MainMenuState::Render(void)
 	SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
 	SDL_RenderFillRect(renderer, nullptr);
 
-	application->GetTextureHandler()->RenderTexture(menyBackground, { 0.0f,0.0f });
+	application->GetTextureHandler()->RenderTexture(menyBackground, { 0.0f, 0.0f});
 	fontHandler->RenderText(renderer, buttonFont, message, {windowSizeHalf.x - (textSize.x * 0.5f), windowSizeHalf.y - ((textSize.y * 0.5f) + 50.0f)}, {255, 255, 255, 255});
 
 	playButton->Render(renderer, mousePosition);
