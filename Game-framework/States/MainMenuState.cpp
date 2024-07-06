@@ -16,6 +16,7 @@ bool MainMenuState::Create(Application* mainApplication)
 
 	// Create objects here that should be created once and that should persist during the lifetime of the game
 
+	menyBackground = application->GetTextureHandler()->CreateTexture("Assets/Textures/mainmenySpiderChase.jpg");
 
 
 	return true;
@@ -28,7 +29,7 @@ void MainMenuState::Destroy(void)
 #endif
 
 	// Destroy objects here that has been created in the Create function and should be destroyed in the end of the game's lifetime
-
+	application->GetTextureHandler()->DestroyTexture(menyBackground);
 
 
 	State::Destroy();
@@ -130,6 +131,7 @@ void MainMenuState::Render(void)
 	SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
 	SDL_RenderFillRect(renderer, nullptr);
 
+	application->GetTextureHandler()->RenderTexture(menyBackground, { 0.0f,0.0f });
 	fontHandler->RenderText(renderer, buttonFont, message, {windowSizeHalf.x - (textSize.x * 0.5f), windowSizeHalf.y - ((textSize.y * 0.5f) + 50.0f)}, {255, 255, 255, 255});
 
 	playButton->Render(renderer, mousePosition);

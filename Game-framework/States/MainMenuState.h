@@ -22,6 +22,7 @@ public:
 private:
 
 	// Declare the main menu objects here and then create/destroy them in the OnEnter- and OnExit functions
+	SDL_Texture* menyBackground = nullptr;
 
 	TTF_Font*	buttonFont		= nullptr;
 
