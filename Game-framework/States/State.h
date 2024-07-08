@@ -7,15 +7,14 @@ class State
 {
 public:
 
-			 State(void) {}
-	virtual ~State(void) {}
+			 State(void)														{}
+			 State(Application* mainApplication) : application(mainApplication)	{}
+	virtual ~State(void)														{}
 
-	virtual bool Create(Application* mainApplication)	{application = mainApplication; return true;}
-	virtual void Destroy(void)							{application = nullptr;}
-	virtual bool OnEnter(void)							{return true;}
-	virtual void OnExit(void)							{}
-	virtual void Update(const float deltaTime)			{}
-	virtual void Render(void)							{}
+	virtual bool OnEnter(void)					{return true;}
+	virtual void OnExit(void)					{}
+	virtual void Update(const float deltaTime)	{}
+	virtual void Render(void)					{}
 
 protected:
 

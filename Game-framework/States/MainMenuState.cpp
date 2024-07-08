@@ -1,39 +1,8 @@
 #include "MainMenuState.h"
 
 #include "Application.h"
-#include "Handlers/AudioHandler.h"
-#include "Handlers/InputHandler.h"
 
 #include <iostream>
-
-bool MainMenuState::Create(Application* mainApplication)
-{
-#if defined(_DEBUG)
-	std::cout << "Creating menu state" << std::endl;
-#endif
-
-	State::Create(mainApplication);
-
-	// Create objects here that should be created once and that should persist during the lifetime of the game
-
-	menyBackground = application->GetTextureHandler()->CreateTexture("Assets/Textures/mainmenySpiderChase.jpg");
-
-
-	return true;
-}
-
-void MainMenuState::Destroy(void)
-{
-#if defined(_DEBUG)
-	std::cout << "Destroying menu state" << std::endl;
-#endif
-
-	// Destroy objects here that has been created in the Create function and should be destroyed in the end of the game's lifetime
-	application->GetTextureHandler()->DestroyTexture(menyBackground);
-
-
-	State::Destroy();
-}
 
 bool MainMenuState::OnEnter(void)
 {
@@ -43,28 +12,12 @@ bool MainMenuState::OnEnter(void)
 
 	// Create objects that should be created/started when this state is entered/started (create textures and buttons, load/start main menu music etc)
 
-	const SDL_FPoint	windowSize				= application->GetWindow()->GetSize();
-	const SDL_FPoint	windowSizeHalf			= {windowSize.x * 0.5f, windowSize.y * 0.5f};
-	const SDL_Color		buttonBackgroundColor	= { 50,	 50,  50, 150};	// Dark gray
-	const SDL_Color		buttonTextColor			= {255, 255, 255, 255}; // White
-	const SDL_Color		buttonTextHoveredColor	= {255,	  0,   0, 255}; // Red
+	// Create the menu background texture
+	menuBackground = application->GetTextureHandler()->CreateTexture("Assets/Textures/mainmenuSpiderChase.jpg");
 
-	buttonFont = application->GetFontHandler()->CreateFont("Assets/Fonts/RockwellNova-Light.ttf", 50);
-	if (!buttonFont)
-		return false;
-
-	playButton = new Button;
-	quitButton = new Button;
-	if (!playButton->Create(application, buttonFont, "Play", {120.0f, 0.0f}, buttonBackgroundColor, buttonTextColor, buttonTextHoveredColor)) return false;
-	if (!quitButton->Create(application, buttonFont, "Quit", {120.0f, 0.0f}, buttonBackgroundColor, buttonTextColor, buttonTextHoveredColor)) return false;
-	playButton->SetPosition({windowSizeHalf.x, windowSizeHalf.y + 150.0f});
-	quitButton->SetPosition({windowSizeHalf.x, windowSizeHalf.y + 220.0f});
-
-	const float value = application->GetTransitionRenderer()->GetTransitionValue();
-
-	music = application->GetAudioHandler()->CreateMusic("Assets/Audio/menu.mp3");
-	Mix_PlayMusic(music, -1);
-	Mix_VolumeMusic(MIX_MAX_VOLUME - (int)((float)MIX_MAX_VOLUME * application->GetTransitionRenderer()->GetTransitionValue()));
+	// Set the clear color (the background color that is shown behind the menu background and other objects) to the same color as the menu texture's background color
+	// This is optional
+	application->GetWindow()->SetClearColor({201, 198, 183, 255});
 
 	return true;
 }
@@ -77,64 +30,37 @@ void MainMenuState::OnExit(void)
 
 	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures and buttons, unload/stop main menu music etc)
 
-	Mix_HaltMusic();
-	application->GetAudioHandler()->DestroyMusic(music);
-	music = nullptr;
-
-	quitButton->Destroy();
-	playButton->Destroy();
-	delete quitButton;
-	delete playButton;
-	playButton = nullptr;
-	quitButton = nullptr;
-
-	application->GetFontHandler()->DestroyFont(buttonFont);
+	// Destroy the menu background texture
+	application->GetTextureHandler()->DestroyTexture(menuBackground);
+	menuBackground = nullptr;
 }
 
 void MainMenuState::Update(const float deltaTime)
 {
 	// Update all the needed main menu objects here
 
-	InputHandler*		inputHandler	= application->GetInputHandler();
-	const SDL_FPoint	mousePosition	= inputHandler->GetMousePosition();
-
-	if (playButton->PointInside(mousePosition) && inputHandler->MouseButtonPressed(SDL_BUTTON_LEFT))
-		application->SetState(Application::EState::GAME);
-
-	else if (quitButton->PointInside(mousePosition) && inputHandler->MouseButtonPressed(SDL_BUTTON_LEFT))
+	// If the escape key on the keyboard is pressed, shut down the game
+	if (application->GetInputHandler()->KeyPressed(SDL_SCANCODE_ESCAPE))
 		application->SetState(Application::EState::QUIT);
 
-	if (inputHandler->KeyPressed(SDL_SCANCODE_RETURN))
+	// If the enter (return) key on the keyboard is pressed, switch to the game state
+	if (application->GetInputHandler()->KeyPressed(SDL_SCANCODE_RETURN))
 		application->SetState(Application::EState::GAME);
-
-	else if (inputHandler->KeyPressed(SDL_SCANCODE_ESCAPE))
-		application->SetState(Application::EState::QUIT);
-
-	TransitionRenderer* transitionRenderer = application->GetTransitionRenderer();
-
-	if (transitionRenderer->IsTransitioning())
-		Mix_VolumeMusic(MIX_MAX_VOLUME - (int)((float)MIX_MAX_VOLUME * transitionRenderer->GetTransitionValue()));
 }
 
 void MainMenuState::Render(void)
 {
 	// Render all the main menu objects here
 
-	SDL_Renderer*		renderer		= application->GetWindow()->GetRenderer();
-	FontHandler*		fontHandler		= application->GetFontHandler();
-	
-	const SDL_FPoint	mousePosition	= application->GetInputHandler()->GetMousePosition();
-	const std::string	message			= "You're in the menu state";
-	const SDL_FPoint	windowSize		= application->GetWindow()->GetSize();
-	const SDL_FPoint	windowSizeHalf	= {windowSize.x * 0.5f, windowSize.y * 0.5f};
-	const SDL_FPoint	textSize		= fontHandler->GetTextSize(buttonFont, message);
+	int textureWidth	= 0;
+	int textureHeight	= 0;
+	SDL_QueryTexture(menuBackground, nullptr, nullptr, &textureWidth, &textureHeight);
 
-	SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
-	SDL_RenderFillRect(renderer, nullptr);
+	const SDL_FPoint windowSize			= application->GetWindow()->GetSize();
+	const SDL_FPoint windowSizeHalf		= {windowSize.x * 0.5f, windowSize.y * 0.5f};
+	const SDL_FPoint textureSizeHalf	= {textureWidth * 0.5f, textureHeight * 0.5f};
 
-	application->GetTextureHandler()->RenderTexture(menyBackground, { 0.0f, 0.0f});
-	fontHandler->RenderText(renderer, buttonFont, message, {windowSizeHalf.x - (textSize.x * 0.5f), windowSizeHalf.y - ((textSize.y * 0.5f) + 50.0f)}, {255, 255, 255, 255});
-
-	playButton->Render(renderer, mousePosition);
-	quitButton->Render(renderer, mousePosition);
+	// Render the background texture
+	// The window size is 1280x720 and the menu background size is 512x512, so I center it in the window
+	application->GetTextureHandler()->RenderTexture(menuBackground, {windowSizeHalf.x - textureSizeHalf.x, windowSizeHalf.y - textureSizeHalf.y});
 }
