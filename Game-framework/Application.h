@@ -29,20 +29,16 @@ public:
 	 Application(void) {}
 	~Application(void) {}
 
-	bool				Create(void); // Returns true if this application was successfully created, false otherwise
-	void				Destroy(void); // Destroys all the handlers, the game etc
+	bool				Create(void);
+	void				Destroy(void);
 
-	// Starts the main loop
 	void				Run(void);
 
-	// Handle input events (keyboard presses, mouse press, mouse move, window X-button etc)
 	void				HandleEvents(void);
 
 	void				Update(void);
 	void				Render(void);
 
-	// This function is used to switch between states in the application/game
-	// For example from the menu to the game state
 	bool				SetState(const EState newState);
 
 	void				OnTransitionOpaque(void);

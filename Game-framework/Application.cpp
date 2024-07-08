@@ -15,11 +15,11 @@ bool Application::Create(void)
 
 	// Creates all the 'libraries' for you, for example SDL, SDL_Image etc
 	libraryHandler = new LibraryHandler;
-	if (!libraryHandler->Create())
+	if(!libraryHandler->Create())
 		return false;
 
 	window = new Window;
-	if (!window->Create("Menu", {1280, 720}))
+	if(!window->Create("Spider Chase", {1280, 720}))
 		return false;
 
 	// If you want to change the title of the window while the game is running
@@ -30,33 +30,29 @@ bool Application::Create(void)
 //	window->SetClearColor({ 255, 0, 0, 255 });
 
 	textureHandler = new TextureHandler;
-	if (!textureHandler->Create(window->GetRenderer()))
+	if(!textureHandler->Create(window->GetRenderer()))
 		return false;
 
-	fontHandler		= new FontHandler;
-	audioHandler	= new AudioHandler;
-	inputHandler	= new InputHandler;
+	fontHandler = new FontHandler;
+	audioHandler = new AudioHandler;
+	inputHandler = new InputHandler;
 
 	transitionRenderer = new TransitionRenderer;
 	transitionRenderer->Create(this, window->GetSize());
 
 	// If you want to tweak the speed of the state transition, you can set the speed here
-	transitionRenderer->SetSpeed(1.5f);
+	// The lower the value is set to, the slower the transition effect will be
+	// NOTE. Don't set it to 0.0f or a negative value, the transition will not work
+	transitionRenderer->SetSpeed(2.0f);
 
 	/**
 	* Create the various states for the application.
 	* Here you can add more states if wanted, for example a Settings menu, a Guide menu that explains the game, a Credits menu showing who made the game etc
 	*/
 
-	states[EState::MAIN_MENU]	= new MainMenuState;
-	states[EState::GAME]		= new GameState;
-	states[EState::QUIT]		= new QuitState;
-
-	for(uint32_t i = 0; i < EState::NUM_STATES; ++i)
-	{
-		if(!states[i]->Create(this))
-			return false;
-	}
+	states[EState::MAIN_MENU]	= new MainMenuState(this);
+	states[EState::GAME]		= new GameState(this);
+	states[EState::QUIT]		= new QuitState(this);
 
 	// Set the start state for the game, in this case the game will start in the MAIN_MENU state
 	currentState = states[EState::MAIN_MENU];
@@ -75,7 +71,6 @@ void Application::Destroy(void)
 	{
 		if(states[i])
 		{
-			states[i]->Destroy();
 			delete states[i];
 			states[i] = nullptr;
 		}
