@@ -3,6 +3,7 @@
 #include "State.h"
 
 #include <SDL.h>
+#include <SDL_ttf.h>
 
 class MainMenuState final : public State
 {
@@ -21,6 +22,8 @@ private:
 
 	// Declare the main menu objects here and then create/destroy them in the OnEnter- and OnExit functions
 
-	SDL_Texture* menuBackground = nullptr;
+	SDL_Texture*	menuBackground	= nullptr;
+
+	TTF_Font*		menuFont		= nullptr;
 
 };
