@@ -1,19 +1,17 @@
 #pragma once
 
-#include "GameObjects/Button.h"
 #include "State.h"
 
-#include <SDL_mixer.h>
+#include <SDL.h>
 
 class MainMenuState final : public State
 {
 public:
 
-	 MainMenuState(void) {}
-	~MainMenuState(void) {}
+	 MainMenuState(void)													{}
+	 MainMenuState(Application* mainApplication) : State(mainApplication)	{}
+	~MainMenuState(void)													{}
 
-	virtual bool Create(Application* mainApplication) override;
-	virtual void Destroy(void) override;
 	virtual bool OnEnter(void) override;
 	virtual void OnExit(void) override;
 	virtual void Update(const float deltaTime) override;
@@ -22,15 +20,7 @@ public:
 private:
 
 	// Declare the main menu objects here and then create/destroy them in the OnEnter- and OnExit functions
-	SDL_Texture* menyBackground = nullptr;
 
-	TTF_Font*	buttonFont		= nullptr;
-
-	Button*		playButton		= nullptr;
-	Button*		quitButton		= nullptr;
-
-	Mix_Music*	music			= nullptr;
-
-	bool		musicFadeDone	= false;
+	SDL_Texture* menuBackground = nullptr;
 
 };

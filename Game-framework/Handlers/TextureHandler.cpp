@@ -48,14 +48,10 @@ void TextureHandler::DestroyTexture(SDL_Texture* texture)
 
 void TextureHandler::RenderTexture(SDL_Texture* texture, const SDL_FPoint& position, const SDL_Rect* srcRect)
 {
-	
 	int textureWidth = 0;
 	int textureHeight = 0;
 	SDL_QueryTexture(texture, nullptr, nullptr, &textureWidth, &textureHeight);
-	//SDL_GetRendererOutputSize(renderer, &textureWidth, &textureHeight);
 
-	const SDL_FRect dstRect = { position.x, position.y, (float)textureHeight, (float)textureHeight };
-
+	const SDL_FRect dstRect = {position.x, position.y, (float)textureWidth, (float)textureHeight};
 	SDL_RenderCopyF(renderer, texture, srcRect, &dstRect);
 }
-

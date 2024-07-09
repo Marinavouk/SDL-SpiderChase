@@ -12,8 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="GameObjects\Button.cpp" />
-    <ClCompile Include="GameObjects\Camera.cpp" />
     <ClCompile Include="Handlers\AudioHandler.cpp" />
     <ClCompile Include="Handlers\FontHandler.cpp" />
     <ClCompile Include="Handlers\InputHandler.cpp" />
@@ -29,8 +27,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
-    <ClInclude Include="GameObjects\Button.h" />
-    <ClInclude Include="GameObjects\Camera.h" />
     <ClInclude Include="Handlers\AudioHandler.h" />
     <ClInclude Include="Handlers\FontHandler.h" />
     <ClInclude Include="Handlers\InputHandler.h" />

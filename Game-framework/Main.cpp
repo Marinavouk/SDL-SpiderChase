@@ -1,11 +1,7 @@
 #include "Application.h"
 
-// IOS - AppMain
-// Android - Main
-// Linux - void main
-int main(int argc, char* argv[]) //entry point on Windows platform/Operating system
+int main(int argc, char* argv[])
 {
-	// Every 'new' requires a 'delete' (see below)
 	Application* application = new Application;
 
 	if (application->Create())
@@ -14,7 +10,6 @@ int main(int argc, char* argv[]) //entry point on Windows platform/Operating sys
 		application->Destroy();
 	}
 
-	// Avoid memory leak
 	delete application;
 	application = nullptr;
 
