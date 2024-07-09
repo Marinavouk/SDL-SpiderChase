@@ -14,7 +14,7 @@ public:
 	 MainMenuState(Application* mainApplication) : State(mainApplication)	{}
 	~MainMenuState(void)													{}
 
-	virtual bool OnEnter(void) override;
+	virtual bool OnEnter(void) override;//why do we need to override here?
 	virtual void OnExit(void) override;
 	virtual void Update(const float deltaTime) override;
 	virtual void Render(void) override;

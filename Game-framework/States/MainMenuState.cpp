@@ -28,6 +28,8 @@ bool MainMenuState::OnEnter(void)
 	if (!buttonMenuFont)
 		return false;
 
+	const SDL_FPoint	windowSize = application->GetWindow()->GetSize();
+	const SDL_FPoint	windowSizeHalf = { windowSize.x * 0.5f, windowSize.y * 0.5f };
 	const SDL_Color buttonBackgroundColor	= {100,	100, 100,	150}; // Light gray
 	const SDL_Color buttonTextColor			= {255, 255, 255,	255}; // White	<-- when the mouse pointer is outside the button
 	const SDL_Color buttonTextHoveredColor	= {255,	  0, 0,		255}; // Red	<-- when the mouse pointer is inside the button
@@ -35,7 +37,8 @@ bool MainMenuState::OnEnter(void)
 	playButton = new Button;
 	if (!playButton->Create(application, buttonMenuFont, "Play", {120.0f, 0.0f}, buttonBackgroundColor, buttonTextColor, buttonTextHoveredColor))
 		return false;
-	playButton->SetPosition({200.0f, 500.0f});
+	playButton->SetPosition({ windowSizeHalf.x, windowSizeHalf.y + 100.0f }
+);
 
 	// Set the clear color (the background color that is shown behind the menu background and other objects)
 	// This is optional
