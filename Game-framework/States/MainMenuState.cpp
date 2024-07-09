@@ -14,7 +14,7 @@ bool MainMenuState::OnEnter(void)
 
 	// Create the menu background texture
 	menuBackground = application->GetTextureHandler()->CreateTexture("Assets/Textures/mainmenuSpiderChase.jpg");
-
+	//need to change the picture here
 	// Set the clear color (the background color that is shown behind the menu background and other objects) to the same color as the menu texture's background color
 	// This is optional
 	application->GetWindow()->SetClearColor({201, 198, 183, 255});
