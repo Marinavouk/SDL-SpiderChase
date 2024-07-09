@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Button.h"
 #include "State.h"
 
 #include <SDL.h>
@@ -25,7 +26,8 @@ private:
 	SDL_Texture*	menuBackground	= nullptr;
 
 	TTF_Font*		menuFont		= nullptr;
-
 	TTF_Font*		buttonMenuFont	= nullptr;
+
+	Button*			playButton		= nullptr;
 
 };
