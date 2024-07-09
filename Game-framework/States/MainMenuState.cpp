@@ -70,5 +70,5 @@ void MainMenuState::Render(void)
 
 	application->GetTextureHandler()->RenderTexture(menuBackground, {0.0f, 0.0f}, nullptr, &dstRect);
 
-	application->GetFontHandler()->RenderText(application->GetWindow()->GetRenderer(), menuFont, "Spider Chase", {windowSizeHalf.x - (textSize.x * 0.5f), 50.0f}, {255, 255, 255, 255});
+	application->GetFontHandler()->RenderText(application->GetWindow()->GetRenderer(), menuFont, "Spider Chase", {windowSizeHalf.x - (textSize.x * 0.5f), 50.0f}, {255, 0, 0, 255});
 }
