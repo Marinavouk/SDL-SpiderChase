@@ -37,8 +37,13 @@ bool MainMenuState::OnEnter(void)
 	playButton = new Button;
 	if (!playButton->Create(application, buttonMenuFont, "Play", {120.0f, 0.0f}, buttonBackgroundColor, buttonTextColor, buttonTextHoveredColor))
 		return false;
-	playButton->SetPosition({ windowSizeHalf.x, windowSizeHalf.y + 100.0f }
-);
+	playButton->SetPosition({ windowSizeHalf.x, windowSizeHalf.y + 100.0f });
+
+	quitButton = new Button;
+	if (!quitButton->Create(application, buttonMenuFont, "Quit", { 120.0f, 0.0f }, buttonBackgroundColor, buttonTextColor, buttonTextHoveredColor))
+		return false;
+	quitButton->SetPosition({ windowSizeHalf.x, windowSizeHalf.y + 180.0f });
+
 
 	// Set the clear color (the background color that is shown behind the menu background and other objects)
 	// This is optional
@@ -52,6 +57,9 @@ void MainMenuState::OnExit(void)
 #if defined(_DEBUG)
 	std::cout << "Exiting menu state" << std::endl;
 #endif
+	quitButton->Destroy();
+	delete quitButton;
+	quitButton = nullptr;
 
 	playButton->Destroy();
 	delete playButton;
@@ -84,6 +92,9 @@ void MainMenuState::Update(const float deltaTime)
 	if (playButton->PointInside(mousePosition) && inputHandler->MouseButtonPressed(SDL_BUTTON_LEFT))
 		application->SetState(Application::EState::GAME);
 
+	if (quitButton->PointInside(mousePosition) && inputHandler->MouseButtonPressed(SDL_BUTTON_LEFT))
+		application->SetState(Application::EState::QUIT);
+
 	// If the escape key on the keyboard is pressed, shut down the game
 	if (inputHandler->KeyPressed(SDL_SCANCODE_ESCAPE))
 		application->SetState(Application::EState::QUIT);
@@ -113,4 +124,5 @@ void MainMenuState::Render(void)
 	fontHandler->RenderText(renderer, menuFont, titleText, textPosition, titleTextColor);
 
 	playButton->Render(renderer, mousePosition);
+	quitButton->Render(renderer, mousePosition);
 }
