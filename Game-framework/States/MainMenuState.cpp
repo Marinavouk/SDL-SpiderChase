@@ -21,6 +21,10 @@ bool MainMenuState::OnEnter(void)
 	if (!menuFont)
 		return false;
 
+	buttonMenuFont = application->GetFontHandler()->CreateFont("Assets/Fonts/SpookyWebbie-lgvxX.ttf", 45);
+	if (!buttonMenuFont)
+		return false;
+
 	// Set the clear color (the background color that is shown behind the menu background and other objects) to the same color as the menu texture's background color
 	// This is optional
 	application->GetWindow()->SetClearColor({0, 0, 0, 255});
@@ -35,6 +39,8 @@ void MainMenuState::OnExit(void)
 #endif
 
 	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures and buttons, unload/stop main menu music etc)
+	application->GetFontHandler()->DestroyFont(buttonMenuFont);
+	buttonMenuFont = nullptr;
 
 	application->GetFontHandler()->DestroyFont(menuFont);
 	menuFont = nullptr;
@@ -71,4 +77,6 @@ void MainMenuState::Render(void)
 	application->GetTextureHandler()->RenderTexture(menuBackground, {0.0f, 0.0f}, nullptr, &dstRect);
 
 	application->GetFontHandler()->RenderText(application->GetWindow()->GetRenderer(), menuFont, "Spider Chase", {windowSizeHalf.x - (textSize.x * 0.5f), 50.0f}, {255, 0, 0, 255});
+
+	application->GetFontHandler()->RenderText(application->GetWindow()->GetRenderer(), buttonMenuFont, "Play", { windowSizeHalf.x - (textSize.x * 0.5f), 50.0f }, { 255, 100, 0, 255 });
 }

@@ -26,4 +26,6 @@ private:
 
 	TTF_Font*		menuFont		= nullptr;
 
+	TTF_Font*		buttonMenuFont	= nullptr;
+
 };
