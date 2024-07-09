@@ -17,15 +17,17 @@ bool MainMenuState::OnEnter(void)
 	SDL_SetTextureBlendMode(menuBackground, SDL_BlendMode::SDL_BLENDMODE_BLEND);
 	SDL_SetTextureAlphaMod(menuBackground, 100);
 
-	menuFont = application->GetFontHandler()->CreateFont("Assets/Fonts/SpiderDemo-51LlB.ttf", 200);
+	FontHandler* fontHandler = application->GetFontHandler();
+
+	menuFont = fontHandler->CreateFont("Assets/Fonts/SpiderDemo-51LlB.ttf", 200);
 	if (!menuFont)
 		return false;
 
-	buttonMenuFont = application->GetFontHandler()->CreateFont("Assets/Fonts/SpookyWebbie-lgvxX.ttf", 45);
+	buttonMenuFont = fontHandler->CreateFont("Assets/Fonts/SpookyWebbie-lgvxX.ttf", 45);
 	if (!buttonMenuFont)
 		return false;
 
-	// Set the clear color (the background color that is shown behind the menu background and other objects) to the same color as the menu texture's background color
+	// Set the clear color (the background color that is shown behind the menu background and other objects)
 	// This is optional
 	application->GetWindow()->SetClearColor({0, 0, 0, 255});
 
@@ -38,11 +40,13 @@ void MainMenuState::OnExit(void)
 	std::cout << "Exiting menu state" << std::endl;
 #endif
 
+	FontHandler* fontHandler = application->GetFontHandler();
+
 	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures and buttons, unload/stop main menu music etc)
-	application->GetFontHandler()->DestroyFont(buttonMenuFont);
+	fontHandler->DestroyFont(buttonMenuFont);
 	buttonMenuFont = nullptr;
 
-	application->GetFontHandler()->DestroyFont(menuFont);
+	fontHandler->DestroyFont(menuFont);
 	menuFont = nullptr;
 
 	// Destroy the menu background texture
@@ -54,12 +58,14 @@ void MainMenuState::Update(const float deltaTime)
 {
 	// Update all the needed main menu objects here
 
+	InputHandler* inputHandler = application->GetInputHandler();
+
 	// If the escape key on the keyboard is pressed, shut down the game
-	if (application->GetInputHandler()->KeyPressed(SDL_SCANCODE_ESCAPE))
+	if (inputHandler->KeyPressed(SDL_SCANCODE_ESCAPE))
 		application->SetState(Application::EState::QUIT);
 
 	// If the enter (return) key on the keyboard is pressed, switch to the game state
-	if (application->GetInputHandler()->KeyPressed(SDL_SCANCODE_RETURN))
+	if (inputHandler->KeyPressed(SDL_SCANCODE_RETURN))
 		application->SetState(Application::EState::GAME);
 }
 
@@ -68,14 +74,15 @@ void MainMenuState::Render(void)
 	// Render all the main menu objects here
 
 	FontHandler*		fontHandler		= application->GetFontHandler();
-	const std::string	gameTitle		= "Spider Chase";
+	const std::string	titleText		= "Spider Chase";
 	const SDL_FPoint	windowSize		= application->GetWindow()->GetSize();
 	const SDL_FPoint	windowSizeHalf	= {windowSize.x * 0.5f, windowSize.y * 0.5f};
-	const SDL_FPoint	textSize		= fontHandler->GetTextSize(menuFont, gameTitle);
+	const SDL_FPoint	textSize		= fontHandler->GetTextSize(menuFont, titleText);
+	const SDL_FPoint	textPosition	= {windowSizeHalf.x - (textSize.x * 0.5f), 50.0f};
 	const SDL_FRect		dstRect			= {0.0f, 0.0f, windowSize.x, windowSize.y};
+	const SDL_Color		titleTextColor	= {200, 0, 0, 255}; // Red text
 
 	application->GetTextureHandler()->RenderTexture(menuBackground, {0.0f, 0.0f}, nullptr, &dstRect);
 
-	application->GetFontHandler()->RenderText(application->GetWindow()->GetRenderer(), menuFont, "Spider Chase", {windowSizeHalf.x - (textSize.x * 0.5f), 50.0f}, {255, 0, 0, 255});
-
+	fontHandler->RenderText(application->GetWindow()->GetRenderer(), menuFont, titleText, textPosition, titleTextColor);
 }
