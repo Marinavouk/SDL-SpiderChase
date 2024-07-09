@@ -17,7 +17,7 @@ public:
 	SDL_Texture*	CreateTextureFromSurface(SDL_Surface* surface);
 	void			DestroyTexture(SDL_Texture* texture);
 
-	void			RenderTexture(SDL_Texture* texture, const SDL_FPoint& position, const SDL_Rect* srcRect = nullptr);
+	void			RenderTexture(SDL_Texture* texture, const SDL_FPoint& position, const SDL_Rect* srcRect = nullptr, const SDL_FRect* dstRect = nullptr);
 
 private:
 

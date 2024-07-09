@@ -13,8 +13,8 @@ bool MainMenuState::OnEnter(void)
 	// Create objects that should be created/started when this state is entered/started (create textures and buttons, load/start main menu music etc)
 
 	// Create the menu background texture
-	menuBackground = application->GetTextureHandler()->CreateTexture("Assets/Textures/mainmenuSpiderChase.jpg");
-	//need to change the picture here
+	menuBackground = application->GetTextureHandler()->CreateTexture("Assets/Textures/menu_background.png");
+
 	// Set the clear color (the background color that is shown behind the menu background and other objects) to the same color as the menu texture's background color
 	// This is optional
 	application->GetWindow()->SetClearColor({201, 198, 183, 255});
@@ -52,15 +52,8 @@ void MainMenuState::Render(void)
 {
 	// Render all the main menu objects here
 
-	int textureWidth	= 0;
-	int textureHeight	= 0;
-	SDL_QueryTexture(menuBackground, nullptr, nullptr, &textureWidth, &textureHeight);
+	const SDL_FPoint	windowSize	= application->GetWindow()->GetSize();
+	const SDL_FRect		dstRect		= {0.0f, 0.0f, windowSize.x, windowSize.y};
 
-	const SDL_FPoint windowSize			= application->GetWindow()->GetSize();
-	const SDL_FPoint windowSizeHalf		= {windowSize.x * 0.5f, windowSize.y * 0.5f};
-	const SDL_FPoint textureSizeHalf	= {textureWidth * 0.5f, textureHeight * 0.5f};
-
-	// Render the background texture
-	// The window size is 1280x720 and the menu background size is 512x512, so I center it in the window
-	application->GetTextureHandler()->RenderTexture(menuBackground, {windowSizeHalf.x - textureSizeHalf.x, windowSizeHalf.y - textureSizeHalf.y});
+	application->GetTextureHandler()->RenderTexture(menuBackground, {0.0f, 0.0f}, nullptr, &dstRect);
 }
