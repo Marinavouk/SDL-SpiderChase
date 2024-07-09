@@ -8,7 +8,7 @@
 
 bool Button::Create(Application* application, TTF_Font* font, const std::string& text, const SDL_FPoint& backgroundSize, const SDL_Color& backgroundColor, const SDL_Color& textColor, const SDL_Color& textColorHovered)
 {
-	SDL_Surface* surface = TTF_RenderText_Blended(font, text.c_str(), { 255, 255, 255, 255 });
+	SDL_Surface* surface = TTF_RenderText_Blended(font, text.c_str(), {255, 255, 255, 255});
 	if (!surface)
 	{
 		std::cout << "Error: failed to create surface" << std::endl;
@@ -24,15 +24,15 @@ bool Button::Create(Application* application, TTF_Font* font, const std::string&
 	if (!texture)
 		return false;
 
-	int textureWidth = 0;
-	int textureHeight = 0;
+	int textureWidth	= 0;
+	int textureHeight	= 0;
 	SDL_QueryTexture(texture, nullptr, nullptr, &textureWidth, &textureHeight);
 
-	position = { 0.0f, 0.0f };
-	size = { std::max(backgroundSize.x, (float)textureWidth), std::max(backgroundSize.y, (float)textureHeight) };
-	textRect = { 0.0f, 0.0f, (float)textureWidth, (float)textureHeight };
-	bgColor = backgroundColor;
-	txtColor = textColor;
+	position		= {0.0f, 0.0f};
+	size			= {std::max(backgroundSize.x, (float)textureWidth), std::max(backgroundSize.y, (float)textureHeight)};
+	textRect		= {0.0f, 0.0f, (float)textureWidth, (float)textureHeight};
+	bgColor			= backgroundColor;
+	txtColor		= textColor;
 	txtColorHovered = textColorHovered;
 
 	SetPosition(position);
