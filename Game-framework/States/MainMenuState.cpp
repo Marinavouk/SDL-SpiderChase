@@ -28,22 +28,21 @@ bool MainMenuState::OnEnter(void)
 	if (!buttonMenuFont)
 		return false;
 
-	const SDL_FPoint	windowSize = application->GetWindow()->GetSize();
-	const SDL_FPoint	windowSizeHalf = { windowSize.x * 0.5f, windowSize.y * 0.5f };
-	const SDL_Color buttonBackgroundColor	= {100,	100, 100,	150}; // Light gray
-	const SDL_Color buttonTextColor			= {255, 255, 255,	255}; // White	<-- when the mouse pointer is outside the button
-	const SDL_Color buttonTextHoveredColor	= {255,	  0, 0,		255}; // Red	<-- when the mouse pointer is inside the button
+	const SDL_FPoint	windowSize				= application->GetWindow()->GetSize();
+	const SDL_FPoint	windowSizeHalf			= { windowSize.x * 0.5f, windowSize.y * 0.5f };
+	const SDL_Color		buttonBackgroundColor	= {100,	100, 100,	150}; // Light gray
+	const SDL_Color		buttonTextColor			= {255, 255, 255,	255}; // White	<-- when the mouse pointer is outside the button
+	const SDL_Color		buttonTextHoveredColor	= {255,	  0, 0,		255}; // Red	<-- when the mouse pointer is inside the button
 
 	playButton = new Button;
 	if (!playButton->Create(application, buttonMenuFont, "Play", {120.0f, 0.0f}, buttonBackgroundColor, buttonTextColor, buttonTextHoveredColor))
 		return false;
-	playButton->SetPosition({ windowSizeHalf.x, windowSizeHalf.y + 100.0f });
+	playButton->SetPosition({windowSizeHalf.x, windowSizeHalf.y + 100.0f});
 
 	quitButton = new Button;
 	if (!quitButton->Create(application, buttonMenuFont, "Quit", { 120.0f, 0.0f }, buttonBackgroundColor, buttonTextColor, buttonTextHoveredColor))
 		return false;
-	quitButton->SetPosition({ windowSizeHalf.x, windowSizeHalf.y + 180.0f });
-
+	quitButton->SetPosition({windowSizeHalf.x, windowSizeHalf.y + 180.0f});
 
 	// Set the clear color (the background color that is shown behind the menu background and other objects)
 	// This is optional
@@ -57,6 +56,9 @@ void MainMenuState::OnExit(void)
 #if defined(_DEBUG)
 	std::cout << "Exiting menu state" << std::endl;
 #endif
+
+	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures and buttons, unload/stop main menu music etc)
+
 	quitButton->Destroy();
 	delete quitButton;
 	quitButton = nullptr;
@@ -68,7 +70,6 @@ void MainMenuState::OnExit(void)
 	// Easy access to the font handler so you don't have to write application->GetFontHandler() multiple times below
 	FontHandler* fontHandler = application->GetFontHandler();
 
-	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures and buttons, unload/stop main menu music etc)
 	fontHandler->DestroyFont(buttonMenuFont);
 	buttonMenuFont = nullptr;
 
@@ -117,7 +118,7 @@ void MainMenuState::Render(void)
 	const SDL_FPoint	textSize		= fontHandler->GetTextSize(menuFont, titleText);
 	const SDL_FPoint	textPosition	= {windowSizeHalf.x - (textSize.x * 0.5f), 50.0f};
 	const SDL_FRect		dstRect			= {0.0f, 0.0f, windowSize.x, windowSize.y};
-	const SDL_Color		titleTextColor	= {200, 0, 0, 255}; // Red text
+	const SDL_Color		titleTextColor	= {200, 0, 0, 255};
 
 	application->GetTextureHandler()->RenderTexture(menuBackground, {0.0f, 0.0f}, nullptr, &dstRect);
 
