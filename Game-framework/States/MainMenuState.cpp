@@ -78,5 +78,4 @@ void MainMenuState::Render(void)
 
 	application->GetFontHandler()->RenderText(application->GetWindow()->GetRenderer(), menuFont, "Spider Chase", {windowSizeHalf.x - (textSize.x * 0.5f), 50.0f}, {255, 0, 0, 255});
 
-	application->GetFontHandler()->RenderText(application->GetWindow()->GetRenderer(), buttonMenuFont, "Play", { windowSizeHalf.x - (textSize.x * 0.5f), 50.0f }, { 255, 100, 0, 255 });
 }
