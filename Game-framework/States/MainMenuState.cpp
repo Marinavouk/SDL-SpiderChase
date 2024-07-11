@@ -1,6 +1,7 @@
 #include "MainMenuState.h"
 
 #include "Application.h"
+#include "Handlers/AudioHandler.h"
 
 #include <iostream>
 
@@ -70,6 +71,10 @@ bool MainMenuState::OnEnter(void)
 	// This is optional
 	application->GetWindow()->SetClearColor({0, 0, 0, 255});
 
+	music = application->GetAudioHandler()->CreateMusic("Assets/Audio/dark-ambient-horror-cinematic-halloween-atmosphere-scary-118585.mp3");
+	Mix_PlayMusic(music, -1);
+	Mix_VolumeMusic(MIX_MAX_VOLUME - (int)((float)MIX_MAX_VOLUME * application->GetTransitionRenderer()->GetTransitionValue()));
+
 	return true;
 }
 
@@ -79,11 +84,16 @@ void MainMenuState::OnExit(void)
 	std::cout << "Exiting menu state" << std::endl;
 #endif
 
-	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures and buttons, unload/stop main menu music etc)
 
 	// Easy access to handlers so you don't have to write application->Get_X_Handler() multiple times below
 	TextureHandler* textureHandler	= application->GetTextureHandler();
 	FontHandler*	fontHandler		= application->GetFontHandler();
+
+	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures and buttons, unload/stop main menu music etc)
+
+	Mix_HaltMusic();
+	application->GetAudioHandler()->DestroyMusic(music);
+	music = nullptr;
 
 	quitButton->Destroy();
 	delete quitButton;
@@ -114,6 +124,7 @@ void MainMenuState::Update(const float deltaTime)
 
 	// Easy access to the input handler so you don't have to write application->GetInputHandler() multiple times below
 	InputHandler* inputHandler = application->GetInputHandler();
+	TransitionRenderer* transitionRenderer = application->GetTransitionRenderer();
 
 	playButton->Update(inputHandler);
 	quitButton->Update(inputHandler);
@@ -127,6 +138,10 @@ void MainMenuState::Update(const float deltaTime)
 	spiderAngle = sinf(lifeTime * 1.5f) * 10.0f;
 	spiderPosition.x = (spiderWebStart.x - (spiderSize.x * 0.5f)) + spiderAngle;
 	spiderPosition.y = (spiderWebStart.y + 200.0f) + (cosf((lifeTime * 0.5f) + (spiderAngle * 0.1f)) * 30.0f);
+
+
+	if (transitionRenderer->IsTransitioning())
+		Mix_VolumeMusic(MIX_MAX_VOLUME - (int)((float)MIX_MAX_VOLUME * transitionRenderer->GetTransitionValue()));
 }
 
 void MainMenuState::Render(void)

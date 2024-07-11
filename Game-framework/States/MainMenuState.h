@@ -5,6 +5,7 @@
 
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include <SDL_mixer.h>
 
 class MainMenuState final : public State
 {
@@ -33,9 +34,11 @@ private:
 	Button*			playButton		= nullptr;
 	Button*			quitButton		= nullptr;
 
-	SDL_FPoint		spiderWebStart	= {0.0f, 0.0f};//what doe SDL_FPoint does
+	SDL_FPoint		spiderWebStart	= {0.0f, 0.0f};  
 	SDL_FPoint		spiderSize		= {0.0f, 0.0f};
 	SDL_FPoint		spiderPosition	= {0.0f, 0.0f};
+
+	Mix_Music* music = nullptr;
 
 	float			lifeTime		= 0.0f;
 	float			spiderAngle		= 0.0f;

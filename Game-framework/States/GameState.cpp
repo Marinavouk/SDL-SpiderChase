@@ -56,7 +56,7 @@ void GameState::Render(void)
 	const SDL_FPoint	mousePosition = application->GetInputHandler()->GetMousePosition();
 	const SDL_FPoint	windowSize = application->GetWindow()->GetSize();
 	const SDL_FPoint	windowSizeHalf = { windowSize.x * 0.5f, windowSize.y * 0.5f };
-	const SDL_FRect		dstRect = { 0.0f, 0.0f, windowSize.x, windowSize.y };
+	const SDL_FRect		dstRect = { 0.0f, 0.0f, windowSize.x, windowSize.y }; 
 	const SDL_Color		titleTextColor = { 200, 0, 0, 255 };
 
 	// TODO: render your game background here
