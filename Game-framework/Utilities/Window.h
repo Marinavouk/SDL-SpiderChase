@@ -16,6 +16,12 @@ public:
 	bool			BeginRender(void);
 	void			EndRender(void);
 
+	bool			ClearBuffer();
+
+	void			SetRenderTarget(SDL_Texture* renderTarget);
+
+	void			OnResized();
+
 public:
 
 	// Place getters and setters in their own public field
@@ -36,7 +42,7 @@ private:
 
 	SDL_FPoint		size		= {0.0f, 0.0f};
 
-	//								R, G, B, A (alpha)
+								//	R, G, B, A (alpha)
 	SDL_Color		clearColor	=  {0, 0, 0, 255};
 
 };

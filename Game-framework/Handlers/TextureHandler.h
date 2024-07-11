@@ -15,6 +15,7 @@ public:
 
 	SDL_Texture*	CreateTexture(const std::string& fileName);
 	SDL_Texture*	CreateTextureFromSurface(SDL_Surface* surface);
+	SDL_Texture*	CreateEmptyTexture(const SDL_Point& size, const SDL_TextureAccess access);
 	void			DestroyTexture(SDL_Texture* texture);
 
 	void			RenderTexture(SDL_Texture* texture, const SDL_FPoint& position, const SDL_Rect* srcRect = nullptr, const SDL_FRect* dstRect = nullptr);
