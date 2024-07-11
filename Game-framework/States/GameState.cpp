@@ -1,6 +1,7 @@
 #include "GameState.h"
 
 #include "Application.h"
+#include "Handlers/AudioHandler.h"
 
 #include <iostream>
 
@@ -21,6 +22,11 @@ bool GameState::OnEnter(void)
 	// This is optional
 	application->GetWindow()->SetClearColor({150, 150, 200, 255});
 
+	music = application->GetAudioHandler()->CreateMusic("Assets/Audio/gameMusic.mp3");
+	Mix_PlayMusic(music, -1);
+	Mix_VolumeMusic(MIX_MAX_VOLUME - (int)((float)MIX_MAX_VOLUME * application->GetTransitionRenderer()->GetTransitionValue()));
+
+
 	return true;
 }
 
@@ -33,6 +39,10 @@ void GameState::OnExit(void)
 	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures, unload/stop game music etc)
 	TextureHandler* textureHandler = application->GetTextureHandler();
 	// TODO: destroy your game background here
+	Mix_HaltMusic();
+	application->GetAudioHandler()->DestroyMusic(music);
+	music = nullptr;
+
 	textureHandler->DestroyTexture(mainBackground);
 	mainBackground = nullptr;
 }
@@ -40,10 +50,15 @@ void GameState::OnExit(void)
 void GameState::Update(const float deltaTime)
 {
 	// Update all the needed game objects here
+	TransitionRenderer* transitionRenderer = application->GetTransitionRenderer();
 
 	// If the escape key on the keyboard is pressed, switch to the main menu
 	if (application->GetInputHandler()->KeyPressed(SDL_SCANCODE_ESCAPE))
 		application->SetState(Application::EState::MAIN_MENU);
+
+	if (transitionRenderer->IsTransitioning())
+		Mix_VolumeMusic(MIX_MAX_VOLUME - (int)((float)MIX_MAX_VOLUME * transitionRenderer->GetTransitionValue()));
+
 }
 
 void GameState::Render(void)

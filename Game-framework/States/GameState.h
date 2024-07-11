@@ -3,6 +3,7 @@
 #include "State.h"
 
 #include <SDL.h>
+#include <SDL_mixer.h>
 
 class GameState final : public State
 {
@@ -23,4 +24,5 @@ private:
 
 	SDL_Texture* mainBackground = nullptr;
 
+	Mix_Music* music = nullptr;
 };
