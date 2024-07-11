@@ -22,7 +22,7 @@ private:
 
 	// Declare the game objects here and then create/destroy them in the OnEnter- and OnExit functions
 
-	SDL_Texture* mainBackground = nullptr;
+	SDL_Texture*	mainBackground	= nullptr;
 
-	Mix_Music* music = nullptr;
+	Mix_Music*		music			= nullptr;
 };

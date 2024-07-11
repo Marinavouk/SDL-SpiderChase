@@ -13,5 +13,7 @@ int main(int argc, char* argv[])
 	delete application;
 	application = nullptr;
 
+	system("pause");
+
 	return 0;
 }

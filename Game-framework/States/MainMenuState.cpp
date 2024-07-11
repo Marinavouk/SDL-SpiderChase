@@ -18,16 +18,21 @@ bool MainMenuState::OnEnter(void)
 	FontHandler*	fontHandler		= application->GetFontHandler();
 
 	menuBackground = textureHandler->CreateTexture("Assets/Textures/menu_background.png");
+	if (!menuBackground)
+		return false;
+
 	SDL_SetTextureBlendMode(menuBackground, SDL_BlendMode::SDL_BLENDMODE_BLEND);
 	SDL_SetTextureAlphaMod(menuBackground, 100);
 
 	spider = textureHandler->CreateTexture("Assets/Textures/spider_spritesheet.png");
+	if (!spider)
+		return false;
 
 	menuFont		= fontHandler->CreateFont("Assets/Fonts/SpiderDemo-51LlB.ttf",		200); if (!menuFont)		return false;
 	buttonMenuFont	= fontHandler->CreateFont("Assets/Fonts/SpookyWebbie-lgvxX.ttf",	 60); if (!buttonMenuFont)	return false;
 
 	const SDL_FPoint	windowSize						= application->GetWindow()->GetSize();
-	const SDL_FPoint	windowSizeHalf					= { windowSize.x * 0.5f, windowSize.y * 0.5f };
+	const SDL_FPoint	windowSizeHalf					= {windowSize.x * 0.5f, windowSize.y * 0.5f};
 	const SDL_Color		titleTextColor					= {200,	0,		0,		255}; // Dark red
 	const SDL_Color		buttonBackgroundColor			= {100,	100,	100,	150}; // Light gray	<-- Background color when the button is not held
 	const SDL_Color		buttonBackgroundPressedColor	= {100,	100,	100,	200}; // Dark gray	<-- Background color when the button is held
@@ -67,13 +72,16 @@ bool MainMenuState::OnEnter(void)
 	lifeTime	= 0.0f;
 	spiderAngle = 0.0f;
 
+	music = application->GetAudioHandler()->CreateMusic("Assets/Audio/dark-ambient-horror-cinematic-halloween-atmosphere-scary-118585.mp3");
+	if (!music)
+		return false;
+
+	Mix_PlayMusic(music, -1);
+	Mix_VolumeMusic(MIX_MAX_VOLUME - (int)((float)MIX_MAX_VOLUME * application->GetTransitionRenderer()->GetTransitionValue()));
+
 	// Set the clear color (the background color that is shown behind the menu background and other objects)
 	// This is optional
 	application->GetWindow()->SetClearColor({0, 0, 0, 255});
-
-	music = application->GetAudioHandler()->CreateMusic("Assets/Audio/dark-ambient-horror-cinematic-halloween-atmosphere-scary-118585.mp3");
-	Mix_PlayMusic(music, -1);
-	Mix_VolumeMusic(MIX_MAX_VOLUME - (int)((float)MIX_MAX_VOLUME * application->GetTransitionRenderer()->GetTransitionValue()));
 
 	return true;
 }
@@ -83,7 +91,6 @@ void MainMenuState::OnExit(void)
 #if defined(_DEBUG)
 	std::cout << "Exiting menu state" << std::endl;
 #endif
-
 
 	// Easy access to handlers so you don't have to write application->Get_X_Handler() multiple times below
 	TextureHandler* textureHandler	= application->GetTextureHandler();
@@ -123,8 +130,8 @@ void MainMenuState::Update(const float deltaTime)
 	// Update all the needed main menu objects here
 
 	// Easy access to the input handler so you don't have to write application->GetInputHandler() multiple times below
-	InputHandler* inputHandler = application->GetInputHandler();
-	TransitionRenderer* transitionRenderer = application->GetTransitionRenderer();
+	InputHandler*		inputHandler		= application->GetInputHandler();
+	TransitionRenderer* transitionRenderer	= application->GetTransitionRenderer();
 
 	playButton->Update(inputHandler);
 	quitButton->Update(inputHandler);
@@ -138,7 +145,6 @@ void MainMenuState::Update(const float deltaTime)
 	spiderAngle = sinf(lifeTime * 1.5f) * 10.0f;
 	spiderPosition.x = (spiderWebStart.x - (spiderSize.x * 0.5f)) + spiderAngle;
 	spiderPosition.y = (spiderWebStart.y + 200.0f) + (cosf((lifeTime * 0.5f) + (spiderAngle * 0.1f)) * 30.0f);
-
 
 	if (transitionRenderer->IsTransitioning())
 		Mix_VolumeMusic(MIX_MAX_VOLUME - (int)((float)MIX_MAX_VOLUME * transitionRenderer->GetTransitionValue()));
