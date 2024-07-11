@@ -24,10 +24,19 @@ private:
 	// Declare the main menu objects here and then create/destroy them in the OnEnter- and OnExit functions
 
 	SDL_Texture*	menuBackground	= nullptr;
+	SDL_Texture*	spider			= nullptr;
 
 	TTF_Font*		menuFont		= nullptr;
 	TTF_Font*		buttonMenuFont	= nullptr;
 
 	Button*			playButton		= nullptr;
 	Button*			quitButton		= nullptr;
+
+	SDL_FPoint		spiderWebStart	= {0.0f, 0.0f};
+	SDL_FPoint		spiderSize		= {0.0f, 0.0f};
+	SDL_FPoint		spiderPosition	= {0.0f, 0.0f};
+
+	float			lifeTime		= 0.0f;
+	float			spiderAngle		= 0.0f;
+
 };

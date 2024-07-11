@@ -12,21 +12,18 @@ bool MainMenuState::OnEnter(void)
 
 	// Create objects that should be created/started when this state is entered/started (create textures and buttons, load/start main menu music etc)
 
-	// Create the menu background texture
-	menuBackground = application->GetTextureHandler()->CreateTexture("Assets/Textures/menu_background.png");
+	// Easy access to handlers so you don't have to write application->Get_X_Handler() multiple times below
+	TextureHandler* textureHandler	= application->GetTextureHandler();
+	FontHandler*	fontHandler		= application->GetFontHandler();
+
+	menuBackground = textureHandler->CreateTexture("Assets/Textures/menu_background.png");
 	SDL_SetTextureBlendMode(menuBackground, SDL_BlendMode::SDL_BLENDMODE_BLEND);
 	SDL_SetTextureAlphaMod(menuBackground, 100);
 
-	// Easy access to the font handler so you don't have to write application->GetFontHandler() multiple times below
-	FontHandler* fontHandler = application->GetFontHandler();
+	spider = textureHandler->CreateTexture("Assets/Textures/spider_spritesheet.png");
 
-	menuFont = fontHandler->CreateFont("Assets/Fonts/SpiderDemo-51LlB.ttf", 200);
-	if (!menuFont)
-		return false;
-
-	buttonMenuFont = fontHandler->CreateFont("Assets/Fonts/SpookyWebbie-lgvxX.ttf", 45);
-	if (!buttonMenuFont)
-		return false;
+	menuFont		= fontHandler->CreateFont("Assets/Fonts/SpiderDemo-51LlB.ttf",		200); if (!menuFont)		return false;
+	buttonMenuFont	= fontHandler->CreateFont("Assets/Fonts/SpookyWebbie-lgvxX.ttf",	 60); if (!buttonMenuFont)	return false;
 
 	const SDL_FPoint	windowSize				= application->GetWindow()->GetSize();
 	const SDL_FPoint	windowSizeHalf			= { windowSize.x * 0.5f, windowSize.y * 0.5f };
@@ -42,7 +39,11 @@ bool MainMenuState::OnEnter(void)
 	quitButton = new Button;
 	if (!quitButton->Create(application, buttonMenuFont, "Quit", { 120.0f, 0.0f }, buttonBackgroundColor, buttonTextColor, buttonTextHoveredColor))
 		return false;
-	quitButton->SetPosition({windowSizeHalf.x, windowSizeHalf.y + 180.0f});
+	quitButton->SetPosition({windowSizeHalf.x, windowSizeHalf.y + 200.0f});
+
+	spiderWebStart	= {150.0f, 220.0f};
+	spiderSize		= {32.0f, 32.0f};
+	spiderPosition	= {spiderWebStart.x - (spiderSize.x * 0.5f), spiderWebStart.y + 200.0f};
 
 	// Set the clear color (the background color that is shown behind the menu background and other objects)
 	// This is optional
@@ -59,6 +60,10 @@ void MainMenuState::OnExit(void)
 
 	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures and buttons, unload/stop main menu music etc)
 
+	// Easy access to handlers so you don't have to write application->Get_X_Handler() multiple times below
+	TextureHandler* textureHandler	= application->GetTextureHandler();
+	FontHandler*	fontHandler		= application->GetFontHandler();
+
 	quitButton->Destroy();
 	delete quitButton;
 	quitButton = nullptr;
@@ -67,18 +72,15 @@ void MainMenuState::OnExit(void)
 	delete playButton;
 	playButton = nullptr;
 
-	// Easy access to the font handler so you don't have to write application->GetFontHandler() multiple times below
-	FontHandler* fontHandler = application->GetFontHandler();
-
 	fontHandler->DestroyFont(buttonMenuFont);
-	buttonMenuFont = nullptr;
-
 	fontHandler->DestroyFont(menuFont);
-	menuFont = nullptr;
+	buttonMenuFont	= nullptr;
+	menuFont		= nullptr;
 
-	// Destroy the menu background texture
-	application->GetTextureHandler()->DestroyTexture(menuBackground);
-	menuBackground = nullptr;
+	textureHandler->DestroyTexture(spider);
+	textureHandler->DestroyTexture(menuBackground);
+	spider			= nullptr;
+	menuBackground	= nullptr;
 }
 
 void MainMenuState::Update(const float deltaTime)
@@ -103,6 +105,12 @@ void MainMenuState::Update(const float deltaTime)
 	// If the enter (return) key on the keyboard is pressed, switch to the game state
 	if (inputHandler->KeyPressed(SDL_SCANCODE_RETURN))
 		application->SetState(Application::EState::GAME);
+
+	lifeTime += deltaTime;
+
+	spiderAngle = sinf(lifeTime * 1.5f) * 10.0f;
+	spiderPosition.x = (spiderWebStart.x - (spiderSize.x * 0.5f)) + spiderAngle;
+	spiderPosition.y = (spiderWebStart.y + 200.0f) + (cosf((lifeTime * 0.5f) + (spiderAngle * 0.1f)) * 30.0f);
 }
 
 void MainMenuState::Render(void)
@@ -110,6 +118,7 @@ void MainMenuState::Render(void)
 	// Render all the main menu objects here
 
 	SDL_Renderer*		renderer		= application->GetWindow()->GetRenderer();
+	TextureHandler*		textureHandler	= application->GetTextureHandler();
 	FontHandler*		fontHandler		= application->GetFontHandler();
 	const std::string	titleText		= "Spider Chase";
 	const SDL_FPoint	mousePosition	= application->GetInputHandler()->GetMousePosition();
@@ -120,7 +129,14 @@ void MainMenuState::Render(void)
 	const SDL_FRect		dstRect			= {0.0f, 0.0f, windowSize.x, windowSize.y};
 	const SDL_Color		titleTextColor	= {200, 0, 0, 255};
 
-	application->GetTextureHandler()->RenderTexture(menuBackground, {0.0f, 0.0f}, nullptr, &dstRect);
+	textureHandler->RenderTexture(menuBackground, {0.0f, 0.0f}, nullptr, &dstRect);
+
+	SDL_SetRenderDrawColor(renderer, 100, 100, 100, 150);
+	SDL_RenderDrawLineF(renderer, spiderWebStart.x, spiderWebStart.y, spiderPosition.x + (spiderSize.x * 0.5f), spiderPosition.y + (spiderSize.y * 1.0f));
+
+	const SDL_Rect	spiderClipRect	= {9, 118, 13, 10};
+	const SDL_FRect	spiderDstRect	= {spiderPosition.x, spiderPosition.y, spiderSize.x, spiderSize.y};
+	textureHandler->RenderTextureRotated(spider, spiderPosition, -spiderAngle, &spiderClipRect, &spiderDstRect);
 
 	fontHandler->RenderText(renderer, menuFont, titleText, textPosition, titleTextColor);
 

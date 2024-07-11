@@ -64,3 +64,22 @@ void TextureHandler::RenderTexture(SDL_Texture* texture, const SDL_FPoint& posit
 		SDL_RenderCopyF(renderer, texture, srcRect, &dstRect2);
 	}
 }
+
+void TextureHandler::RenderTextureRotated(SDL_Texture* texture, const SDL_FPoint& position, const float angle, const SDL_Rect* srcRect /*= nullptr*/, const SDL_FRect* dstRect /*= nullptr*/)
+{
+	if (dstRect)
+	{
+		const SDL_FRect dstRect2 = {position.x, position.y, dstRect->w, dstRect->h};
+		SDL_RenderCopyExF(renderer, texture, srcRect, &dstRect2, angle, nullptr, SDL_RendererFlip::SDL_FLIP_NONE);
+	}
+
+	else
+	{
+		int textureWidth = 0;
+		int textureHeight = 0;
+		SDL_QueryTexture(texture, nullptr, nullptr, &textureWidth, &textureHeight);
+
+		const SDL_FRect dstRect2 = {position.x, position.y, (float)textureWidth, (float)textureHeight};
+		SDL_RenderCopyExF(renderer, texture, srcRect, &dstRect2, angle, nullptr, SDL_RendererFlip::SDL_FLIP_NONE);
+	}
+}
