@@ -32,7 +32,7 @@ private:
 	Button*			playButton		= nullptr;
 	Button*			quitButton		= nullptr;
 
-	SDL_FPoint		spiderWebStart	= {0.0f, 0.0f};
+	SDL_FPoint		spiderWebStart	= {0.0f, 0.0f};//what doe SDL_FPoint does
 	SDL_FPoint		spiderSize		= {0.0f, 0.0f};
 	SDL_FPoint		spiderPosition	= {0.0f, 0.0f};
 
