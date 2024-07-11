@@ -44,15 +44,31 @@ bool Window::BeginRender(void)
 	if (SDL_SetRenderDrawColor(renderer, clearColor.r, clearColor.g, clearColor.b, clearColor.a) < 0)
 		return false;
 
-	if (SDL_RenderClear(renderer) < 0)
-		return false;
-
-	return true;
+	return ClearBuffer();
 }
 
 void Window::EndRender(void)
 {
 	SDL_RenderPresent(renderer);
+}
+
+bool Window::ClearBuffer()
+{
+	return  (SDL_RenderClear(renderer) == 0);
+}
+
+void Window::SetRenderTarget(SDL_Texture* renderTarget)
+{
+	SDL_SetRenderTarget(renderer, renderTarget);
+}
+
+void Window::OnResized()
+{
+	int windowWidth		= 0;
+	int windowHeight	= 0;
+	SDL_GetWindowSize(window, &windowWidth, &windowHeight);
+
+	size = {(float)windowWidth, (float)windowHeight};
 }
 
 void Window::SetTitle(const std::string& title)

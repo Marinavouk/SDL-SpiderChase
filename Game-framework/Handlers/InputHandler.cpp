@@ -43,6 +43,11 @@ bool InputHandler::MouseButtonPressed(const int mouseButton)
 	return (currentMouseState[mouseButton] && !previousMouseState[mouseButton]);
 }
 
+bool InputHandler::MouseButtonHeld(const int mouseButton)
+{
+	return currentMouseState[mouseButton];
+}
+
 bool InputHandler::MouseButtonReleased(const int mouseButton)
 {
 	return (!currentMouseState[mouseButton] && previousMouseState[mouseButton]);

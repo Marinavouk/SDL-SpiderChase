@@ -41,6 +41,19 @@ SDL_Texture* TextureHandler::CreateTextureFromSurface(SDL_Surface* surface)
 	return texture;
 }
 
+SDL_Texture* TextureHandler::CreateEmptyTexture(const SDL_Point& size, const SDL_TextureAccess access)
+{
+	SDL_Texture* texture = SDL_CreateTexture(renderer, SDL_PixelFormatEnum::SDL_PIXELFORMAT_RGBA8888, access, size.x, size.y);
+
+	if (!texture)
+	{
+		std::cout << "Error: failed to create texture" << std::endl;
+		std::cout << SDL_GetError() << std::endl;
+	}
+
+	return texture;
+}
+
 void TextureHandler::DestroyTexture(SDL_Texture* texture)
 {
 	SDL_DestroyTexture(texture);

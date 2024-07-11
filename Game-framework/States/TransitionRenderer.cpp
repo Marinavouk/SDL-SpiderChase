@@ -25,11 +25,9 @@ void TransitionRenderer::Update(const float deltaTime)
 	if (state == EState::IDLE)
 		return;
 
-	const float delta = std::min(deltaTime, 0.0333f);
-
 	if (state == EState::FADING_IN)
 	{
-		transitionValue = std::clamp(transitionValue - (fadeSpeed * delta), 0.0f, 1.0f);
+		transitionValue = std::clamp(transitionValue - (fadeSpeed * std::min(deltaTime, 0.0333f)), 0.0f, 1.0f);
 
 		if(transitionValue <= 0.0f)
 			state = EState::IDLE;
@@ -37,7 +35,7 @@ void TransitionRenderer::Update(const float deltaTime)
 
 	else if(state == EState::FADING_OUT)
 	{
-		transitionValue = std::clamp(transitionValue + (fadeSpeed * delta), 0.0f, 1.0f);
+		transitionValue = std::clamp(transitionValue + (fadeSpeed * std::min(deltaTime, 0.0333f)), 0.0f, 1.0f);
 
 		if (transitionValue >= 1.0f)
 		{

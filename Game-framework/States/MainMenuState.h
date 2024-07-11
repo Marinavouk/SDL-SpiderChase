@@ -29,6 +29,7 @@ private:
 	TTF_Font*		menuFont		= nullptr;
 	TTF_Font*		buttonMenuFont	= nullptr;
 
+	Button*			titleTextBlock	= nullptr;
 	Button*			playButton		= nullptr;
 	Button*			quitButton		= nullptr;
 
