@@ -13,7 +13,9 @@ int main(int argc, char* argv[])
 	delete application;
 	application = nullptr;
 
+#if defined(_DEBUG)
 	system("pause");
+#endif
 
 	return 0;
 }

@@ -11,9 +11,10 @@ bool Button::Create(Application* application, TTF_Font* font, const std::string&
 	SDL_Surface* surface = TTF_RenderText_Blended(font, text.c_str(), {255, 255, 255, 255});
 	if (!surface)
 	{
+	#if defined(_DEBUG)
 		std::cout << "Error: failed to create surface" << std::endl;
 		std::cout << SDL_GetError() << std::endl;
-
+	#endif
 		return false;
 	}
 

@@ -21,8 +21,10 @@ SDL_Texture* TextureHandler::CreateTexture(const std::string& fileName)
 
 	if (!texture)
 	{
+	#if defined(_DEBUG)
 		std::cout << "Error: failed to load texture '" << fileName << "'"  << std::endl;
 		std::cout << IMG_GetError() << std::endl;
+	#endif
 	}
 
 	return texture;
@@ -34,8 +36,10 @@ SDL_Texture* TextureHandler::CreateTextureFromSurface(SDL_Surface* surface)
 
 	if (!texture)
 	{
+	#if defined(_DEBUG)
 		std::cout << "Error: failed to create texture from surface" << std::endl;
 		std::cout << SDL_GetError() << std::endl;
+	#endif
 	}
 
 	return texture;
@@ -47,8 +51,10 @@ SDL_Texture* TextureHandler::CreateEmptyTexture(const SDL_Point& size, const SDL
 
 	if (!texture)
 	{
+	#if defined(_DEBUG)
 		std::cout << "Error: failed to create texture" << std::endl;
 		std::cout << SDL_GetError() << std::endl;
+	#endif
 	}
 
 	return texture;

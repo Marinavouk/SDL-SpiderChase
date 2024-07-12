@@ -8,8 +8,10 @@ Mix_Chunk* AudioHandler::CreateSound(const std::string& fileName)
 
 	if (!chunk)
 	{
+	#if defined(_DEBUG)
 		std::cout << "Error: failed to load sound '" << fileName.c_str() << "'" << std::endl;
 		std::cout << Mix_GetError() << std::endl;
+	#endif
 	}
 
 	return chunk;
@@ -21,8 +23,10 @@ Mix_Music* AudioHandler::CreateMusic(const std::string& fileName)
 
 	if (!music)
 	{
+	#if defined(_DEBUG)
 		std::cout << "Error: failed to load music '" << fileName.c_str() << "'" << std::endl;
 		std::cout << Mix_GetError() << std::endl;
+	#endif
 	}
 
 	return music;
@@ -53,8 +57,10 @@ bool AudioHandler::PlayMusic(Mix_Music* music, const int numLoops)
 	{
 		if (Mix_PlayMusic(music, -1) == -1)
 		{
+		#if defined(_DEBUG)
 			std::cout << "Error: failed to play music" << std::endl;
 			std::cout << Mix_GetError() << std::endl;
+		#endif
 
 			return false;
 		}
@@ -64,8 +70,10 @@ bool AudioHandler::PlayMusic(Mix_Music* music, const int numLoops)
 	{
 		if (Mix_PlayMusic(music, numLoops) == -1)
 		{
+		#if defined(_DEBUG)
 			std::cout << "Error: failed to play music" << std::endl;
 			std::cout << Mix_GetError() << std::endl;
+		#endif
 
 			return false;
 		}

@@ -8,8 +8,10 @@ TTF_Font* FontHandler::CreateFont(const std::string& fileName, const int textSiz
 
 	if (!font)
 	{
+	#if defined(_DEBUG)
 		std::cout << "Error: failed to load font '" << fileName.c_str() << "'" << std::endl;
 		std::cout << TTF_GetError() << std::endl;
+	#endif
 	}
 
 	return font;
