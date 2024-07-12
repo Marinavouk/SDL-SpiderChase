@@ -25,7 +25,7 @@ bool MainMenuState::OnEnter(void)
 	SDL_SetTextureBlendMode(menuBackground, SDL_BlendMode::SDL_BLENDMODE_BLEND);
 	SDL_SetTextureAlphaMod(menuBackground, 100);
 
-	spider = textureHandler->CreateTexture("Assets/Textures/spider_spritesheet.png");
+	spider = textureHandler->CreateTexture("Assets/Textures/spider04.png");
 	if (!spider)
 		return false;
 
@@ -67,7 +67,7 @@ bool MainMenuState::OnEnter(void)
 	quitButton->SetTextColorPressed(buttonTextColorPressed);
 
 	spiderWebStart	= {150.0f, 220.0f};
-	spiderSize		= {32.0f, 32.0f};
+	spiderSize		= {64.0f, 64.0f};
 	spiderPosition	= {spiderWebStart.x - (spiderSize.x * 0.5f), spiderWebStart.y + 200.0f};
 
 	lifeTime	= 0.0f;
@@ -77,7 +77,7 @@ bool MainMenuState::OnEnter(void)
 	if (!music)
 		return false;
 
-	audioHandler->PlayMusic(music, -1);
+//	audioHandler->PlayMusic(music, -1);
 	audioHandler->SetMusicVolume(0);
 
 	// Set the clear color (the background color that is shown behind the menu background and other objects)
@@ -164,10 +164,10 @@ void MainMenuState::Render(void)
 
 	textureHandler->RenderTexture(menuBackground, {0.0f, 0.0f}, nullptr, &dstRect);
 
-	SDL_SetRenderDrawColor(renderer, 100, 100, 100, 150);
-	SDL_RenderDrawLineF(renderer, spiderWebStart.x, spiderWebStart.y, spiderPosition.x + (spiderSize.x * 0.5f), spiderPosition.y + spiderSize.y);
+	SDL_SetRenderDrawColor(renderer, 100, 100, 100, 200);
+	SDL_RenderDrawLineF(renderer, spiderWebStart.x, spiderWebStart.y, spiderPosition.x + (spiderSize.x * 0.5f), spiderPosition.y + 30.0f);
 
-	const SDL_Rect	spiderClipRect	= {9, 118, 13, 10};
+	const SDL_Rect	spiderClipRect	= {64, 260, 64, 64};
 	const SDL_FRect	spiderDstRect	= {spiderPosition.x, spiderPosition.y, spiderSize.x, spiderSize.y};
 	textureHandler->RenderTextureRotated(spider, spiderPosition, -spiderAngle, &spiderClipRect, &spiderDstRect);
 
