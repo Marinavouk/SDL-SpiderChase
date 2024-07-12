@@ -26,6 +26,6 @@ private:
 
 	Mix_Music*		music			= nullptr;
 
-	int				volumeLimiter	= 50;
+	int				volumeLimiter	= 100;
 
 };
