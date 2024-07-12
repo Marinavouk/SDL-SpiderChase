@@ -25,4 +25,7 @@ private:
 	SDL_Texture*	mainBackground	= nullptr;
 
 	Mix_Music*		music			= nullptr;
+
+	int				volumeLimiter	= 50;
+
 };

@@ -16,6 +16,7 @@ bool MainMenuState::OnEnter(void)
 	// Easy access to handlers so you don't have to write application->Get_X_Handler() multiple times below
 	TextureHandler* textureHandler	= application->GetTextureHandler();
 	FontHandler*	fontHandler		= application->GetFontHandler();
+	AudioHandler*	audioHandler	= application->GetAudioHandler();
 
 	menuBackground = textureHandler->CreateTexture("Assets/Textures/menu_background.png");
 	if (!menuBackground)
@@ -72,12 +73,12 @@ bool MainMenuState::OnEnter(void)
 	lifeTime	= 0.0f;
 	spiderAngle = 0.0f;
 
-	music = application->GetAudioHandler()->CreateMusic("Assets/Audio/dark-ambient-horror-cinematic-halloween-atmosphere-scary-118585.mp3");
+	music = audioHandler->CreateMusic("Assets/Audio/menu.mp3");
 	if (!music)
 		return false;
 
-	Mix_PlayMusic(music, -1);
-	Mix_VolumeMusic(MIX_MAX_VOLUME - (int)((float)MIX_MAX_VOLUME * application->GetTransitionRenderer()->GetTransitionValue()));
+	audioHandler->PlayMusic(music, -1);
+	audioHandler->SetMusicVolume(0);
 
 	// Set the clear color (the background color that is shown behind the menu background and other objects)
 	// This is optional
@@ -95,11 +96,12 @@ void MainMenuState::OnExit(void)
 	// Easy access to handlers so you don't have to write application->Get_X_Handler() multiple times below
 	TextureHandler* textureHandler	= application->GetTextureHandler();
 	FontHandler*	fontHandler		= application->GetFontHandler();
+	AudioHandler*	audioHandler	= application->GetAudioHandler();
 
 	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures and buttons, unload/stop main menu music etc)
 
-	Mix_HaltMusic();
-	application->GetAudioHandler()->DestroyMusic(music);
+	audioHandler->StopMusic();
+	audioHandler->DestroyMusic(music);
 	music = nullptr;
 
 	quitButton->Destroy();
@@ -147,7 +149,7 @@ void MainMenuState::Update(const float deltaTime)
 	spiderPosition.y = (spiderWebStart.y + 200.0f) + (cosf((lifeTime * 0.5f) + (spiderAngle * 0.1f)) * 30.0f);
 
 	if (transitionRenderer->IsTransitioning())
-		Mix_VolumeMusic(MIX_MAX_VOLUME - (int)((float)MIX_MAX_VOLUME * transitionRenderer->GetTransitionValue()));
+		application->GetAudioHandler()->SetMusicVolume(MIX_MAX_VOLUME - (int)((float)MIX_MAX_VOLUME * transitionRenderer->GetTransitionValue()));
 }
 
 void MainMenuState::Render(void)

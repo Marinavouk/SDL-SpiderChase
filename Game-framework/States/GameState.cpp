@@ -13,16 +13,19 @@ bool GameState::OnEnter(void)
 
 	// Create objects that should be created/started when this state is entered/started (create textures, load/start game music etc)
 
+	// Easy access to the audio handler so you don't have to write application->GetAudioHandler() multiple times below
+	AudioHandler* audioHandler = application->GetAudioHandler();
+
 	mainBackground = application->GetTextureHandler()->CreateTexture("Assets/Textures/game_background.png");
 	if (!mainBackground)
 		return false;
 
-	music = application->GetAudioHandler()->CreateMusic("Assets/Audio/gameMusic.mp3");
+	music = audioHandler->CreateMusic("Assets/Audio/game.mp3");
 	if (!music)
 		return false;
 
-	Mix_PlayMusic(music, -1);
-	Mix_VolumeMusic(MIX_MAX_VOLUME - (int)((float)MIX_MAX_VOLUME * application->GetTransitionRenderer()->GetTransitionValue()));
+	audioHandler->PlayMusic(music, -1);
+	audioHandler->SetMusicVolume(0);
 
 	// Set the clear color (the background color that is shown behind the menu background and other objects)
 	// This is optional
@@ -39,8 +42,11 @@ void GameState::OnExit(void)
 
 	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures, unload/stop game music etc)
 
-	Mix_HaltMusic();
-	application->GetAudioHandler()->DestroyMusic(music);
+	// Easy access to the audio handler so you don't have to write application->GetAudioHandler() multiple times below
+	AudioHandler* audioHandler = application->GetAudioHandler();
+
+	audioHandler->StopMusic();
+	audioHandler->DestroyMusic(music);
 	music = nullptr;
 
 	application->GetTextureHandler()->DestroyTexture(mainBackground);
@@ -58,7 +64,7 @@ void GameState::Update(const float deltaTime)
 		application->SetState(Application::EState::MAIN_MENU);
 
 	if (transitionRenderer->IsTransitioning())
-		Mix_VolumeMusic(MIX_MAX_VOLUME - (int)((float)MIX_MAX_VOLUME * transitionRenderer->GetTransitionValue()));
+		application->GetAudioHandler()->SetMusicVolume((MIX_MAX_VOLUME - volumeLimiter) - (int)((float)(MIX_MAX_VOLUME - volumeLimiter) * transitionRenderer->GetTransitionValue()));
 }
 
 void GameState::Render(void)
