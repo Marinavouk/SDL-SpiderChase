@@ -43,7 +43,7 @@ bool MainMenuState::OnEnter(void)
 
 	// Buttons can be used as text blocks too, without mouse interaction
 	titleTextBlock = new Button;
-	if (!titleTextBlock->Create(application, menuFont, "Spider Chase", {255, 0, 0, 255}))
+	if (!titleTextBlock->Create(application, menuFont, "Spider Chase", {200, 0, 0, 255}))
 		return false;
 	titleTextBlock->SetPosition({windowSizeHalf.x, 160.0f});
 	titleTextBlock->SetBackgroundColor({0, 0, 0, 0});
@@ -77,7 +77,7 @@ bool MainMenuState::OnEnter(void)
 	if (!music)
 		return false;
 
-//	audioHandler->PlayMusic(music, -1);
+	audioHandler->PlayMusic(music, -1);
 	audioHandler->SetMusicVolume(0);
 
 	// Set the clear color (the background color that is shown behind the menu background and other objects)

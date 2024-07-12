@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Button.h"
+#include "GameObjects/Button.h"
 #include "State.h"
 
 #include <SDL.h>
