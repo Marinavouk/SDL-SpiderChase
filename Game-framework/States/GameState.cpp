@@ -90,5 +90,5 @@ void GameState::Render(void)
 
 	application->GetTextureHandler()->RenderTexture(mainBackground, {0.0f, 0.0f}, nullptr, &dstRect);
 	application->GetTextureHandler()->RenderTexture(table, {0.0f, 400.0f}, nullptr, nullptr);
-	application->GetTextureHandler()->RenderTexture(chair, {400.0f, 400.0f}, nullptr, nullptr);
+	application->GetTextureHandler()->RenderTexture(chair, {960.0f, 400.0f}, nullptr, nullptr);
 }
