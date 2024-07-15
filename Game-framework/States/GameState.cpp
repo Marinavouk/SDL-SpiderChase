@@ -20,6 +20,10 @@ bool GameState::OnEnter(void)
 	if (!mainBackground)
 		return false;
 
+	table = application->GetTextureHandler()->CreateTexture("Assets/Textures/tableSpiderChase.png");
+	if (!table)
+		return false;
+
 	music = audioHandler->CreateMusic("Assets/Audio/game.mp3");
 	if (!music)
 		return false;
@@ -49,6 +53,9 @@ void GameState::OnExit(void)
 	audioHandler->DestroyMusic(music);
 	music = nullptr;
 
+	application->GetTextureHandler()->DestroyTexture(table);
+	table = nullptr;
+
 	application->GetTextureHandler()->DestroyTexture(mainBackground);
 	mainBackground = nullptr;
 }
@@ -75,4 +82,5 @@ void GameState::Render(void)
 	const SDL_FRect		dstRect		= {0.0f, 0.0f, windowSize.x, windowSize.y}; 
 
 	application->GetTextureHandler()->RenderTexture(mainBackground, {0.0f, 0.0f}, nullptr, &dstRect);
+	application->GetTextureHandler()->RenderTexture(table, {0.0f, 400.0f}, nullptr, nullptr);
 }
