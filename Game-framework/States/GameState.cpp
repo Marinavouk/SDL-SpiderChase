@@ -24,6 +24,10 @@ bool GameState::OnEnter(void)
 	if (!table)
 		return false;
 
+	chair = application->GetTextureHandler()->CreateTexture("Assets/Textures/chairSpiderChase.png");
+	if (!chair)
+		return false;
+
 	music = audioHandler->CreateMusic("Assets/Audio/game.mp3");
 	if (!music)
 		return false;
@@ -52,6 +56,9 @@ void GameState::OnExit(void)
 	audioHandler->StopMusic();
 	audioHandler->DestroyMusic(music);
 	music = nullptr;
+
+	application->GetTextureHandler()->DestroyTexture(chair);
+	chair = nullptr;
 
 	application->GetTextureHandler()->DestroyTexture(table);
 	table = nullptr;
@@ -83,4 +90,5 @@ void GameState::Render(void)
 
 	application->GetTextureHandler()->RenderTexture(mainBackground, {0.0f, 0.0f}, nullptr, &dstRect);
 	application->GetTextureHandler()->RenderTexture(table, {0.0f, 400.0f}, nullptr, nullptr);
+	application->GetTextureHandler()->RenderTexture(chair, {400.0f, 400.0f}, nullptr, nullptr);
 }
