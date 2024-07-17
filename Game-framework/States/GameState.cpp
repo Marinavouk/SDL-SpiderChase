@@ -20,11 +20,11 @@ bool GameState::OnEnter(void)
 	if (!mainBackground)
 		return false;
 
-	table = application->GetTextureHandler()->CreateTexture("Assets/Textures/tableSpiderChase.png");
+	table = application->GetTextureHandler()->CreateTexture("Assets/Textures/table.png");
 	if (!table)
 		return false;
 
-	chair = application->GetTextureHandler()->CreateTexture("Assets/Textures/chairSpiderChase.png");
+	chair = application->GetTextureHandler()->CreateTexture("Assets/Textures/chair.png");
 	if (!chair)
 		return false;
 
@@ -34,6 +34,16 @@ bool GameState::OnEnter(void)
 
 	audioHandler->PlayMusic(music, -1);
 	audioHandler->SetMusicVolume(0);
+
+	int textureWidth	= 0;
+	int textureHeight	= 0;
+	SDL_QueryTexture(table, nullptr, nullptr, &textureWidth, &textureHeight);
+
+	tableSize = {(float)(textureWidth * 0.7f), (float)(textureHeight * 0.7f)};
+
+	SDL_QueryTexture(chair, nullptr, nullptr, &textureWidth, &textureHeight);
+
+	chairSize = {(float)(textureWidth * 0.7f), (float)(textureHeight * 0.7f)};
 
 	// Set the clear color (the background color that is shown behind the menu background and other objects)
 	// This is optional
@@ -75,7 +85,7 @@ void GameState::Update(const float deltaTime)
 
 	// If the escape key on the keyboard is pressed, switch to the main menu
 	if (application->GetInputHandler()->KeyPressed(SDL_SCANCODE_ESCAPE))
-		application->SetState(Application::EState::MAIN_MENU);
+		application->SetState(Application::EState::QUIT);
 
 	if (transitionRenderer->IsTransitioning())
 		application->GetAudioHandler()->SetMusicVolume((MIX_MAX_VOLUME - volumeLimiter) - (int)((float)(MIX_MAX_VOLUME - volumeLimiter) * transitionRenderer->GetTransitionValue()));
@@ -85,10 +95,9 @@ void GameState::Render(void)
 {
 	// Render all the game objects here
 
-	const SDL_FPoint	windowSize	= application->GetWindow()->GetSize();
-	const SDL_FRect		dstRect		= {0.0f, 0.0f, windowSize.x, windowSize.y}; 
+	const SDL_FPoint windowSize = application->GetWindow()->GetSize();
 
-	application->GetTextureHandler()->RenderTexture(mainBackground, {0.0f, 0.0f}, nullptr, &dstRect);
-	application->GetTextureHandler()->RenderTexture(table, {0.0f, 400.0f}, nullptr, nullptr);
-	application->GetTextureHandler()->RenderTexture(chair, {960.0f, 400.0f}, nullptr, nullptr);
+	application->GetTextureHandler()->RenderTexture(mainBackground, {0.0f, 0.0f},												nullptr, &windowSize);
+	application->GetTextureHandler()->RenderTexture(table,			{200.0f, windowSize.y - tableSize.y},						nullptr, &tableSize);
+	application->GetTextureHandler()->RenderTexture(chair,			{windowSize.x - chairSize.x, windowSize.y - chairSize.y},	nullptr, &chairSize);
 }

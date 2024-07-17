@@ -65,11 +65,11 @@ void TextureHandler::DestroyTexture(SDL_Texture* texture)
 	SDL_DestroyTexture(texture);
 }
 
-void TextureHandler::RenderTexture(SDL_Texture* texture, const SDL_FPoint& position, const SDL_Rect* srcRect, const SDL_FRect* dstRect)
+void TextureHandler::RenderTexture(SDL_Texture* texture, const SDL_FPoint& position, const SDL_Rect* srcRect, const SDL_FPoint* customSize)
 {
-	if (dstRect)
+	if (customSize)
 	{
-		const SDL_FRect dstRect2 = {position.x, position.y, dstRect->w, dstRect->h};
+		const SDL_FRect dstRect2 = {position.x, position.y, customSize->x, customSize->y};
 		SDL_RenderCopyF(renderer, texture, srcRect, &dstRect2);
 	}
 
@@ -84,11 +84,11 @@ void TextureHandler::RenderTexture(SDL_Texture* texture, const SDL_FPoint& posit
 	}
 }
 
-void TextureHandler::RenderTextureRotated(SDL_Texture* texture, const SDL_FPoint& position, const float angle, const SDL_Rect* srcRect /*= nullptr*/, const SDL_FRect* dstRect /*= nullptr*/)
+void TextureHandler::RenderTextureRotated(SDL_Texture* texture, const SDL_FPoint& position, const float angle, const SDL_Rect* srcRect, const SDL_FPoint* customSize)
 {
-	if (dstRect)
+	if (customSize)
 	{
-		const SDL_FRect dstRect2 = {position.x, position.y, dstRect->w, dstRect->h};
+		const SDL_FRect dstRect2 = {position.x, position.y, customSize->x, customSize->y};
 		SDL_RenderCopyExF(renderer, texture, srcRect, &dstRect2, angle, nullptr, SDL_RendererFlip::SDL_FLIP_NONE);
 	}
 

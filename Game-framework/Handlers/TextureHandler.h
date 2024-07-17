@@ -18,8 +18,8 @@ public:
 	SDL_Texture*	CreateEmptyTexture(const SDL_Point& size, const SDL_TextureAccess access);
 	void			DestroyTexture(SDL_Texture* texture);
 
-	void			RenderTexture(SDL_Texture* texture, const SDL_FPoint& position, const SDL_Rect* srcRect = nullptr, const SDL_FRect* dstRect = nullptr);
-	void			RenderTextureRotated(SDL_Texture* texture, const SDL_FPoint& position, const float angle, const SDL_Rect* srcRect = nullptr, const SDL_FRect* dstRect = nullptr);
+	void			RenderTexture(SDL_Texture* texture, const SDL_FPoint& position, const SDL_Rect* srcRect = nullptr, const SDL_FPoint* customSize = nullptr);
+	void			RenderTextureRotated(SDL_Texture* texture, const SDL_FPoint& position, const float angle, const SDL_Rect* srcRect = nullptr, const SDL_FPoint* customSize = nullptr);
 
 private:
 

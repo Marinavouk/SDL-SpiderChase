@@ -28,6 +28,9 @@ private:
 
 	Mix_Music*		music			= nullptr;
 
+	SDL_FPoint		tableSize		= {0.0f, 0.0f};
+	SDL_FPoint		chairSize		= {0.0f, 0.0f};
+
 	int				volumeLimiter	= 100;
 
 };

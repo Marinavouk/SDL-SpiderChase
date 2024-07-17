@@ -25,7 +25,7 @@ bool MainMenuState::OnEnter(void)
 	SDL_SetTextureBlendMode(menuBackground, SDL_BlendMode::SDL_BLENDMODE_BLEND);
 	SDL_SetTextureAlphaMod(menuBackground, 100);
 
-	spider = textureHandler->CreateTexture("Assets/Textures/spider04.png");
+	spider = textureHandler->CreateTexture("Assets/Textures/spider.png");
 	if (!spider)
 		return false;
 
@@ -160,16 +160,14 @@ void MainMenuState::Render(void)
 	TextureHandler*		textureHandler	= application->GetTextureHandler();
 	const SDL_FPoint	mousePosition	= application->GetInputHandler()->GetMousePosition();
 	const SDL_FPoint	windowSize		= application->GetWindow()->GetSize();
-	const SDL_FRect		dstRect			= {0.0f, 0.0f, windowSize.x, windowSize.y};
 
-	textureHandler->RenderTexture(menuBackground, {0.0f, 0.0f}, nullptr, &dstRect);
+	textureHandler->RenderTexture(menuBackground, {0.0f, 0.0f}, nullptr, &windowSize);
 
 	SDL_SetRenderDrawColor(renderer, 100, 100, 100, 200);
 	SDL_RenderDrawLineF(renderer, spiderWebStart.x, spiderWebStart.y, spiderPosition.x + (spiderSize.x * 0.5f), spiderPosition.y + 30.0f);
 
-	const SDL_Rect	spiderClipRect	= {64, 260, 64, 64};
-	const SDL_FRect	spiderDstRect	= {spiderPosition.x, spiderPosition.y, spiderSize.x, spiderSize.y};
-	textureHandler->RenderTextureRotated(spider, spiderPosition, -spiderAngle, &spiderClipRect, &spiderDstRect);
+	const SDL_Rect spiderClipRect = {64, 260, 64, 64};
+	textureHandler->RenderTextureRotated(spider, spiderPosition, -spiderAngle, &spiderClipRect, &spiderSize);
 
 	titleTextBlock->Render(renderer);
 	playButton->Render(renderer, &mousePosition);
