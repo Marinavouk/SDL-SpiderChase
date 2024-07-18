@@ -8,11 +8,10 @@ class TransitionRenderer
 {
 public:
 
-	 TransitionRenderer(void) {}
-	~TransitionRenderer(void) {}
+	 TransitionRenderer(void);
+	 TransitionRenderer(Application* mainApplication, const SDL_FPoint& size);
+	~TransitionRenderer(void);
 
-	void	Create(Application* mainApplication, const SDL_FPoint& size);
-	void	Destroy(void);
 	void	Update(const float deltaTime);
 	void	Render(void);
 

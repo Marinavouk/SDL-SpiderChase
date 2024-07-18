@@ -10,9 +10,9 @@ void InputHandler::Update(void)
 		currentKeyboardState[i]		= (keyboardState[i] == SDL_TRUE);
 	}
 
-	int				mouseX			= 0;
-	int				mouseY			= 0;
-	const Uint32	mouseState		= SDL_GetMouseState(&mouseX, &mouseY);	
+	int				mouseX		= 0;
+	int				mouseY		= 0;
+	const Uint32	mouseState	= SDL_GetMouseState(&mouseX, &mouseY);	
 
 	mousePosition = {(float)mouseX, (float)mouseY};
 

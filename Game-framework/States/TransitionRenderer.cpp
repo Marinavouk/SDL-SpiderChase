@@ -5,7 +5,12 @@
 // Used for std::clamp
 #include <algorithm>
 
-void TransitionRenderer::Create(Application* mainApplication, const SDL_FPoint& size)
+TransitionRenderer::TransitionRenderer(void)
+{
+
+}
+
+TransitionRenderer::TransitionRenderer(Application* mainApplication, const SDL_FPoint& size)
 {
 	application = mainApplication;
 
@@ -14,9 +19,9 @@ void TransitionRenderer::Create(Application* mainApplication, const SDL_FPoint& 
 	rect = {0.0f, 0.0f, size.x, size.y};
 }
 
-void TransitionRenderer::Destroy(void)
+TransitionRenderer::~TransitionRenderer(void)
 {
-	renderer = nullptr;
+	renderer	= nullptr;
 	application = nullptr;
 }
 
@@ -57,8 +62,6 @@ void TransitionRenderer::Render(void)
 {
 	if (state == EState::IDLE)
 		return;
-
-	SDL_Renderer* renderer = application->GetWindow()->GetRenderer();
 
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, (Uint8)(transitionValue * 255.0f));
 	SDL_RenderFillRectF(renderer, &rect);

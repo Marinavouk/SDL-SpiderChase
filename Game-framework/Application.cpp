@@ -13,7 +13,7 @@ bool Application::Create(void)
 	// Seed the random number generator
 	srand((unsigned int)time(0));
 
-	// Creates all the 'libraries' for you, for example SDL, SDL_Image etc
+	// Creates all the libraries for you, for example SDL, SDL_Image etc
 	libraryHandler = new LibraryHandler;
 	if(!libraryHandler->Create())
 		return false;
@@ -29,16 +29,11 @@ bool Application::Create(void)
 	// you can use this function
 //	window->SetClearColor({ 255, 0, 0, 255 });
 
-	textureHandler = new TextureHandler;
-	if(!textureHandler->Create(window->GetRenderer()))
-		return false;
-
-	fontHandler = new FontHandler;
-	audioHandler = new AudioHandler;
-	inputHandler = new InputHandler;
-
-	transitionRenderer = new TransitionRenderer;
-	transitionRenderer->Create(this, window->GetSize());
+	textureHandler		= new TextureHandler(window->GetRenderer());
+	fontHandler			= new FontHandler;
+	audioHandler		= new AudioHandler;
+	inputHandler		= new InputHandler;
+	transitionRenderer	= new TransitionRenderer(this, window->GetSize());
 
 	// If you want to tweak the speed of the state transition, you can set the speed here
 	// The lower the value is set to, the slower the transition effect will be
@@ -76,20 +71,16 @@ void Application::Destroy(void)
 		}
 	}
 
-	transitionRenderer->Destroy();
 	delete transitionRenderer;
-	transitionRenderer = nullptr;
-
 	delete inputHandler;
 	delete audioHandler;
 	delete fontHandler;
-	inputHandler	= nullptr;
-	audioHandler	= nullptr;
-	fontHandler		= nullptr;
-
-	textureHandler->Destroy();
 	delete textureHandler;
-	textureHandler = nullptr;
+	transitionRenderer	= nullptr;
+	inputHandler		= nullptr;
+	audioHandler		= nullptr;
+	fontHandler			= nullptr;
+	textureHandler		= nullptr;
 
 	window->Destroy();
 	delete window;

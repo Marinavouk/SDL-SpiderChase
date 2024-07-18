@@ -46,7 +46,7 @@ bool GameState::OnEnter(void)
 	chairSize = {(float)(textureWidth * 0.7f), (float)(textureHeight * 0.7f)};
 
 	// Set the clear color (the background color that is shown behind the menu background and other objects)
-	// This is optional
+	// This is completely optional
 	application->GetWindow()->SetClearColor({150, 150, 200, 255});
 
 	return true;
@@ -87,6 +87,7 @@ void GameState::Update(const float deltaTime)
 	if (application->GetInputHandler()->KeyPressed(SDL_SCANCODE_ESCAPE))
 		application->SetState(Application::EState::QUIT);
 
+	// Will fade the game music in/out whenever the game switch to/from this state
 	if (transitionRenderer->IsTransitioning())
 		application->GetAudioHandler()->SetMusicVolume((MIX_MAX_VOLUME - volumeLimiter) - (int)((float)(MIX_MAX_VOLUME - volumeLimiter) * transitionRenderer->GetTransitionValue()));
 }
@@ -95,6 +96,9 @@ void GameState::Render(void)
 {
 	// Render all the game objects here
 
+	// It's always good practice to create a local variable for data that is used in multiple places in a function, in this the window size is used on multiple places below
+	// By having a local variable like this, application->GetWindow()->GetSize() isn't called multiple times
+	// This is both an optimization and also reduces repetitive code
 	const SDL_FPoint windowSize = application->GetWindow()->GetSize();
 
 	application->GetTextureHandler()->RenderTexture(mainBackground, {0.0f, 0.0f},												nullptr, &windowSize);

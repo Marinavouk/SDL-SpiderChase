@@ -7,11 +7,9 @@ class TextureHandler
 {
 public:
 
-	 TextureHandler(void) {}
-	~TextureHandler(void) {}
-
-	bool			Create(SDL_Renderer* SDLRenderer);
-	void			Destroy(void);
+	 TextureHandler(void)						{}
+	 TextureHandler(SDL_Renderer* SDLRenderer)	{renderer = SDLRenderer;}
+	~TextureHandler(void)						{renderer = nullptr;}
 
 	SDL_Texture*	CreateTexture(const std::string& fileName);
 	SDL_Texture*	CreateTextureFromSurface(SDL_Surface* surface);

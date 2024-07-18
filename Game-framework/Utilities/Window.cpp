@@ -48,7 +48,10 @@ bool Window::Create(const std::string& title, const SDL_Point& windowSize)
 void Window::Destroy(void)
 {
 	SDL_DestroyRenderer(renderer);
+	renderer = nullptr;
+
 	SDL_DestroyWindow(window);
+	window = nullptr;
 }
 
 bool Window::BeginRender(void)
@@ -66,7 +69,7 @@ void Window::EndRender(void)
 
 bool Window::ClearBuffer()
 {
-	return  (SDL_RenderClear(renderer) == 0);
+	return (SDL_RenderClear(renderer) == 0);
 }
 
 void Window::SetRenderTarget(SDL_Texture* renderTarget)

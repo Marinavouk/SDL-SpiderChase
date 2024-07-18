@@ -46,6 +46,8 @@ bool MainMenuState::OnEnter(void)
 	if (!titleTextBlock->Create(application, menuFont, "Spider Chase", {200, 0, 0, 255}))
 		return false;
 	titleTextBlock->SetPosition({windowSizeHalf.x, 160.0f});
+
+	// Invisible background color (alpha = 0) since the text is the only thing that should be visible when rendering the text block
 	titleTextBlock->SetBackgroundColor({0, 0, 0, 0});
 
 	playButton = new Button;
@@ -81,7 +83,7 @@ bool MainMenuState::OnEnter(void)
 	audioHandler->SetMusicVolume(0);
 
 	// Set the clear color (the background color that is shown behind the menu background and other objects)
-	// This is optional
+	// This is completely optional
 	application->GetWindow()->SetClearColor({0, 0, 0, 255});
 
 	return true;
@@ -148,6 +150,7 @@ void MainMenuState::Update(const float deltaTime)
 	spiderPosition.x = (spiderWebStart.x - (spiderSize.x * 0.5f)) + spiderAngle;
 	spiderPosition.y = (spiderWebStart.y + 200.0f) + (cosf((lifeTime * 0.5f) + (spiderAngle * 0.1f)) * 30.0f);
 
+	// Will fade the menu music in/out whenever the game switch to/from this state
 	if (transitionRenderer->IsTransitioning())
 		application->GetAudioHandler()->SetMusicVolume(MIX_MAX_VOLUME - (int)((float)MIX_MAX_VOLUME * transitionRenderer->GetTransitionValue()));
 }
@@ -156,6 +159,9 @@ void MainMenuState::Render(void)
 {
 	// Render all the main menu objects here
 
+	// It's always good practice to create local variables for data that is used in multiple places in a function, in this the renderer for example is used on multiple places below
+	// By having a local variable like this, application->GetWindow()->GetRenderer(), application->GetTextureHandler() etc isn't called multiple times
+	// This is both an optimization and also reduces repetitive code 
 	SDL_Renderer*		renderer		= application->GetWindow()->GetRenderer();
 	TextureHandler*		textureHandler	= application->GetTextureHandler();
 	const SDL_FPoint	mousePosition	= application->GetInputHandler()->GetMousePosition();

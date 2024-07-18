@@ -89,10 +89,7 @@ void Button::Render(SDL_Renderer* renderer, const SDL_FPoint* mousePosition)
 
 		const float		diffW	= ((textRect.w * scalePressed) - (textRect.w * scaleDefault)) * 0.5f;
 		const float		diffH	= ((textRect.h * scalePressed) - (textRect.h * scaleDefault)) * 0.5f;
-		const SDL_FRect dstRect	= {	textRect.x - diffW,
-									textRect.y - diffH,
-									textRect.w * scalePressed,
-									textRect.h * scalePressed};
+		const SDL_FRect dstRect	= {textRect.x - diffW, textRect.y - diffH, textRect.w * scalePressed, textRect.h * scalePressed};
 
 		SDL_RenderCopyF(renderer, texture, nullptr, &dstRect);
 	}
@@ -112,10 +109,7 @@ bool Button::PointInside(const SDL_FPoint& point)
 	{
 		const float		diffW	= ((textRect.w * scalePressed) - (textRect.w * scaleDefault)) * 0.5f;
 		const float		diffH	= ((textRect.h * scalePressed) - (textRect.h * scaleDefault)) * 0.5f;
-		const SDL_FRect dstRect	= {	textRect.x - diffW,
-									textRect.y - diffH,
-									textRect.w * scalePressed,
-									textRect.h * scalePressed};
+		const SDL_FRect dstRect	= {textRect.x - diffW, textRect.y - diffH, textRect.w * scalePressed, textRect.h * scalePressed};
 
 		return (SDL_PointInFRect(&point, &dstRect) == SDL_TRUE);
 	}
