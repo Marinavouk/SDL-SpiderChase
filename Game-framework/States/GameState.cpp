@@ -13,18 +13,19 @@ bool GameState::OnEnter(void)
 
 	// Create objects that should be created/started when this state is entered/started (create textures, load/start game music etc)
 
-	// Easy access to the audio handler so you don't have to write application->GetAudioHandler() multiple times below
-	AudioHandler* audioHandler = application->GetAudioHandler();
+	// Easy access to handlers so you don't have to write application->Get_X_Handler() multiple times below
+	TextureHandler* textureHandler	= application->GetTextureHandler();
+	AudioHandler*	audioHandler	= application->GetAudioHandler();
 
-	mainBackground = application->GetTextureHandler()->CreateTexture("Assets/Textures/game_background.png");
+	mainBackground = textureHandler->CreateTexture("Assets/Textures/game_background.png");
 	if (!mainBackground)
 		return false;
 
-	table = application->GetTextureHandler()->CreateTexture("Assets/Textures/table.png");
+	table = textureHandler->CreateTexture("Assets/Textures/table.png");
 	if (!table)
 		return false;
 
-	chair = application->GetTextureHandler()->CreateTexture("Assets/Textures/chair.png");
+	chair = textureHandler->CreateTexture("Assets/Textures/chair.png");
 	if (!chair)
 		return false;
 
@@ -60,21 +61,20 @@ void GameState::OnExit(void)
 
 	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures, unload/stop game music etc)
 
-	// Easy access to the audio handler so you don't have to write application->GetAudioHandler() multiple times below
-	AudioHandler* audioHandler = application->GetAudioHandler();
+	// Easy access to handlers so you don't have to write application->Get_X_Handler() multiple times below
+	TextureHandler* textureHandler	= application->GetTextureHandler();
+	AudioHandler*	audioHandler	= application->GetAudioHandler();
 
 	audioHandler->StopMusic();
 	audioHandler->DestroyMusic(music);
 	music = nullptr;
 
-	application->GetTextureHandler()->DestroyTexture(chair);
-	chair = nullptr;
-
-	application->GetTextureHandler()->DestroyTexture(table);
-	table = nullptr;
-
-	application->GetTextureHandler()->DestroyTexture(mainBackground);
-	mainBackground = nullptr;
+	textureHandler->DestroyTexture(chair);
+	textureHandler->DestroyTexture(table);
+	textureHandler->DestroyTexture(mainBackground);
+	chair			= nullptr;
+	table			= nullptr;
+	mainBackground	= nullptr;
 }
 
 void GameState::Update(const float deltaTime)
@@ -99,9 +99,10 @@ void GameState::Render(void)
 	// It's always good practice to create a local variable for data that is used in multiple places in a function, in this the window size is used on multiple places below
 	// By having a local variable like this, application->GetWindow()->GetSize() isn't called multiple times
 	// This is both an optimization and also reduces repetitive code
-	const SDL_FPoint windowSize = application->GetWindow()->GetSize();
+	TextureHandler*		textureHandler	= application->GetTextureHandler();
+	const SDL_FPoint	windowSize		= application->GetWindow()->GetSize();
 
-	application->GetTextureHandler()->RenderTexture(mainBackground, {0.0f, 0.0f},												nullptr, &windowSize);
-	application->GetTextureHandler()->RenderTexture(table,			{200.0f, windowSize.y - tableSize.y},						nullptr, &tableSize);
-	application->GetTextureHandler()->RenderTexture(chair,			{windowSize.x - chairSize.x, windowSize.y - chairSize.y},	nullptr, &chairSize);
+	textureHandler->RenderTexture(mainBackground,	{0.0f, 0.0f},												nullptr, &windowSize);
+	textureHandler->RenderTexture(table,			{200.0f, windowSize.y - tableSize.y},						nullptr, &tableSize);
+	textureHandler->RenderTexture(chair,			{windowSize.x - chairSize.x, windowSize.y - chairSize.y},	nullptr, &chairSize);
 }
