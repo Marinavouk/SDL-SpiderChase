@@ -25,6 +25,7 @@ private:
 	SDL_Texture*	mainBackground	= nullptr;
 	SDL_Texture*	table			= nullptr;
 	SDL_Texture*	chair			= nullptr;
+	SDL_Texture*	triangleTest	= nullptr;
 
 	Mix_Music*		music			= nullptr;
 
