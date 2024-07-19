@@ -29,10 +29,6 @@ bool GameState::OnEnter(void)
 	if (!chair)
 		return false;
 
-	triangleTest = textureHandler->CreateTexture("Assets/Textures/triangleTest.png");
-	if (!triangleTest)
-		return false;
-
 	music = audioHandler->CreateMusic("Assets/Audio/game.mp3");
 	if (!music)
 		return false;
@@ -73,11 +69,11 @@ void GameState::OnExit(void)
 	audioHandler->DestroyMusic(music);
 	music = nullptr;
 
-	textureHandler->DestroyTexture(triangleTest);
+	
 	textureHandler->DestroyTexture(chair);
 	textureHandler->DestroyTexture(table);
 	textureHandler->DestroyTexture(mainBackground);
-	triangleTest	= nullptr;
+	
 	chair			= nullptr;
 	table			= nullptr;
 	mainBackground	= nullptr;
@@ -107,9 +103,8 @@ void GameState::Render(void)
 	// This is both an optimization and also reduces repetitive code
 	TextureHandler*		textureHandler	= application->GetTextureHandler();
 	const SDL_FPoint	windowSize		= application->GetWindow()->GetSize();
-
+	
 	textureHandler->RenderTexture(mainBackground,	{0.0f, 0.0f},												nullptr, &windowSize);
 	textureHandler->RenderTexture(table,			{200.0f, windowSize.y - tableSize.y},						nullptr, &tableSize);//need to understand here code
 	textureHandler->RenderTexture(chair,			{windowSize.x - chairSize.x, windowSize.y - chairSize.y},	nullptr, &chairSize);
-	textureHandler->RenderTexture(triangleTest,		{600.0f, 400.0f});//need to learn how to change the size
 }
