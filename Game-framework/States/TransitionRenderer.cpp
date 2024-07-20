@@ -10,49 +10,49 @@ TransitionRenderer::TransitionRenderer(void)
 
 }
 
-TransitionRenderer::TransitionRenderer(Application* mainApplication, const SDL_FPoint& size)
+TransitionRenderer::TransitionRenderer(Application* application, const SDL_FPoint& size)
 {
-	application = mainApplication;
+	application = application;
 
-	renderer = application->GetWindow().GetRenderer();
+	m_pRenderer = application->GetWindow().GetRenderer();
 
-	rect = {0.0f, 0.0f, size.x, size.y};
+	m_Transition = {0.0f, 0.0f, size.x, size.y};
 }
 
 TransitionRenderer::~TransitionRenderer(void)
 {
-	renderer	= nullptr;
-	application = nullptr;
+	m_pRenderer		= nullptr;
+	m_pApplication	= nullptr;
 }
 
 void TransitionRenderer::Update(const float deltaTime)
 {
-	if (state == EState::IDLE)
+	if (m_State == EState::IDLE)
 		return;
 
-	if (state == EState::FADING_IN)
+	if (m_State == EState::FADING_IN)
 	{
-		transitionValue = std::clamp(transitionValue - (fadeSpeed * std::min(deltaTime, 0.0333f)), 0.0f, 1.0f);
+		m_TransitionValue = std::clamp(m_TransitionValue - (m_FadeSpeed * std::min(deltaTime, 0.0333f)), 0.0f, 1.0f);
 
-		if(transitionValue <= 0.0f)
-			state = EState::IDLE;
+		if(m_TransitionValue <= 0.0f)
+			m_State = EState::IDLE;
 	}
 
-	else if(state == EState::FADING_OUT)
+	else if(m_State == EState::FADING_OUT)
 	{
-		transitionValue = std::clamp(transitionValue + (fadeSpeed * std::min(deltaTime, 0.0333f)), 0.0f, 1.0f);
+		m_TransitionValue = std::clamp(m_TransitionValue + (m_FadeSpeed * std::min(deltaTime, 0.0333f)), 0.0f, 1.0f);
 
-		if (transitionValue >= 1.0f)
+		if (m_TransitionValue >= 1.0f)
 		{
-			transitionDelay -= deltaTime;
+			m_TransitionDelay -= deltaTime;
 
-			if (transitionDelay <= 0.0f)
+			if (m_TransitionDelay <= 0.0f)
 			{
-				transitionDelay = 0.0f;
+				m_TransitionDelay = 0.0f;
 
-				application->OnTransitionOpaque();
+				m_pApplication->OnTransitionOpaque();
 
-				state = EState::FADING_IN;
+				m_State = EState::FADING_IN;
 			}
 		}
 	}
@@ -60,18 +60,18 @@ void TransitionRenderer::Update(const float deltaTime)
 
 void TransitionRenderer::Render(void)
 {
-	if (state == EState::IDLE)
+	if (m_State == EState::IDLE)
 		return;
 
-	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, (Uint8)(transitionValue * 255.0f));
-	SDL_RenderFillRectF(renderer, &rect);
+	SDL_SetRenderDrawColor(m_pRenderer, m_Color.r, m_Color.g, m_Color.b, (Uint8)(m_TransitionValue * 255.0f));
+	SDL_RenderFillRectF(m_pRenderer, &m_Transition);
 }
 
 void TransitionRenderer::StartTransition(void)
 {
-	transitionValue = 0.0f;
+	m_TransitionValue = 0.0f;
 
-	transitionDelay = transitionDelayDefault;
+	m_TransitionDelay = m_TransitionDelayDefault;
 
-	state = EState::FADING_OUT;
+	m_State = EState::FADING_OUT;
 }

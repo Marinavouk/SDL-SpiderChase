@@ -26,16 +26,16 @@ public:
 
 	// Place getters and setters in their own public field
 
-	SDL_FPoint&	GetPosition(void) const								{return (SDL_FPoint&)position;}
+	SDL_FPoint&	GetPosition(void) const								{return (SDL_FPoint&)m_Position;}
 	void		SetPosition(const SDL_FPoint& newPosition);
 
-	void		SetBackgroundColor(const SDL_Color& color)			{bgColor = color;}
-	void		SetBackgroundPressedColor(const SDL_Color& color)	{bgColorPressed = color;}
-	void		SetTextColor(const SDL_Color& color)				{txtColor = color;}
-	void		SetTextColorHovered(const SDL_Color& color)			{txtColorHovered = color;}
-	void		SetTextColorPressed(const SDL_Color& color)			{txtColorPressed = color;}
+	void		SetBackgroundColor(const SDL_Color& color)			{m_BackgroundColor = color;}
+	void		SetBackgroundPressedColor(const SDL_Color& color)	{m_BackgroundColorPressed = color;}
+	void		SetTextColor(const SDL_Color& color)				{m_TextColor = color;}
+	void		SetTextColorHovered(const SDL_Color& color)			{m_TextColorHovered = color;}
+	void		SetTextColorPressed(const SDL_Color& color)			{m_TextColorPressed = color;}
 
-	void		SetTriggerButton(const int newTriggerButton)		{triggerButton = newTriggerButton;}
+	void		SetTriggerButton(const int newTriggerButton)		{m_TriggerButton = newTriggerButton;}
 
 private:
 
@@ -43,24 +43,24 @@ private:
 
 private:
 
-	SDL_Texture*	texture			= nullptr;
+	SDL_Texture*	m_pTexture					= nullptr;
 
-	SDL_FPoint		position		= {0.0f, 0.0f};
+	SDL_FPoint		m_Position					= {0.0f, 0.0f};
 
-	SDL_FRect		textRect		= {0.0f, 0.0f, 0.0f, 0.0f};
+	SDL_FRect		m_TextRect					= {0.0f, 0.0f, 0.0f, 0.0f};
 
-	SDL_Color		bgColor			= {0,	0,		0,		255};
-	SDL_Color		bgColorPressed	= {0,	0,		0,		255};
-	SDL_Color		txtColor		= {255, 255,	255,	255};
-	SDL_Color		txtColorHovered = {255, 255,	255,	255};
-	SDL_Color		txtColorPressed	= {255, 255,	255,	255};
+	SDL_Color		m_BackgroundColor			= {0,	0,		0,		255};
+	SDL_Color		m_BackgroundColorPressed	= {0,	0,		0,		255};
+	SDL_Color		m_TextColor					= {255, 255,	255,	255};
+	SDL_Color		m_TextColorHovered			= {255, 255,	255,	255};
+	SDL_Color		m_TextColorPressed			= {255, 255,	255,	255};
 
-	float			scaleDefault	= 1.0f;
-	float			scalePressed	= 1.1f;
-	float			currentScale	= scaleDefault;
+	float			m_ScaleDefault				= 1.0f;
+	float			m_ScalePressed				= 1.1f;
+	float			m_CurrentScale				= m_ScaleDefault;
 
-	int				triggerButton	= SDL_BUTTON_LEFT;
+	int				m_TriggerButton				= SDL_BUTTON_LEFT;
 
-	bool			held			= false;
+	bool			m_Held						= false;
 
 };

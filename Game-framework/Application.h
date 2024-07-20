@@ -47,36 +47,36 @@ public:
 
 	// Place getters and setters in their own public field
 
-	TextureHandler&		GetTextureHandler(void) const	{return (TextureHandler&)textureHandler;}
-	FontHandler&		GetFontHandler(void) const		{return (FontHandler&)fontHandler;}
-	AudioHandler&		GetAudioHandler(void) const		{return (AudioHandler&)audioHandler;}
-	InputHandler&		GetInputHandler(void) const		{return (InputHandler&)inputHandler;}
+	TextureHandler&		GetTextureHandler(void) const	{return (TextureHandler&)m_TextureHandler;}
+	FontHandler&		GetFontHandler(void) const		{return (FontHandler&)m_FontHandler;}
+	AudioHandler&		GetAudioHandler(void) const		{return (AudioHandler&)m_AudioHandler;}
+	InputHandler&		GetInputHandler(void) const		{return (InputHandler&)m_InputHandler;}
 
-	Window&				GetWindow(void) const			{return (Window&)window;}
+	Window&				GetWindow(void) const			{return (Window&)m_Window;}
 
-	TransitionRenderer&	GetTransitionRenderer() const	{return (TransitionRenderer&)transitionRenderer;}
+	TransitionRenderer&	GetTransitionRenderer() const	{return (TransitionRenderer&)m_TransitionRenderer;}
 
 	// Call this to shutdown the game
-	void				Quit(void)						{running = false;}
+	void				Quit(void)						{m_Running = false;}
 
 private:
 
-	State*				states[NUM_STATES]	= {nullptr};
-	State*				currentState		= nullptr;
-	State*				nextState			= nullptr;
+	State*				m_pStates[NUM_STATES]	= {nullptr};
+	State*				m_pCurrentState			= nullptr;
+	State*				m_pNextState			= nullptr;
 
-	Window				window				= {};
+	Window				m_Window				= {};
 
-	LibraryHandler		libraryHandler		= {};
-	TextureHandler		textureHandler		= {};
-	FontHandler			fontHandler			= {};
-	AudioHandler		audioHandler		= {};
-	InputHandler		inputHandler		= {};
+	LibraryHandler		m_LibraryHandler		= {};
+	TextureHandler		m_TextureHandler		= {};
+	FontHandler			m_FontHandler			= {};
+	AudioHandler		m_AudioHandler			= {};
+	InputHandler		m_InputHandler			= {};
 
-	TransitionRenderer	transitionRenderer	= {};
+	TransitionRenderer	m_TransitionRenderer	= {};
 
-	Timer				timer				= {};
+	Timer				m_Timer					= {};
 
-	bool				running				= true;
+	bool				m_Running				= true;
 
 };

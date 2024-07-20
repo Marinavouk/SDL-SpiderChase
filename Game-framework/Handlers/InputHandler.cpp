@@ -6,49 +6,49 @@ void InputHandler::Update(void)
 
 	for (size_t i = 0; i < SDL_NUM_SCANCODES; i++)
 	{
-		previousKeyboardState[i]	= currentKeyboardState[i];
-		currentKeyboardState[i]		= (keyboardState[i] == SDL_TRUE);
+		m_PreviousKeyboardState[i]	= m_CurrentKeyboardState[i];
+		m_CurrentKeyboardState[i]		= (keyboardState[i] == SDL_TRUE);
 	}
 
 	int				mouseX		= 0;
 	int				mouseY		= 0;
 	const Uint32	mouseState	= SDL_GetMouseState(&mouseX, &mouseY);	
 
-	mousePosition = {(float)mouseX, (float)mouseY};
+	m_MousePosition = {(float)mouseX, (float)mouseY};
 
 	for (size_t i = 0; i < 8; i++)
 	{
-		previousMouseState[i]	= currentMouseState[i];
-		currentMouseState[i]	= ((mouseState & SDL_BUTTON(i)) ? true : false);
+		m_previousMouseState[i]	= m_CurrentMouseState[i];
+		m_CurrentMouseState[i]	= ((mouseState & SDL_BUTTON(i)) ? true : false);
 	}
 }
 
 bool InputHandler::KeyPressed(const SDL_Scancode keyboardKey)
 {
-	return (currentKeyboardState[keyboardKey] && !previousKeyboardState[keyboardKey]);
+	return (m_CurrentKeyboardState[keyboardKey] && !m_PreviousKeyboardState[keyboardKey]);
 }
 
 bool InputHandler::KeyHeld(const SDL_Scancode keyboardKey)
 {
-	return currentKeyboardState[keyboardKey];
+	return m_CurrentKeyboardState[keyboardKey];
 }
 
 bool InputHandler::KeyReleased(const SDL_Scancode keyboardKey)
 {
-	return (!currentKeyboardState[keyboardKey] && previousKeyboardState[keyboardKey]);
+	return (!m_CurrentKeyboardState[keyboardKey] && m_PreviousKeyboardState[keyboardKey]);
 }
 
 bool InputHandler::MouseButtonPressed(const int mouseButton)
 {
-	return (currentMouseState[mouseButton] && !previousMouseState[mouseButton]);
+	return (m_CurrentMouseState[mouseButton] && !m_previousMouseState[mouseButton]);
 }
 
 bool InputHandler::MouseButtonHeld(const int mouseButton)
 {
-	return currentMouseState[mouseButton];
+	return m_CurrentMouseState[mouseButton];
 }
 
 bool InputHandler::MouseButtonReleased(const int mouseButton)
 {
-	return (!currentMouseState[mouseButton] && previousMouseState[mouseButton]);
+	return (!m_CurrentMouseState[mouseButton] && m_previousMouseState[mouseButton]);
 }

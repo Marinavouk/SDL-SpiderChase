@@ -4,7 +4,7 @@
 
 bool QuitState::OnEnter(void)
 {
-	application->Quit();
+	m_pApplication->Quit();
 
 	return true;
 }

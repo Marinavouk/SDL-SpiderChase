@@ -8,8 +8,8 @@ class TextureHandler
 public:
 
 	 TextureHandler(void)						{}
-	 TextureHandler(SDL_Renderer* SDLRenderer)	{renderer = SDLRenderer;}
-	~TextureHandler(void)						{renderer = nullptr;}
+	 TextureHandler(SDL_Renderer* SDLRenderer)	{m_pRenderer = SDLRenderer;}
+	~TextureHandler(void)						{m_pRenderer = nullptr;}
 
 	SDL_Texture*	CreateTexture(const std::string& fileName);
 	SDL_Texture*	CreateTextureFromSurface(SDL_Surface* surface);
@@ -21,6 +21,6 @@ public:
 
 private:
 
-	SDL_Renderer* renderer = nullptr;
+	SDL_Renderer* m_pRenderer = nullptr;
 
 };

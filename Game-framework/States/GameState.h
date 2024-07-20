@@ -9,9 +9,9 @@ class GameState final : public State
 {
 public:
 
-	 GameState(void)													{}
-	 GameState(Application* mainApplication) : State(mainApplication)	{}
-	~GameState(void)													{}
+	 GameState(void)											{}
+	 GameState(Application* application) : State(application)	{}
+	~GameState(void)											{}
 
 	virtual bool OnEnter(void) override;
 	virtual void OnExit(void) override;
@@ -22,16 +22,16 @@ private:
 
 	// Declare the game objects here and then create/destroy them in the OnEnter- and OnExit functions
 
-	SDL_Texture*	mainBackground	= nullptr;
-	SDL_Texture*	table			= nullptr;
-	SDL_Texture*	chair			= nullptr;
-	SDL_Texture*	triangleTest	= nullptr;
+	SDL_Texture*	m_pBackground	= nullptr;
+	SDL_Texture*	m_pTable		= nullptr;
+	SDL_Texture*	m_pChair		= nullptr;
+	SDL_Texture*	m_pTriangleTest	= nullptr;
 
-	Mix_Music*		music			= nullptr;
+	Mix_Music*		m_pMusic		= nullptr;
 
-	SDL_FPoint		tableSize		= {0.0f, 0.0f};
-	SDL_FPoint		chairSize		= {0.0f, 0.0f};
+	SDL_FPoint		m_TableSize		= {0.0f, 0.0f};
+	SDL_FPoint		m_ChairSize		= {0.0f, 0.0f};
 
-	int				volumeLimiter	= 100;
+	int				m_VolumeLimiter	= 100;
 
 };

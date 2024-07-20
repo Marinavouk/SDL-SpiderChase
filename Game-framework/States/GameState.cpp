@@ -14,41 +14,41 @@ bool GameState::OnEnter(void)
 	// Create objects that should be created/started when this state is entered/started (create textures, load/start game music etc)
 
 	// Easy access to handlers so you don't have to write application->Get_X_Handler() multiple times below
-	TextureHandler& textureHandler	= application->GetTextureHandler();
-	AudioHandler&	audioHandler	= application->GetAudioHandler();
+	TextureHandler& textureHandler	= m_pApplication->GetTextureHandler();
+	AudioHandler&	audioHandler	= m_pApplication->GetAudioHandler();
 
-	mainBackground = textureHandler.CreateTexture("Assets/Textures/game_background.png");
-	if (!mainBackground)
+	m_pBackground = textureHandler.CreateTexture("Assets/Textures/game_background.png");
+	if (!m_pBackground)
 		return false;
 
-	table = textureHandler.CreateTexture("Assets/Textures/table.png");
-	if (!table)
+	m_pTable = textureHandler.CreateTexture("Assets/Textures/table.png");
+	if (!m_pTable)
 		return false;
 
-	chair = textureHandler.CreateTexture("Assets/Textures/chair.png");
-	if (!chair)
+	m_pChair = textureHandler.CreateTexture("Assets/Textures/chair.png");
+	if (!m_pChair)
 		return false;
 
-	music = audioHandler.CreateMusic("Assets/Audio/game.mp3");
-	if (!music)
+	m_pMusic = audioHandler.CreateMusic("Assets/Audio/game.mp3");
+	if (!m_pMusic)
 		return false;
 
-	audioHandler.PlayMusic(music, -1);
+	audioHandler.PlayMusic(m_pMusic, -1);
 	audioHandler.SetMusicVolume(0);
 
 	int textureWidth	= 0;
 	int textureHeight	= 0;
-	SDL_QueryTexture(table, nullptr, nullptr, &textureWidth, &textureHeight);
+	SDL_QueryTexture(m_pTable, nullptr, nullptr, &textureWidth, &textureHeight);
 
-	tableSize = {(float)(textureWidth * 0.7f), (float)(textureHeight * 0.7f)};
+	m_TableSize = {(float)(textureWidth * 0.7f), (float)(textureHeight * 0.7f)};
 
-	SDL_QueryTexture(chair, nullptr, nullptr, &textureWidth, &textureHeight);
+	SDL_QueryTexture(m_pChair, nullptr, nullptr, &textureWidth, &textureHeight);
 
-	chairSize = {(float)(textureWidth * 0.7f), (float)(textureHeight * 0.7f)};
+	m_ChairSize = {(float)(textureWidth * 0.7f), (float)(textureHeight * 0.7f)};
 
 	// Set the clear color (the background color that is shown behind the menu background and other objects)
 	// This is completely optional
-	application->GetWindow().SetClearColor({150, 150, 200, 255});
+	m_pApplication->GetWindow().SetClearColor({150, 150, 200, 255});
 
 	return true;
 }
@@ -62,34 +62,34 @@ void GameState::OnExit(void)
 	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures, unload/stop game music etc)
 
 	// Easy access to handlers so you don't have to write application->Get_X_Handler() multiple times below
-	TextureHandler& textureHandler	= application->GetTextureHandler();
-	AudioHandler&	audioHandler	= application->GetAudioHandler();
+	TextureHandler& textureHandler	= m_pApplication->GetTextureHandler();
+	AudioHandler&	audioHandler	= m_pApplication->GetAudioHandler();
 
 	audioHandler.StopMusic();
-	audioHandler.DestroyMusic(music);
-	music = nullptr;
+	audioHandler.DestroyMusic(m_pMusic);
+	m_pMusic = nullptr;
 
-	textureHandler.DestroyTexture(chair);
-	textureHandler.DestroyTexture(table);
-	textureHandler.DestroyTexture(mainBackground);
-	chair			= nullptr;
-	table			= nullptr;
-	mainBackground	= nullptr;
+	textureHandler.DestroyTexture(m_pChair);
+	textureHandler.DestroyTexture(m_pTable);
+	textureHandler.DestroyTexture(m_pBackground);
+	m_pChair			= nullptr;
+	m_pTable			= nullptr;
+	m_pBackground	= nullptr;
 }
 
 void GameState::Update(const float deltaTime)
 {
 	// Update all the needed game objects here
 
-	const TransitionRenderer& transitionRenderer = application->GetTransitionRenderer();
+	const TransitionRenderer& transitionRenderer = m_pApplication->GetTransitionRenderer();
 
 	// If the escape key on the keyboard is pressed, switch to the main menu
-	if (application->GetInputHandler().KeyPressed(SDL_SCANCODE_ESCAPE))
-		application->SetState(Application::EState::QUIT);
+	if (m_pApplication->GetInputHandler().KeyPressed(SDL_SCANCODE_ESCAPE))
+		m_pApplication->SetState(Application::EState::QUIT);
 
 	// Will fade the game music in/out whenever the game switch to/from this state
 	if (transitionRenderer.IsTransitioning())
-		application->GetAudioHandler().SetMusicVolume((MIX_MAX_VOLUME - volumeLimiter) - (int)((float)(MIX_MAX_VOLUME - volumeLimiter) * transitionRenderer.GetTransitionValue()));
+		m_pApplication->GetAudioHandler().SetMusicVolume((MIX_MAX_VOLUME - m_VolumeLimiter) - (int)((float)(MIX_MAX_VOLUME - m_VolumeLimiter) * transitionRenderer.GetTransitionValue()));
 }
 
 void GameState::Render(void)
@@ -99,10 +99,10 @@ void GameState::Render(void)
 	// It's always good practice to create a local variable for data that is used in multiple places in a function, in this the window size is used on multiple places below
 	// By having a local variable like this, application->GetWindow()->GetSize() isn't called multiple times
 	// This is both an optimization and also reduces repetitive code
-	TextureHandler&		textureHandler	= application->GetTextureHandler();
-	const SDL_FPoint	windowSize		= application->GetWindow().GetSize();
+	TextureHandler&		textureHandler	= m_pApplication->GetTextureHandler();
+	const SDL_FPoint	windowSize		= m_pApplication->GetWindow().GetSize();
 	
-	textureHandler.RenderTexture(mainBackground,	{0.0f, 0.0f},												nullptr, &windowSize);
-	textureHandler.RenderTexture(table,				{200.0f, windowSize.y - tableSize.y},						nullptr, &tableSize);//need to understand here code
-	textureHandler.RenderTexture(chair,				{windowSize.x - chairSize.x, windowSize.y - chairSize.y},	nullptr, &chairSize);
+	textureHandler.RenderTexture(m_pBackground,	{0.0f, 0.0f},												nullptr, &windowSize);
+	textureHandler.RenderTexture(m_pTable,				{200.0f, windowSize.y - m_TableSize.y},						nullptr, &m_TableSize);//need to understand here code
+	textureHandler.RenderTexture(m_pChair,				{windowSize.x - m_ChairSize.x, windowSize.y - m_ChairSize.y},	nullptr, &m_ChairSize);
 }

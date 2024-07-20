@@ -7,9 +7,9 @@ class State
 {
 public:
 
-			 State(void)														{}
-			 State(Application* mainApplication) : application(mainApplication)	{}
-	virtual ~State(void)														{}
+			 State(void)													{}
+			 State(Application* application) : m_pApplication(application)	{}
+	virtual ~State(void)													{}
 
 	virtual bool OnEnter(void)					{return true;}
 	virtual void OnExit(void)					{}
@@ -18,6 +18,6 @@ public:
 
 protected:
 
-	Application* application = nullptr;
+	Application* m_pApplication = nullptr;
 
 };

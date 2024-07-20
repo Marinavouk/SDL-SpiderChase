@@ -5,7 +5,7 @@
 
 SDL_Texture* TextureHandler::CreateTexture(const std::string& fileName)
 {
-	SDL_Texture* texture = IMG_LoadTexture(renderer, fileName.c_str());
+	SDL_Texture* texture = IMG_LoadTexture(m_pRenderer, fileName.c_str());
 
 	if (!texture)
 	{
@@ -20,7 +20,7 @@ SDL_Texture* TextureHandler::CreateTexture(const std::string& fileName)
 
 SDL_Texture* TextureHandler::CreateTextureFromSurface(SDL_Surface* surface)
 {
-	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(m_pRenderer, surface);
 
 	if (!texture)
 	{
@@ -35,7 +35,7 @@ SDL_Texture* TextureHandler::CreateTextureFromSurface(SDL_Surface* surface)
 
 SDL_Texture* TextureHandler::CreateEmptyTexture(const SDL_Point& size, const SDL_TextureAccess access)
 {
-	SDL_Texture* texture = SDL_CreateTexture(renderer, SDL_PixelFormatEnum::SDL_PIXELFORMAT_RGBA8888, access, size.x, size.y);
+	SDL_Texture* texture = SDL_CreateTexture(m_pRenderer, SDL_PixelFormatEnum::SDL_PIXELFORMAT_RGBA8888, access, size.x, size.y);
 
 	if (!texture)
 	{
@@ -58,7 +58,7 @@ void TextureHandler::RenderTexture(SDL_Texture* texture, const SDL_FPoint& posit
 	if (customSize)
 	{
 		const SDL_FRect dstRect2 = {position.x, position.y, customSize->x, customSize->y};
-		SDL_RenderCopyF(renderer, texture, srcRect, &dstRect2);
+		SDL_RenderCopyF(m_pRenderer, texture, srcRect, &dstRect2);
 	}
 
 	else
@@ -68,7 +68,7 @@ void TextureHandler::RenderTexture(SDL_Texture* texture, const SDL_FPoint& posit
 		SDL_QueryTexture(texture, nullptr, nullptr, &textureWidth, &textureHeight);
 
 		const SDL_FRect dstRect2 = {position.x, position.y, (float)textureWidth, (float)textureHeight};
-		SDL_RenderCopyF(renderer, texture, srcRect, &dstRect2);
+		SDL_RenderCopyF(m_pRenderer, texture, srcRect, &dstRect2);
 	}
 }
 
@@ -77,7 +77,7 @@ void TextureHandler::RenderTextureRotated(SDL_Texture* texture, const SDL_FPoint
 	if (customSize)
 	{
 		const SDL_FRect dstRect2 = {position.x, position.y, customSize->x, customSize->y};
-		SDL_RenderCopyExF(renderer, texture, srcRect, &dstRect2, angle, nullptr, SDL_RendererFlip::SDL_FLIP_NONE);
+		SDL_RenderCopyExF(m_pRenderer, texture, srcRect, &dstRect2, angle, nullptr, SDL_RendererFlip::SDL_FLIP_NONE);
 	}
 
 	else
@@ -87,6 +87,6 @@ void TextureHandler::RenderTextureRotated(SDL_Texture* texture, const SDL_FPoint
 		SDL_QueryTexture(texture, nullptr, nullptr, &textureWidth, &textureHeight);
 
 		const SDL_FRect dstRect2 = {position.x, position.y, (float)textureWidth, (float)textureHeight};
-		SDL_RenderCopyExF(renderer, texture, srcRect, &dstRect2, angle, nullptr, SDL_RendererFlip::SDL_FLIP_NONE);
+		SDL_RenderCopyExF(m_pRenderer, texture, srcRect, &dstRect2, angle, nullptr, SDL_RendererFlip::SDL_FLIP_NONE);
 	}
 }

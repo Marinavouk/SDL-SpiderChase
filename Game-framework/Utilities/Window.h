@@ -26,23 +26,23 @@ public:
 
 	// Place getters and setters in their own public field
 
-	SDL_Renderer*	GetRenderer(void) const					{return renderer;}
+	SDL_Renderer*	GetRenderer(void) const					{return m_pRenderer;}
 
-	SDL_FPoint&		GetSize(void) const						{return (SDL_FPoint&)size;}
+	SDL_FPoint&		GetSize(void) const						{return (SDL_FPoint&)m_Size;}
 
-	SDL_Color&		GetClearColor(void) const				{return (SDL_Color&)clearColor;}
-	void			SetClearColor(const SDL_Color& color)	{clearColor = color;}
+	SDL_Color&		GetClearColor(void) const				{return (SDL_Color&)m_ClearColor;}
+	void			SetClearColor(const SDL_Color& color)	{m_ClearColor = color;}
 
 	void			SetTitle(const std::string& title);
 
 private:
 
-	SDL_Window*		window		= nullptr;
-	SDL_Renderer*	renderer	= nullptr;
+	SDL_Window*		m_pWindow		= nullptr;
+	SDL_Renderer*	m_pRenderer		= nullptr;
 
-	SDL_FPoint		size		= {0.0f, 0.0f};
+	SDL_FPoint		m_Size			= {0.0f, 0.0f};
 
-								//	R, G, B, A (alpha)
-	SDL_Color		clearColor	=  {0, 0, 0, 255};
+									//	R, G, B, A (transparency/alpha)
+	SDL_Color		m_ClearColor	=  {0, 0, 0, 255};
 
 };

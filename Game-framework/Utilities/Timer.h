@@ -13,13 +13,13 @@ public:
 
 	// Place getters and setters in their own public field
 
-	double	GetDeltaTime(void) const {return deltaTime;}
+	double	GetDeltaTime(void) const {return m_DeltaTime;}
 
 private:
 
-	double currentTime	= 0.0;
-	double previousTime	= 0.0;
-	double deltaTime	= 0.0;
+	double m_CurrentTime	= 0.0;
+	double m_PreviousTime	= 0.0;
+	double m_DeltaTime		= 0.0;
 
 };
 
