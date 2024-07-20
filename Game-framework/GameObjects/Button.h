@@ -17,10 +17,10 @@ public:
 	bool		Create(Application* application, TTF_Font* font, const std::string& text, const SDL_Color& textColor);
 	void		Destroy(void);
 
-	void		Update(InputHandler* inputHandler);
+	void		Update(InputHandler& inputHandler);
 	void		Render(SDL_Renderer* renderer, const SDL_FPoint* mousePosition = nullptr);
 
-	bool		IsPressed(InputHandler* inputHandler);
+	bool		IsPressed(InputHandler& inputHandler);
 
 public:
 

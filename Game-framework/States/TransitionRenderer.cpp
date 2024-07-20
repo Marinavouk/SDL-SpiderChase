@@ -14,7 +14,7 @@ TransitionRenderer::TransitionRenderer(Application* mainApplication, const SDL_F
 {
 	application = mainApplication;
 
-	renderer = application->GetWindow()->GetRenderer();
+	renderer = application->GetWindow().GetRenderer();
 
 	rect = {0.0f, 0.0f, size.x, size.y};
 }

@@ -56,10 +56,7 @@ void Window::Destroy(void)
 
 bool Window::BeginRender(void)
 {
-	if (SDL_SetRenderDrawColor(renderer, clearColor.r, clearColor.g, clearColor.b, clearColor.a) < 0)
-		return false;
-
-	return ClearBuffer();
+	return ((SDL_SetRenderDrawColor(renderer, clearColor.r, clearColor.g, clearColor.b, clearColor.a) == 0) && ClearBuffer());
 }
 
 void Window::EndRender(void)

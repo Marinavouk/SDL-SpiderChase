@@ -30,11 +30,11 @@ private:
 	TTF_Font*		menuFont		= nullptr;
 	TTF_Font*		buttonMenuFont	= nullptr;
 
-	Button*			titleTextBlock	= nullptr;
-	Button*			playButton		= nullptr;
-	Button*			quitButton		= nullptr;
-
 	Mix_Music*		music			= nullptr;
+
+	Button			titleTextBlock	= {};
+	Button			playButton		= {};
+	Button			quitButton		= {};
 
 	SDL_FPoint		spiderWebStart	= {0.0f, 0.0f};  
 	SDL_FPoint		spiderSize		= {0.0f, 0.0f};

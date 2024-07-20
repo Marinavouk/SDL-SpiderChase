@@ -10,7 +10,7 @@ class Player
 {
 public:
 
-	Player() {}
+	 Player() {}
 	~Player() {}
 
 	bool Create(Application* mainApplication);

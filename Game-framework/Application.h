@@ -47,32 +47,33 @@ public:
 
 	// Place getters and setters in their own public field
 
-	TextureHandler*		GetTextureHandler(void) const	{return textureHandler;}
-	FontHandler*		GetFontHandler(void) const		{return fontHandler;}
-	AudioHandler*		GetAudioHandler(void) const		{return audioHandler;}
-	InputHandler*		GetInputHandler(void) const		{return inputHandler;}
-	TransitionRenderer*	GetTransitionRenderer() const	{return transitionRenderer;}
+	TextureHandler&		GetTextureHandler(void) const	{return (TextureHandler&)textureHandler;}
+	FontHandler&		GetFontHandler(void) const		{return (FontHandler&)fontHandler;}
+	AudioHandler&		GetAudioHandler(void) const		{return (AudioHandler&)audioHandler;}
+	InputHandler&		GetInputHandler(void) const		{return (InputHandler&)inputHandler;}
 
-	Window*				GetWindow(void) const			{return window;}
+	Window&				GetWindow(void) const			{return (Window&)window;}
+
+	TransitionRenderer&	GetTransitionRenderer() const	{return (TransitionRenderer&)transitionRenderer;}
 
 	// Call this to shutdown the game
 	void				Quit(void)						{running = false;}
 
 private:
 
-	LibraryHandler*		libraryHandler		= nullptr;
-	TextureHandler*		textureHandler		= nullptr;
-	FontHandler*		fontHandler			= nullptr;
-	AudioHandler*		audioHandler		= nullptr;
-	InputHandler*		inputHandler		= nullptr;
-
-	Window*				window				= nullptr;
-
-	TransitionRenderer*	transitionRenderer	= nullptr;
-
 	State*				states[NUM_STATES]	= {nullptr};
 	State*				currentState		= nullptr;
 	State*				nextState			= nullptr;
+
+	Window				window				= {};
+
+	LibraryHandler		libraryHandler		= {};
+	TextureHandler		textureHandler		= {};
+	FontHandler			fontHandler			= {};
+	AudioHandler		audioHandler		= {};
+	InputHandler		inputHandler		= {};
+
+	TransitionRenderer	transitionRenderer	= {};
 
 	Timer				timer				= {};
 

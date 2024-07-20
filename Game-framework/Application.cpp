@@ -14,31 +14,27 @@ bool Application::Create(void)
 	srand((unsigned int)time(0));
 
 	// Creates all the libraries for you, for example SDL, SDL_Image etc
-	libraryHandler = new LibraryHandler;
-	if(!libraryHandler->Create())
+	if(!libraryHandler.Create())
 		return false;
 
-	window = new Window;
-	if(!window->Create("Spider Chase", {1280, 720}))
+	if(!window.Create("Spider Chase", {1280, 720}))
 		return false;
 
 	// If you want to change the title of the window while the game is running
-//	window->SetTitle("This is the window's new title");
+//	window.SetTitle("This is the window's new title");
 
 	// If you want to set the color that the renderer's (the big 'screen texture') is "cleared" to,
 	// you can use this function
-//	window->SetClearColor({ 255, 0, 0, 255 });
+//	window.SetClearColor({ 255, 0, 0, 255 });
 
-	textureHandler		= new TextureHandler(window->GetRenderer());
-	fontHandler			= new FontHandler;
-	audioHandler		= new AudioHandler;
-	inputHandler		= new InputHandler;
-	transitionRenderer	= new TransitionRenderer(this, window->GetSize());
+	textureHandler = TextureHandler(window.GetRenderer());
+
+	transitionRenderer = TransitionRenderer(this, window.GetSize());
 
 	// If you want to tweak the speed of the state transition, you can set the speed here
 	// The lower the value is set to, the slower the transition effect will be
 	// NOTE. Don't set it to 0.0f or a negative value, the transition will not work
-	transitionRenderer->SetSpeed(2.0f);
+	transitionRenderer.SetSpeed(100.0f); // Default: 2.0f
 
 	/**
 	* Create the various states for the application.
@@ -50,7 +46,7 @@ bool Application::Create(void)
 	states[EState::QUIT]		= new QuitState(this);
 
 	// Set the start state for the game, in this case the game will start in the MAIN_MENU state
-	currentState = states[EState::MAIN_MENU];
+	currentState = states[EState::GAME];
 	if(!currentState->OnEnter())
 		return false;
 
@@ -71,24 +67,8 @@ void Application::Destroy(void)
 		}
 	}
 
-	delete transitionRenderer;
-	delete inputHandler;
-	delete audioHandler;
-	delete fontHandler;
-	delete textureHandler;
-	transitionRenderer	= nullptr;
-	inputHandler		= nullptr;
-	audioHandler		= nullptr;
-	fontHandler			= nullptr;
-	textureHandler		= nullptr;
-
-	window->Destroy();
-	delete window;
-	window = nullptr;
-
-	libraryHandler->Destroy();
-	delete libraryHandler;
-	libraryHandler = nullptr;
+	window.Destroy();
+	libraryHandler.Destroy();
 }
 
 void Application::Run(void) 
@@ -124,7 +104,7 @@ void Application::HandleEvents(void)
 
 void Application::Update(void)
 {
-	inputHandler->Update();
+	inputHandler.Update();
 	timer.Update();
 
 	const float deltaTime = (float)timer.GetDeltaTime();
@@ -132,19 +112,19 @@ void Application::Update(void)
 	if(currentState)
 		currentState->Update(deltaTime);
 
-	transitionRenderer->Update(deltaTime);
+	transitionRenderer.Update(deltaTime);
 }
 
 void Application::Render(void)
 {
-	if(window->BeginRender())
+	if(window.BeginRender())
 	{
 		if(currentState)
 			currentState->Render();
 
-		transitionRenderer->Render();
+		transitionRenderer.Render();
 
-		window->EndRender();
+		window.EndRender();
 	}
 }
 
@@ -156,7 +136,7 @@ bool Application::SetState(const EState newState)
 
 	nextState = states[newState];
 
-	transitionRenderer->StartTransition();
+	transitionRenderer.StartTransition();
 
 	return true;
 }

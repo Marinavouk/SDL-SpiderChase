@@ -18,7 +18,7 @@ bool Button::Create(Application* application, TTF_Font* font, const std::string&
 		return false;
 	}
 
-	texture = application->GetTextureHandler()->CreateTextureFromSurface(surface);
+	texture = application->GetTextureHandler().CreateTextureFromSurface(surface);
 
 	SDL_FreeSurface(surface);
 
@@ -47,9 +47,9 @@ void Button::Destroy(void)
 	texture = nullptr;
 }
 
-void Button::Update(InputHandler* inputHandler)
+void Button::Update(InputHandler& inputHandler)
 {
-	held = (PointInside(inputHandler->GetMousePosition()) && inputHandler->MouseButtonHeld(triggerButton));
+	held = (PointInside(inputHandler.GetMousePosition()) && inputHandler.MouseButtonHeld(triggerButton));
 
 	currentScale = (held ? scalePressed : scaleDefault);
 }
@@ -98,9 +98,9 @@ void Button::Render(SDL_Renderer* renderer, const SDL_FPoint* mousePosition)
 		SDL_RenderCopyF(renderer, texture, nullptr, &textRect);
 }
 
-bool Button::IsPressed(InputHandler* inputHandler)
+bool Button::IsPressed(InputHandler& inputHandler)
 {
-	return (PointInside(inputHandler->GetMousePosition()) && inputHandler->MouseButtonReleased(triggerButton));
+	return (PointInside(inputHandler.GetMousePosition()) && inputHandler.MouseButtonReleased(triggerButton));
 }
 
 bool Button::PointInside(const SDL_FPoint& point)

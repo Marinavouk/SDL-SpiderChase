@@ -6,7 +6,7 @@ bool Player::Create(Application* mainApplication)
 {
 	application = mainApplication;
 
-	texture = application->GetTextureHandler()->CreateTexture("Assets/Textures/triangleTest.png");
+	texture = application->GetTextureHandler().CreateTexture("Assets/Textures/triangleTest.png");
 	if (!texture)
 		return false;
 
@@ -27,7 +27,7 @@ bool Player::Create(Application* mainApplication)
 
 void Player::Destroy()
 {
-	application->GetTextureHandler()->DestroyTexture(texture);
+	application->GetTextureHandler().DestroyTexture(texture);
 	texture = nullptr;
 	//application->GetAudioHandler()->DestroyAudio(jumpSound);
 }
@@ -46,9 +46,9 @@ void Player::Update(const float deltaTime, const std::vector<SDL_FRect>& levelCo
 
 void Player::Render(void)
 {
-	TextureHandler* textureHandler = application->GetTextureHandler();
+	TextureHandler& textureHandler = application->GetTextureHandler();
 
-	textureHandler->RenderTexture(texture, { 600.0f,500.0f });
+	textureHandler.RenderTexture(texture, { 600.0f,500.0f });
 }
 
 void Player::SyncColliders()
