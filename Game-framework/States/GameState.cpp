@@ -3,11 +3,12 @@
 #include "Application.h"
 #include "Handlers/AudioHandler.h"
 
+
 #include <iostream>
 
 bool GameState::OnEnter(void)
 {
-#if defined(_DEBUG)
+#if defined(_DEBUG) 
 	std::cout << "Entering game state" << std::endl;
 #endif
 
@@ -50,6 +51,9 @@ bool GameState::OnEnter(void)
 	// This is completely optional
 	m_pApplication->GetWindow().SetClearColor({150, 150, 200, 255});
 
+	if(!m_Player.Create(m_pApplication))
+		return false;
+
 	return true;
 }
 
@@ -72,6 +76,7 @@ void GameState::OnExit(void)
 	textureHandler.DestroyTexture(m_pChair);
 	textureHandler.DestroyTexture(m_pTable);
 	textureHandler.DestroyTexture(m_pBackground);
+	m_Player.Destroy();
 	m_pChair			= nullptr;
 	m_pTable			= nullptr;
 	m_pBackground	= nullptr;
@@ -105,4 +110,5 @@ void GameState::Render(void)
 	textureHandler.RenderTexture(m_pBackground,	{0.0f, 0.0f},												nullptr, &windowSize);
 	textureHandler.RenderTexture(m_pTable,				{200.0f, windowSize.y - m_TableSize.y},						nullptr, &m_TableSize);//need to understand here code
 	textureHandler.RenderTexture(m_pChair,				{windowSize.x - m_ChairSize.x, windowSize.y - m_ChairSize.y},	nullptr, &m_ChairSize);
+	m_Player.Render();
 }

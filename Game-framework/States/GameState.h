@@ -4,6 +4,7 @@
 
 #include <SDL.h>
 #include <SDL_mixer.h>
+#include "GameObjects/Player.h"
 
 class GameState final : public State
 {
@@ -31,6 +32,8 @@ private:
 
 	SDL_FPoint		m_TableSize		= {0.0f, 0.0f};
 	SDL_FPoint		m_ChairSize		= {0.0f, 0.0f};
+
+	Player			m_Player;
 
 	int				m_VolumeLimiter	= 100;
 
