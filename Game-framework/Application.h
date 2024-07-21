@@ -52,7 +52,7 @@ public:
 	AudioHandler&		GetAudioHandler(void) const		{return (AudioHandler&)m_AudioHandler;}
 	InputHandler&		GetInputHandler(void) const		{return (InputHandler&)m_InputHandler;}
 
-	Window&				GetWindow(void) const			{return (Window&)m_Window;}
+	Window* GetWindow() { return window; }
 
 	TransitionRenderer&	GetTransitionRenderer() const	{return (TransitionRenderer&)m_TransitionRenderer;}
 
@@ -65,7 +65,7 @@ private:
 	State*				m_pCurrentState			= nullptr;
 	State*				m_pNextState			= nullptr;
 
-	Window				m_Window				= {};
+	Window*				window					= nullptr;
 
 	LibraryHandler		m_LibraryHandler		= {};
 	TextureHandler		m_TextureHandler		= {};

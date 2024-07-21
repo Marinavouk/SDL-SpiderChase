@@ -16,8 +16,8 @@ bool Player::Create(Application* mainApplication)
 
 	collider = { 0.0f, 0.0f, (float)(playerWidth * 0.7f), (float)(playerHeight * 0.7f) };
 
-	//xPosition = application->GetWindow()->GetWidth() * 0.5f;
-	//yPosition = application->GetWindow()->GetHeight() - collider.h;
+	xPosition = application->GetWindow()->GetWidth() * 0.5f;
+	yPosition = application->GetWindow()->GetHeight() - collider.h;
 
 	collider.x = xPosition;
 	collider.y = yPosition;
