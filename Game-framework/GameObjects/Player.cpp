@@ -48,7 +48,7 @@ void Player::Render(void)
 {
 	TextureHandler& textureHandler = application->GetTextureHandler();
 
-	textureHandler.RenderTexture(texture, { 600.0f,500.0f });
+	textureHandler.RenderTexture(texture, { 600.0f,400.0f });
 }
 
 void Player::SyncColliders()

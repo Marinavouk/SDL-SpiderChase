@@ -35,6 +35,9 @@ public:
 
 	void			SetTitle(const std::string& title);
 
+	int GetWidth() { return width; }
+	int GetHeight() { return height; }
+
 private:
 
 	SDL_Window*		m_pWindow		= nullptr;
@@ -44,5 +47,8 @@ private:
 
 									//	R, G, B, A (transparency/alpha)
 	SDL_Color		m_ClearColor	=  {0, 0, 0, 255};
+
+	int width = 0;
+	int height = 0;
 
 };
