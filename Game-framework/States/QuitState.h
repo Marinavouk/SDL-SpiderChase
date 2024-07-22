@@ -2,13 +2,13 @@
 
 #include "State.h"
 
-class QuitState final : public State
+class CQuitState final : public CState
 {
 public:
 
-	 QuitState(void)											{}
-	 QuitState(Application* application) : State(application)	{}
-	~QuitState(void)											{}
+	 CQuitState(void)												{}
+	 CQuitState(CApplication* application) : CState(application)	{}
+	~CQuitState(void)												{}
 
 	virtual bool OnEnter(void) override;
 

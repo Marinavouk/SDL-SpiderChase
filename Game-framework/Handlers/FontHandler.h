@@ -4,12 +4,12 @@
 #include <SDL_ttf.h>
 #include <string>
 
-class FontHandler 
+class CFontHandler 
 {
 public:
 
-	 FontHandler(void) {}
-	~FontHandler(void) {}
+	 CFontHandler(void) {}
+	~CFontHandler(void) {}
 
 	TTF_Font*	CreateFont(const std::string& fileName, const int textSize);
 	void		DestroyFont(TTF_Font* font);

@@ -2,7 +2,7 @@
 
 int main(int argc, char* argv[])
 {
-	Application* application = new Application;
+	CApplication* application = new CApplication;
 
 	if (application->Create())
 	{
@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
 	application = nullptr;
 
 #if defined(_DEBUG)
-	system("pause");
+//	system("pause");
 #endif
 
 	return 0;

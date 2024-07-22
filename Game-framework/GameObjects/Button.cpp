@@ -6,7 +6,7 @@
 #include <iostream>
 #include <vector>
 
-bool Button::Create(Application* application, TTF_Font* font, const std::string& text, const SDL_Color& textColor)
+bool CButton::Create(CApplication* application, TTF_Font* font, const std::string& text, const SDL_Color& textColor)
 {
 	SDL_Surface* surface = TTF_RenderText_Blended(font, text.c_str(), {255, 255, 255, 255});
 	if (!surface)
@@ -32,29 +32,29 @@ bool Button::Create(Application* application, TTF_Font* font, const std::string&
 	int textureHeight	= 0;
 	SDL_QueryTexture(m_pTexture, nullptr, nullptr, &textureWidth, &textureHeight);
 
-	m_Position	= {0.0f, 0.0f};
-	m_TextRect	= {0.0f, 0.0f, (float)textureWidth, (float)textureHeight};
-	m_TextColor = textColor;
+	m_Position		= {0.0f, 0.0f};
+	m_TextRectangle	= {0.0f, 0.0f, (float)textureWidth, (float)textureHeight};
+	m_TextColor		= textColor;
 
 	SetPosition(m_Position);
 
 	return true;
 }
 
-void Button::Destroy(void)
+void CButton::Destroy(void)
 {
 	SDL_DestroyTexture(m_pTexture);
 	m_pTexture = nullptr;
 }
 
-void Button::Update(InputHandler& inputHandler)
+void CButton::Update(CInputHandler& inputHandler)
 {
 	m_Held = (PointInside(inputHandler.GetMousePosition()) && inputHandler.MouseButtonHeld(m_TriggerButton));
 
 	m_CurrentScale = (m_Held ? m_ScalePressed : m_ScaleDefault);
 }
 
-void Button::Render(SDL_Renderer* renderer, const SDL_FPoint* mousePosition)
+void CButton::Render(SDL_Renderer* renderer, const SDL_FPoint* mousePosition)
 {
 	if (m_Held)
 		SDL_SetRenderDrawColor(renderer, m_BackgroundColorPressed.r, m_BackgroundColorPressed.g, m_BackgroundColorPressed.b, m_BackgroundColorPressed.a);
@@ -64,18 +64,18 @@ void Button::Render(SDL_Renderer* renderer, const SDL_FPoint* mousePosition)
 
 	if (m_Held)
 	{
-		const float		diffW	= ((m_TextRect.w * m_ScalePressed) - (m_TextRect.w * m_ScaleDefault)) * 0.5f;
-		const float		diffH	= ((m_TextRect.h * m_ScalePressed) - (m_TextRect.h * m_ScaleDefault)) * 0.5f;
-		const SDL_FRect dstRect	= {	m_TextRect.x - diffW,
-									m_TextRect.y - diffH,
-									m_TextRect.w * m_ScalePressed,
-									m_TextRect.h * m_ScalePressed};
+		const float		diffW	= ((m_TextRectangle.w * m_ScalePressed) - (m_TextRectangle.w * m_ScaleDefault)) * 0.5f;
+		const float		diffH	= ((m_TextRectangle.h * m_ScalePressed) - (m_TextRectangle.h * m_ScaleDefault)) * 0.5f;
+		const SDL_FRect dstRect	= {	m_TextRectangle.x - diffW,
+									m_TextRectangle.y - diffH,
+									m_TextRectangle.w * m_ScalePressed,
+									m_TextRectangle.h * m_ScalePressed};
 
 		SDL_RenderFillRectF(renderer, &dstRect);
 	}
 
 	else
-		SDL_RenderFillRectF(renderer, &m_TextRect);
+		SDL_RenderFillRectF(renderer, &m_TextRectangle);
 
 	if (mousePosition)
 	{
@@ -87,41 +87,41 @@ void Button::Render(SDL_Renderer* renderer, const SDL_FPoint* mousePosition)
 	{
 		SDL_SetTextureColorMod(m_pTexture, m_TextColorPressed.r, m_TextColorPressed.g, m_TextColorPressed.b);
 
-		const float		diffW	= ((m_TextRect.w * m_ScalePressed) - (m_TextRect.w * m_ScaleDefault)) * 0.5f;
-		const float		diffH	= ((m_TextRect.h * m_ScalePressed) - (m_TextRect.h * m_ScaleDefault)) * 0.5f;
-		const SDL_FRect dstRect	= {m_TextRect.x - diffW, m_TextRect.y - diffH, m_TextRect.w * m_ScalePressed, m_TextRect.h * m_ScalePressed};
+		const float		diffW	= ((m_TextRectangle.w * m_ScalePressed) - (m_TextRectangle.w * m_ScaleDefault)) * 0.5f;
+		const float		diffH	= ((m_TextRectangle.h * m_ScalePressed) - (m_TextRectangle.h * m_ScaleDefault)) * 0.5f;
+		const SDL_FRect dstRect	= {m_TextRectangle.x - diffW, m_TextRectangle.y - diffH, m_TextRectangle.w * m_ScalePressed, m_TextRectangle.h * m_ScalePressed};
 
 		SDL_RenderCopyF(renderer, m_pTexture, nullptr, &dstRect);
 	}
 
 	else
-		SDL_RenderCopyF(renderer, m_pTexture, nullptr, &m_TextRect);
+		SDL_RenderCopyF(renderer, m_pTexture, nullptr, &m_TextRectangle);
 }
 
-bool Button::IsPressed(InputHandler& inputHandler)
+bool CButton::IsPressed(CInputHandler& inputHandler)
 {
 	return (PointInside(inputHandler.GetMousePosition()) && inputHandler.MouseButtonReleased(m_TriggerButton));
 }
 
-bool Button::PointInside(const SDL_FPoint& point)
+bool CButton::PointInside(const SDL_FPoint& point)
 {
 	if (m_Held)
 	{
-		const float		diffW	= ((m_TextRect.w * m_ScalePressed) - (m_TextRect.w * m_ScaleDefault)) * 0.5f;
-		const float		diffH	= ((m_TextRect.h * m_ScalePressed) - (m_TextRect.h * m_ScaleDefault)) * 0.5f;
-		const SDL_FRect dstRect	= {m_TextRect.x - diffW, m_TextRect.y - diffH, m_TextRect.w * m_ScalePressed, m_TextRect.h * m_ScalePressed};
+		const float		diffW	= ((m_TextRectangle.w * m_ScalePressed) - (m_TextRectangle.w * m_ScaleDefault)) * 0.5f;
+		const float		diffH	= ((m_TextRectangle.h * m_ScalePressed) - (m_TextRectangle.h * m_ScaleDefault)) * 0.5f;
+		const SDL_FRect dstRect	= {m_TextRectangle.x - diffW, m_TextRectangle.y - diffH, m_TextRectangle.w * m_ScalePressed, m_TextRectangle.h * m_ScalePressed};
 
 		return (SDL_PointInFRect(&point, &dstRect) == SDL_TRUE);
 	}
 
 	else
-		return (SDL_PointInFRect(&point, &m_TextRect) == SDL_TRUE);
+		return (SDL_PointInFRect(&point, &m_TextRectangle) == SDL_TRUE);
 }
 
-void Button::SetPosition(const SDL_FPoint& newPosition)
+void CButton::SetPosition(const SDL_FPoint& newPosition)
 {
 	m_Position = newPosition;
 
-	m_TextRect.x = m_Position.x - (m_TextRect.w * 0.5f);
-	m_TextRect.y = m_Position.y - (m_TextRect.h * 0.5f);
+	m_TextRectangle.x = m_Position.x - (m_TextRectangle.w * 0.5f);
+	m_TextRectangle.y = m_Position.y - (m_TextRectangle.h * 0.5f);
 }

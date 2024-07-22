@@ -6,7 +6,7 @@
 #include <SDL_ttf.h>
 #include <iostream>
 
-bool LibraryHandler::Create(void)
+bool CLibraryHandler::Create(void)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 	{
@@ -59,7 +59,7 @@ bool LibraryHandler::Create(void)
 	return true;
 }
 
-void LibraryHandler::Destroy(void)
+void CLibraryHandler::Destroy(void)
 {
 	// If you have some other external library/libraries that you have created/started up in the
 	// 'Create' function above, you should destroy/shut it down here

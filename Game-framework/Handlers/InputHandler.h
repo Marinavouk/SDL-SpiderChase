@@ -2,12 +2,12 @@
 
 #include <SDL.h>
 
-class InputHandler
+class CInputHandler
 {
 public:
 
-	 InputHandler(void) {}
-	~InputHandler(void) {}
+	 CInputHandler(void) {}
+	~CInputHandler(void) {}
 
 	void		Update(void);
 

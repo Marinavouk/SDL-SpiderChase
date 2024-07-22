@@ -1,11 +1,11 @@
 #pragma once
 
-class Timer
+class CTimer
 {
 public:
 
-	 Timer(void) {}
-	~Timer(void) {}
+	 CTimer(void) {}
+	~CTimer(void) {}
 
 	void	Update();
 

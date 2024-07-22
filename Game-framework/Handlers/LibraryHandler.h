@@ -1,11 +1,11 @@
 #pragma once
 
-class LibraryHandler
+class CLibraryHandler
 {
 public:
 
-	 LibraryHandler(void) {}
-	~LibraryHandler(void) {}
+	 CLibraryHandler(void) {}
+	~CLibraryHandler(void) {}
 
 	bool Create(void);
 	void Destroy(void);

@@ -1,23 +1,24 @@
 #pragma once
 
-class Application;
+class CApplication;
 
 // The base class that every state in the application/game inherits from
-class State
+class CState
 {
 public:
 
-			 State(void)													{}
-			 State(Application* application) : m_pApplication(application)	{}
-	virtual ~State(void)													{}
+			 CState(void)														{}
+			 CState(CApplication* application) : m_pApplication(application)	{}
+	virtual ~CState(void)														{}
 
 	virtual bool OnEnter(void)					{return true;}
 	virtual void OnExit(void)					{}
 	virtual void Update(const float deltaTime)	{}
 	virtual void Render(void)					{}
+	virtual void RenderDebug(void)				{}
 
 protected:
 
-	Application* m_pApplication = nullptr;
+	CApplication* m_pApplication = nullptr;
 
 };

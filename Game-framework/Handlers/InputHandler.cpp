@@ -1,6 +1,6 @@
 #include "InputHandler.h"
 
-void InputHandler::Update(void)
+void CInputHandler::Update(void)
 {
 	const Uint8* keyboardState = SDL_GetKeyboardState(nullptr);
 
@@ -23,32 +23,32 @@ void InputHandler::Update(void)
 	}
 }
 
-bool InputHandler::KeyPressed(const SDL_Scancode keyboardKey)
+bool CInputHandler::KeyPressed(const SDL_Scancode keyboardKey)
 {
 	return (m_CurrentKeyboardState[keyboardKey] && !m_PreviousKeyboardState[keyboardKey]);
 }
 
-bool InputHandler::KeyHeld(const SDL_Scancode keyboardKey)
+bool CInputHandler::KeyHeld(const SDL_Scancode keyboardKey)
 {
 	return m_CurrentKeyboardState[keyboardKey];
 }
 
-bool InputHandler::KeyReleased(const SDL_Scancode keyboardKey)
+bool CInputHandler::KeyReleased(const SDL_Scancode keyboardKey)
 {
 	return (!m_CurrentKeyboardState[keyboardKey] && m_PreviousKeyboardState[keyboardKey]);
 }
 
-bool InputHandler::MouseButtonPressed(const int mouseButton)
+bool CInputHandler::MouseButtonPressed(const int mouseButton)
 {
 	return (m_CurrentMouseState[mouseButton] && !m_previousMouseState[mouseButton]);
 }
 
-bool InputHandler::MouseButtonHeld(const int mouseButton)
+bool CInputHandler::MouseButtonHeld(const int mouseButton)
 {
 	return m_CurrentMouseState[mouseButton];
 }
 
-bool InputHandler::MouseButtonReleased(const int mouseButton)
+bool CInputHandler::MouseButtonReleased(const int mouseButton)
 {
 	return (!m_CurrentMouseState[mouseButton] && m_previousMouseState[mouseButton]);
 }

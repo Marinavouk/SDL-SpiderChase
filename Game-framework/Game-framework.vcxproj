@@ -13,7 +13,9 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="GameObjects\Button.cpp" />
+    <ClCompile Include="GameObjects\GameObject.cpp" />
     <ClCompile Include="GameObjects\Player.cpp" />
+    <ClCompile Include="GameObjects\Table.cpp" />
     <ClCompile Include="Handlers\AudioHandler.cpp" />
     <ClCompile Include="Handlers\FontHandler.cpp" />
     <ClCompile Include="Handlers\InputHandler.cpp" />
@@ -30,7 +32,9 @@
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="GameObjects\Button.h" />
+    <ClInclude Include="GameObjects\GameObject.h" />
     <ClInclude Include="GameObjects\Player.h" />
+    <ClInclude Include="GameObjects\Table.h" />
     <ClInclude Include="Handlers\AudioHandler.h" />
     <ClInclude Include="Handlers\FontHandler.h" />
     <ClInclude Include="Handlers\InputHandler.h" />

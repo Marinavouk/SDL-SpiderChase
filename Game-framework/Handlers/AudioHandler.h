@@ -3,12 +3,12 @@
 #include <SDL_mixer.h>
 #include <string>
 
-class AudioHandler 
+class CAudioHandler 
 {
 public: 
 
-	 AudioHandler(void) {}
-	~AudioHandler(void) {}
+	 CAudioHandler(void) {}
+	~CAudioHandler(void) {}
 
 	Mix_Chunk*	CreateSound(const std::string& fileName);
 	Mix_Music*	CreateMusic(const std::string& fileName);

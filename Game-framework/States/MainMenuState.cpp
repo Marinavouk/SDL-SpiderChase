@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-bool MainMenuState::OnEnter(void)
+bool CMainMenuState::OnEnter(void)
 {
 #if defined(_DEBUG)
 	std::cout << "Entering menu state" << std::endl;
@@ -14,9 +14,9 @@ bool MainMenuState::OnEnter(void)
 	// Create objects that should be created/started when this state is entered/started (create textures and buttons, load/start main menu music etc)
 
 	// Easy access to handlers so you don't have to write application->Get_X_Handler() multiple times below
-	TextureHandler& textureHandler	= m_pApplication->GetTextureHandler();
-	FontHandler&	fontHandler		= m_pApplication->GetFontHandler();
-	AudioHandler&	audioHandler	= m_pApplication->GetAudioHandler();
+	CTextureHandler&	textureHandler	= m_pApplication->GetTextureHandler();
+	CFontHandler&		fontHandler		= m_pApplication->GetFontHandler();
+	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
 
 	m_pBackground = textureHandler.CreateTexture("Assets/Textures/menu_background.png");
 	if (!m_pBackground)
@@ -86,16 +86,16 @@ bool MainMenuState::OnEnter(void)
 	return true;
 }
 
-void MainMenuState::OnExit(void)
+void CMainMenuState::OnExit(void)
 {
 #if defined(_DEBUG)
 	std::cout << "Exiting menu state" << std::endl;
 #endif
 
 	// Easy access to handlers so you don't have to write application->Get_X_Handler() multiple times below
-	TextureHandler& textureHandler	= m_pApplication->GetTextureHandler();
-	FontHandler&	fontHandler		= m_pApplication->GetFontHandler();
-	AudioHandler&	audioHandler	= m_pApplication->GetAudioHandler();
+	CTextureHandler&	textureHandler	= m_pApplication->GetTextureHandler();
+	CFontHandler&		fontHandler		= m_pApplication->GetFontHandler();
+	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
 
 	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures and buttons, unload/stop main menu music etc)
 
@@ -118,20 +118,20 @@ void MainMenuState::OnExit(void)
 	m_pBackground	= nullptr;
 }
 
-void MainMenuState::Update(const float deltaTime)
+void CMainMenuState::Update(const float deltaTime)
 {
 	// Update all the needed main menu objects here
 
 	// Easy access to the input handler so you don't have to write application->GetInputHandler() multiple times below
-	InputHandler&				inputHandler		= m_pApplication->GetInputHandler();
-	const TransitionRenderer&	transitionRenderer	= m_pApplication->GetTransitionRenderer();
+	CInputHandler&				inputHandler		= m_pApplication->GetInputHandler();
+	const CTransitionRenderer&	transitionRenderer	= m_pApplication->GetTransitionRenderer();
 
 	m_PlayButton.Update(inputHandler);
 	m_QuitButton.Update(inputHandler);
 
 	// Switch state whenever any of the buttons- or a specific key on the keyboard is pressed
-		 if (m_PlayButton.IsPressed(inputHandler) || inputHandler.KeyPressed(SDL_SCANCODE_RETURN)) m_pApplication->SetState(Application::EState::GAME);
-	else if (m_QuitButton.IsPressed(inputHandler) || inputHandler.KeyPressed(SDL_SCANCODE_ESCAPE)) m_pApplication->SetState(Application::EState::QUIT);
+		 if (m_PlayButton.IsPressed(inputHandler) || inputHandler.KeyPressed(SDL_SCANCODE_RETURN)) m_pApplication->SetState(CApplication::EState::GAME);
+	else if (m_QuitButton.IsPressed(inputHandler) || inputHandler.KeyPressed(SDL_SCANCODE_ESCAPE)) m_pApplication->SetState(CApplication::EState::QUIT);
 
 	m_LifeTime += deltaTime;
 
@@ -144,15 +144,15 @@ void MainMenuState::Update(const float deltaTime)
 		m_pApplication->GetAudioHandler().SetMusicVolume(MIX_MAX_VOLUME - (int)((float)MIX_MAX_VOLUME * transitionRenderer.GetTransitionValue()));
 }
 
-void MainMenuState::Render(void)
+void CMainMenuState::Render(void)
 {
 	// Render all the main menu objects here
 
 	// It's always good practice to create local variables for data that is used in multiple places in a function, in this the renderer for example is used on multiple places below
 	// By having a local variable like this, application->GetWindow()->GetRenderer(), application->GetTextureHandler() etc isn't called multiple times
 	// This is both an optimization and also reduces repetitive code
-	Window&				window			= m_pApplication->GetWindow();
-	TextureHandler&		textureHandler	= m_pApplication->GetTextureHandler();
+	CWindow&			window			= m_pApplication->GetWindow();
+	CTextureHandler&	textureHandler	= m_pApplication->GetTextureHandler();
 	SDL_Renderer*		renderer		= window.GetRenderer();
 	const SDL_FPoint	mousePosition	= m_pApplication->GetInputHandler().GetMousePosition();
 	const SDL_FPoint	windowSize		= window.GetSize();

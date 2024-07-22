@@ -2,7 +2,7 @@
 
 #include "Application.h"
 
-bool QuitState::OnEnter(void)
+bool CQuitState::OnEnter(void)
 {
 	m_pApplication->Quit();
 

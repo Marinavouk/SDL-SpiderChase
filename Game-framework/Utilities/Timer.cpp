@@ -3,7 +3,7 @@
 #include <SDL.h>
 #include <utility>
 
-void Timer::Update(void)
+void CTimer::Update(void)
 {
 	m_CurrentTime	= SDL_GetTicks();
 	m_DeltaTime		= std::min((m_CurrentTime - m_PreviousTime) * 0.001, 0.25);

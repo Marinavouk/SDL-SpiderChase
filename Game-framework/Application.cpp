@@ -8,7 +8,7 @@
 // Used by srand
 #include <time.h>
 
-bool Application::Create(void)
+bool CApplication::Create(void)
 {
 	// Seed the random number generator
 	srand((unsigned int)time(0));
@@ -27,9 +27,9 @@ bool Application::Create(void)
 	// you can use this function
 //	m_Window.SetClearColor({ 255, 0, 0, 255 });
 
-	m_TextureHandler = TextureHandler(m_Window.GetRenderer());
+	m_TextureHandler = CTextureHandler(m_Window.GetRenderer());
 
-	m_TransitionRenderer = TransitionRenderer(this, m_Window.GetSize());
+	m_TransitionRenderer = CTransitionRenderer(this, m_Window.GetSize());
 
 	// If you want to tweak the speed of the state transition, you can set the speed here
 	// The lower the value is set to, the slower the transition effect will be
@@ -41,9 +41,9 @@ bool Application::Create(void)
 	* Here you can add more states if wanted, for example a Settings menu, a Guide menu that explains the game, a Credits menu showing who made the game etc
 	*/
 
-	m_pStates[EState::MAIN_MENU]	= new MainMenuState(this);
-	m_pStates[EState::GAME]			= new GameState(this);
-	m_pStates[EState::QUIT]			= new QuitState(this);
+	m_pStates[EState::MAIN_MENU]	= new CMainMenuState(this);
+	m_pStates[EState::GAME]			= new CGameState(this);
+	m_pStates[EState::QUIT]			= new CQuitState(this);
 
 	// Set the start state for the game, in this case the game will start in the MAIN_MENU state
 	m_pCurrentState = m_pStates[EState::GAME];
@@ -53,7 +53,7 @@ bool Application::Create(void)
 	return true;
 }
 
-void Application::Destroy(void)
+void CApplication::Destroy(void)
 {
 	if(m_pCurrentState)
 		m_pCurrentState->OnExit();
@@ -71,7 +71,7 @@ void Application::Destroy(void)
 	m_LibraryHandler.Destroy();
 }
 
-void Application::Run(void) 
+void CApplication::Run(void) 
 {
 	// Main loop - Loops as long as the application/game is running
 	while (m_Running)
@@ -82,7 +82,7 @@ void Application::Run(void)
 	}
 }
 
-void Application::HandleEvents(void)
+void CApplication::HandleEvents(void)
 {
 	SDL_Event event = {};
 	while (SDL_PollEvent(&event))
@@ -102,7 +102,7 @@ void Application::HandleEvents(void)
 	}
 }
 
-void Application::Update(void)
+void CApplication::Update(void)
 {
 	m_InputHandler.Update();
 	m_Timer.Update();
@@ -115,12 +115,15 @@ void Application::Update(void)
 	m_TransitionRenderer.Update(deltaTime);
 }
 
-void Application::Render(void)
+void CApplication::Render(void)
 {
 	if(m_Window.BeginRender())
 	{
 		if(m_pCurrentState)
 			m_pCurrentState->Render();
+
+		if(m_pCurrentState)
+		m_pCurrentState->RenderDebug();
 
 		m_TransitionRenderer.Render();
 
@@ -128,7 +131,7 @@ void Application::Render(void)
 	}
 }
 
-bool Application::SetState(const EState newState)
+bool CApplication::SetState(const EState newState)
 {
 	// Make sure that no state transition is already happening, i.e make sure that m_pNextState is nullptr
 	// If m_pNextState is not nullptr, it means a state transition is occurring
@@ -142,7 +145,7 @@ bool Application::SetState(const EState newState)
 	return true;
 }
 
-void Application::OnTransitionOpaque(void)
+void CApplication::OnTransitionOpaque(void)
 {
 	// If there's a pending state
 	if(m_pNextState)

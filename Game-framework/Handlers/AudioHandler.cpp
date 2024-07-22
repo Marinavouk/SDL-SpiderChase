@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-Mix_Chunk* AudioHandler::CreateSound(const std::string& fileName)
+Mix_Chunk* CAudioHandler::CreateSound(const std::string& fileName)
 {
 	Mix_Chunk* chunk = Mix_LoadWAV(fileName.c_str());
 
@@ -17,7 +17,7 @@ Mix_Chunk* AudioHandler::CreateSound(const std::string& fileName)
 	return chunk;
 }
 
-Mix_Music* AudioHandler::CreateMusic(const std::string& fileName)
+Mix_Music* CAudioHandler::CreateMusic(const std::string& fileName)
 {
 	Mix_Music* music = Mix_LoadMUS(fileName.c_str());
 
@@ -32,7 +32,7 @@ Mix_Music* AudioHandler::CreateMusic(const std::string& fileName)
 	return music;
 }
 
-void AudioHandler::DestroySound(Mix_Chunk* chunk)
+void CAudioHandler::DestroySound(Mix_Chunk* chunk)
 {
 	if (!chunk)
 		return;
@@ -40,7 +40,7 @@ void AudioHandler::DestroySound(Mix_Chunk* chunk)
 	Mix_FreeChunk(chunk);
 }
 
-void AudioHandler::DestroyMusic(Mix_Music* music)
+void CAudioHandler::DestroyMusic(Mix_Music* music)
 {
 	if (!music)
 		return;
@@ -48,7 +48,7 @@ void AudioHandler::DestroyMusic(Mix_Music* music)
 	Mix_FreeMusic(music);
 }
 
-bool AudioHandler::PlayMusic(Mix_Music* music, const int numLoops)
+bool CAudioHandler::PlayMusic(Mix_Music* music, const int numLoops)
 {
 	if (!music)
 		return false;
@@ -82,7 +82,7 @@ bool AudioHandler::PlayMusic(Mix_Music* music, const int numLoops)
 	return true;
 }
 
-bool AudioHandler::StopMusic()
+bool CAudioHandler::StopMusic()
 {
 	if (Mix_PlayingMusic() == 0)
 		return false;
@@ -92,7 +92,7 @@ bool AudioHandler::StopMusic()
 	return true;
 }
 
-void AudioHandler::SetMusicVolume(const int volume)
+void CAudioHandler::SetMusicVolume(const int volume)
 {
 	if (volume < 0)
 	{

@@ -3,7 +3,7 @@
 #include <SDL_image.h>
 #include <iostream>
 
-SDL_Texture* TextureHandler::CreateTexture(const std::string& fileName)
+SDL_Texture* CTextureHandler::CreateTexture(const std::string& fileName)
 {
 	SDL_Texture* texture = IMG_LoadTexture(m_pRenderer, fileName.c_str());
 
@@ -18,7 +18,7 @@ SDL_Texture* TextureHandler::CreateTexture(const std::string& fileName)
 	return texture;
 }
 
-SDL_Texture* TextureHandler::CreateTextureFromSurface(SDL_Surface* surface)
+SDL_Texture* CTextureHandler::CreateTextureFromSurface(SDL_Surface* surface)
 {
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(m_pRenderer, surface);
 
@@ -33,7 +33,7 @@ SDL_Texture* TextureHandler::CreateTextureFromSurface(SDL_Surface* surface)
 	return texture;
 }
 
-SDL_Texture* TextureHandler::CreateEmptyTexture(const SDL_Point& size, const SDL_TextureAccess access)
+SDL_Texture* CTextureHandler::CreateEmptyTexture(const SDL_Point& size, const SDL_TextureAccess access)
 {
 	SDL_Texture* texture = SDL_CreateTexture(m_pRenderer, SDL_PixelFormatEnum::SDL_PIXELFORMAT_RGBA8888, access, size.x, size.y);
 
@@ -48,12 +48,12 @@ SDL_Texture* TextureHandler::CreateEmptyTexture(const SDL_Point& size, const SDL
 	return texture;
 }
 
-void TextureHandler::DestroyTexture(SDL_Texture* texture)
+void CTextureHandler::DestroyTexture(SDL_Texture* texture)
 {
 	SDL_DestroyTexture(texture);
 }
 
-void TextureHandler::RenderTexture(SDL_Texture* texture, const SDL_FPoint& position, const SDL_Rect* srcRect, const SDL_FPoint* customSize)
+void CTextureHandler::RenderTexture(SDL_Texture* texture, const SDL_FPoint& position, const SDL_Rect* srcRect, const SDL_FPoint* customSize)
 {
 	if (customSize)
 	{
@@ -72,7 +72,7 @@ void TextureHandler::RenderTexture(SDL_Texture* texture, const SDL_FPoint& posit
 	}
 }
 
-void TextureHandler::RenderTextureRotated(SDL_Texture* texture, const SDL_FPoint& position, const float angle, const SDL_Rect* srcRect, const SDL_FPoint* customSize)
+void CTextureHandler::RenderTextureRotated(SDL_Texture* texture, const SDL_FPoint& position, const float angle, const SDL_Rect* srcRect, const SDL_FPoint* customSize)
 {
 	if (customSize)
 	{

@@ -5,27 +5,27 @@
 // Used for std::clamp
 #include <algorithm>
 
-TransitionRenderer::TransitionRenderer(void)
+CTransitionRenderer::CTransitionRenderer(void)
 {
 
 }
 
-TransitionRenderer::TransitionRenderer(Application* application, const SDL_FPoint& size)
+CTransitionRenderer::CTransitionRenderer(CApplication* application, const SDL_FPoint& size)
 {
-	application = application;
+	m_pApplication = application;
 
 	m_pRenderer = application->GetWindow().GetRenderer();
 
 	m_Transition = {0.0f, 0.0f, size.x, size.y};
 }
 
-TransitionRenderer::~TransitionRenderer(void)
+CTransitionRenderer::~CTransitionRenderer(void)
 {
 	m_pRenderer		= nullptr;
 	m_pApplication	= nullptr;
 }
 
-void TransitionRenderer::Update(const float deltaTime)
+void CTransitionRenderer::Update(const float deltaTime)
 {
 	if (m_State == EState::IDLE)
 		return;
@@ -58,7 +58,7 @@ void TransitionRenderer::Update(const float deltaTime)
 	}
 }
 
-void TransitionRenderer::Render(void)
+void CTransitionRenderer::Render(void)
 {
 	if (m_State == EState::IDLE)
 		return;
@@ -67,7 +67,7 @@ void TransitionRenderer::Render(void)
 	SDL_RenderFillRectF(m_pRenderer, &m_Transition);
 }
 
-void TransitionRenderer::StartTransition(void)
+void CTransitionRenderer::StartTransition(void)
 {
 	m_TransitionValue = 0.0f;
 

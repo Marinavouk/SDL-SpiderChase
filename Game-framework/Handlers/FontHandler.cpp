@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-TTF_Font* FontHandler::CreateFont(const std::string& fileName, const int textSize)
+TTF_Font* CFontHandler::CreateFont(const std::string& fileName, const int textSize)
 {
 	TTF_Font* font = TTF_OpenFont(fileName.c_str(), textSize);
 
@@ -17,12 +17,12 @@ TTF_Font* FontHandler::CreateFont(const std::string& fileName, const int textSiz
 	return font;
 }
 
-void FontHandler::DestroyFont(TTF_Font* font)
+void CFontHandler::DestroyFont(TTF_Font* font)
 {
 	TTF_CloseFont(font);
 }
 
-bool FontHandler::RenderText(SDL_Renderer* renderer, TTF_Font* font, const std::string& text, const SDL_FPoint& position, const SDL_Color& color)
+bool CFontHandler::RenderText(SDL_Renderer* renderer, TTF_Font* font, const std::string& text, const SDL_FPoint& position, const SDL_Color& color)
 {
 	SDL_Surface* surface = TTF_RenderText_Blended(font, text.c_str(), {color.r, color.g, color.b, color.a});
 	if (!surface)
@@ -48,7 +48,7 @@ bool FontHandler::RenderText(SDL_Renderer* renderer, TTF_Font* font, const std::
 	return true;
 }
 
-SDL_FPoint FontHandler::GetTextSize(TTF_Font* font, const std::string& text)
+SDL_FPoint CFontHandler::GetTextSize(TTF_Font* font, const std::string& text)
 {
 	int textWidth	= 0;
 	int textHeight	= 0;

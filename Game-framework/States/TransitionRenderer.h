@@ -2,15 +2,15 @@
 
 #include <SDL.h>
 
-class Application;
+class CApplication;
 
-class TransitionRenderer
+class CTransitionRenderer
 {
 public:
 
-	 TransitionRenderer(void);
-	 TransitionRenderer(Application* application, const SDL_FPoint& size);
-	~TransitionRenderer(void);
+	 CTransitionRenderer(void);
+	 CTransitionRenderer(CApplication* application, const SDL_FPoint& size);
+	~CTransitionRenderer(void);
 
 	void	Update(const float deltaTime);
 	void	Render(void);
@@ -40,7 +40,7 @@ private:
 
 private:
 
-	Application*	m_pApplication				= nullptr;
+	CApplication*	m_pApplication				= nullptr;
 
 	SDL_Renderer*	m_pRenderer					= nullptr;
 

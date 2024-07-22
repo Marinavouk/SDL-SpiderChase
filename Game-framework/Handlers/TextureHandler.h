@@ -3,13 +3,13 @@
 #include <SDL.h>
 #include <string>
 
-class TextureHandler
+class CTextureHandler
 {
 public:
 
-	 TextureHandler(void)						{}
-	 TextureHandler(SDL_Renderer* SDLRenderer)	{m_pRenderer = SDLRenderer;}
-	~TextureHandler(void)						{m_pRenderer = nullptr;}
+	 CTextureHandler(void)						{}
+	 CTextureHandler(SDL_Renderer* SDLRenderer)	{m_pRenderer = SDLRenderer;}
+	~CTextureHandler(void)						{m_pRenderer = nullptr;}
 
 	SDL_Texture*	CreateTexture(const std::string& fileName);
 	SDL_Texture*	CreateTextureFromSurface(SDL_Surface* surface);

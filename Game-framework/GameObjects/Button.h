@@ -4,23 +4,23 @@
 #include <SDL_ttf.h>
 #include <string>
 
-class Application;
-class InputHandler;
+class CApplication;
+class CInputHandler;
 
-class Button
+class CButton
 {
 public:
 
-	 Button(void) {}
-	~Button(void) {}
+	 CButton(void) {}
+	~CButton(void) {}
 
-	bool		Create(Application* application, TTF_Font* font, const std::string& text, const SDL_Color& textColor);
+	bool		Create(CApplication* application, TTF_Font* font, const std::string& text, const SDL_Color& textColor);
 	void		Destroy(void);
 
-	void		Update(InputHandler& inputHandler);
+	void		Update(CInputHandler& inputHandler);
 	void		Render(SDL_Renderer* renderer, const SDL_FPoint* mousePosition = nullptr);
 
-	bool		IsPressed(InputHandler& inputHandler);
+	bool		IsPressed(CInputHandler& inputHandler);
 
 public:
 
@@ -47,7 +47,7 @@ private:
 
 	SDL_FPoint		m_Position					= {0.0f, 0.0f};
 
-	SDL_FRect		m_TextRect					= {0.0f, 0.0f, 0.0f, 0.0f};
+	SDL_FRect		m_TextRectangle				= {0.0f, 0.0f, 0.0f, 0.0f};
 
 	SDL_Color		m_BackgroundColor			= {0,	0,		0,		255};
 	SDL_Color		m_BackgroundColorPressed	= {0,	0,		0,		255};

@@ -3,12 +3,12 @@
 #include <SDL.h>
 #include <string>
 
-class Window
+class CWindow
 {
 public:
 
-	 Window(void) {}
-	~Window(void) {}
+	 CWindow(void) {}
+	~CWindow(void) {}
 
 	bool			Create(const std::string& title, const SDL_Point& windowSize);
 	void			Destroy(void);
@@ -35,9 +35,6 @@ public:
 
 	void			SetTitle(const std::string& title);
 
-	int GetWidth() { return width; }
-	int GetHeight() { return height; }
-
 private:
 
 	SDL_Window*		m_pWindow		= nullptr;
@@ -47,8 +44,5 @@ private:
 
 									//	R, G, B, A (transparency/alpha)
 	SDL_Color		m_ClearColor	=  {0, 0, 0, 255};
-
-	int width = 0;
-	int height = 0;
 
 };

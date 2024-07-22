@@ -7,13 +7,13 @@
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
 
-class MainMenuState final : public State
+class CMainMenuState final : public CState
 {
 public:
 
-	 MainMenuState(void)											{}
-	 MainMenuState(Application* application) : State(application)	{}
-	~MainMenuState(void)											{}
+	 CMainMenuState(void)												{}
+	 CMainMenuState(CApplication* application) : CState(application)	{}
+	~CMainMenuState(void)												{}
 
 	virtual bool OnEnter(void) override;//why do we need to override here?
 	virtual void OnExit(void) override;
@@ -32,9 +32,9 @@ private:
 
 	Mix_Music*		m_pMusic			= nullptr;
 
-	Button			m_TitleTextBlock	= {};
-	Button			m_PlayButton		= {};
-	Button			m_QuitButton		= {};
+	CButton			m_TitleTextBlock	= {};
+	CButton			m_PlayButton		= {};
+	CButton			m_QuitButton		= {};
 
 	SDL_FPoint		m_SpiderWebStart	= {0.0f, 0.0f};  
 	SDL_FPoint		m_SpiderSize		= {0.0f, 0.0f};

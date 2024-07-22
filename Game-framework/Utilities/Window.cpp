@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-bool Window::Create(const std::string& title, const SDL_Point& windowSize)
+bool CWindow::Create(const std::string& title, const SDL_Point& windowSize)
 {
 	m_pWindow = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowSize.x, windowSize.y, SDL_WINDOW_SHOWN);
 	if (!m_pWindow)
@@ -45,7 +45,7 @@ bool Window::Create(const std::string& title, const SDL_Point& windowSize)
 
 	return true;
 }
-void Window::Destroy(void)
+void CWindow::Destroy(void)
 {
 	SDL_DestroyRenderer(m_pRenderer);
 	m_pRenderer = nullptr;
@@ -54,27 +54,27 @@ void Window::Destroy(void)
 	m_pWindow = nullptr;
 }
 
-bool Window::BeginRender(void)
+bool CWindow::BeginRender(void)
 {
 	return ((SDL_SetRenderDrawColor(m_pRenderer, m_ClearColor.r, m_ClearColor.g, m_ClearColor.b, m_ClearColor.a) == 0) && ClearBuffer());
 }
 
-void Window::EndRender(void)
+void CWindow::EndRender(void)
 {
 	SDL_RenderPresent(m_pRenderer);
 }
 
-bool Window::ClearBuffer()
+bool CWindow::ClearBuffer()
 {
 	return (SDL_RenderClear(m_pRenderer) == 0);
 }
 
-void Window::SetRenderTarget(SDL_Texture* renderTarget)
+void CWindow::SetRenderTarget(SDL_Texture* renderTarget)
 {
 	SDL_SetRenderTarget(m_pRenderer, renderTarget);
 }
 
-void Window::OnResized()
+void CWindow::OnResized()
 {
 	int windowWidth		= 0;
 	int windowHeight	= 0;
@@ -83,7 +83,7 @@ void Window::OnResized()
 	m_Size = {(float)windowWidth, (float)windowHeight};
 }
 
-void Window::SetTitle(const std::string& title)
+void CWindow::SetTitle(const std::string& title)
 {
 	SDL_SetWindowTitle(m_pWindow, title.c_str());
 }

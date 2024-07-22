@@ -12,7 +12,7 @@
 #include "Utilities/Timer.h"
 #include "Utilities/Window.h"
 
-class Application 
+class CApplication 
 {
 public:
 
@@ -26,54 +26,56 @@ public:
 
 public:
 
-	 Application(void) {}
-	~Application(void) {}
+	 CApplication(void) {}
+	~CApplication(void) {}
 
-	bool				Create(void);
-	void				Destroy(void);
+	bool					Create(void);
+	void					Destroy(void);
 
-	void				Run(void);
+	void					Run(void);
 
-	void				HandleEvents(void);
+	void					HandleEvents(void);
 
-	void				Update(void);
-	void				Render(void);
+	void					Update(void);
+	void					Render(void);
 
-	bool				SetState(const EState newState);
+	bool					SetState(const EState newState);
 
-	void				OnTransitionOpaque(void);
+	void					OnTransitionOpaque(void);
 
 public:
 
 	// Place getters and setters in their own public field
 
-	TextureHandler&		GetTextureHandler(void) const	{return (TextureHandler&)m_TextureHandler;}
-	FontHandler&		GetFontHandler(void) const		{return (FontHandler&)m_FontHandler;}
-	AudioHandler&		GetAudioHandler(void) const		{return (AudioHandler&)m_AudioHandler;}
-	InputHandler&		GetInputHandler(void) const		{return (InputHandler&)m_InputHandler;}
-	Window&				GetWindow(void)	const			{return (Window&)m_Window;}
+	CWindow&				GetWindow(void)	const			{return (CWindow&)m_Window;}
 
-	TransitionRenderer&	GetTransitionRenderer() const	{return (TransitionRenderer&)m_TransitionRenderer;}
+	CTextureHandler&		GetTextureHandler(void) const	{return (CTextureHandler&)m_TextureHandler;}
+	CFontHandler&			GetFontHandler(void) const		{return (CFontHandler&)m_FontHandler;}
+	CAudioHandler&			GetAudioHandler(void) const		{return (CAudioHandler&)m_AudioHandler;}
+	CInputHandler&			GetInputHandler(void) const		{return (CInputHandler&)m_InputHandler;}
+
+	CTransitionRenderer&	GetTransitionRenderer() const	{return (CTransitionRenderer&)m_TransitionRenderer;}
 
 	// Call this to shutdown the game
-	void				Quit(void)						{m_Running = false;}
+	void					Quit(void)						{m_Running = false;}
 
 private:
 
-	State*				m_pStates[NUM_STATES]	= {nullptr};
-	State*				m_pCurrentState			= nullptr;
-	State*				m_pNextState			= nullptr;
+	CState*				m_pStates[NUM_STATES]	= {nullptr};
+	CState*				m_pCurrentState			= nullptr;
+	CState*				m_pNextState			= nullptr;
 
-	Window				m_Window;
-	LibraryHandler		m_LibraryHandler		= {};
-	TextureHandler		m_TextureHandler		= {};
-	FontHandler			m_FontHandler			= {};
-	AudioHandler		m_AudioHandler			= {};
-	InputHandler		m_InputHandler			= {};
+	CWindow				m_Window				= {};
 
-	TransitionRenderer	m_TransitionRenderer	= {};
+	CLibraryHandler		m_LibraryHandler		= {};
+	CTextureHandler		m_TextureHandler		= {};
+	CFontHandler		m_FontHandler			= {};
+	CAudioHandler		m_AudioHandler			= {};
+	CInputHandler		m_InputHandler			= {};
 
-	Timer				m_Timer					= {};
+	CTransitionRenderer	m_TransitionRenderer	= {};
+
+	CTimer				m_Timer					= {};
 
 	bool				m_Running				= true;
 
