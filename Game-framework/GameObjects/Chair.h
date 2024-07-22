@@ -9,9 +9,9 @@ class CChair final : public CGameObject
 {
 public:
 
-	CChair(void) {}
-	CChair(CApplication* application) : CGameObject(application) {}
-	~CChair(void) {}
+	 CChair(void)													{}
+	 CChair(CApplication* application) : CGameObject(application)	{}
+	~CChair(void)													{}
 
 	virtual bool Create(void) override;
 	virtual void Render(void) override;
@@ -19,7 +19,7 @@ public:
 
 private:
 
-	SDL_FPoint m_Size = { 0.0f, 0.0f };
+	SDL_FPoint m_Size = {0.0f, 0.0f};
 
 };
 

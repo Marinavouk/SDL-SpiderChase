@@ -123,7 +123,7 @@ void CApplication::Render(void)
 			m_pCurrentState->Render();
 
 		if(m_pCurrentState)
-		m_pCurrentState->RenderDebug();
+			m_pCurrentState->RenderDebug();
 
 		m_TransitionRenderer.Render();
 

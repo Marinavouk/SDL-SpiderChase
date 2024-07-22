@@ -11,6 +11,10 @@ bool CMainMenuState::OnEnter(void)
 	std::cout << "Entering menu state" << std::endl;
 #endif
 
+	// Set the clear color (the background color that is shown behind the menu background and other objects)
+	// This is completely optional
+	m_pApplication->GetWindow().SetClearColor({0, 0, 0, 255});
+
 	// Create objects that should be created/started when this state is entered/started (create textures and buttons, load/start main menu music etc)
 
 	// Easy access to handlers so you don't have to write application->Get_X_Handler() multiple times below
@@ -78,10 +82,6 @@ bool CMainMenuState::OnEnter(void)
 
 	audioHandler.PlayMusic(m_pMusic, -1);
 	audioHandler.SetMusicVolume(0);
-
-	// Set the clear color (the background color that is shown behind the menu background and other objects)
-	// This is completely optional
-	m_pApplication->GetWindow().SetClearColor({0, 0, 0, 255});
 
 	return true;
 }

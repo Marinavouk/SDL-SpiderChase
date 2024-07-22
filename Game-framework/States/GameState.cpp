@@ -1,9 +1,9 @@
 #include "GameState.h"
 
 #include "Application.h"
+#include "GameObjects/Chair.h"
 #include "GameObjects/Player.h"
 #include "GameObjects/Table.h"
-#include "Chair.h"
 
 #include "Handlers/AudioHandler.h"
 
@@ -49,6 +49,7 @@ bool CGameState::OnEnter(void)
 		return false;
 
 	m_Obstacles.push_back(m_pTable);
+	m_Obstacles.push_back(m_pChair);
 
 	return true;
 }
@@ -64,6 +65,8 @@ void CGameState::OnExit(void)
 	// Easy access to handlers so you don't have to write application->Get_X_Handler() multiple times below
 	CTextureHandler&	textureHandler	= m_pApplication->GetTextureHandler();
 	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
+
+	m_Obstacles.clear();
 
 	m_pChair->Destroy();
 	delete m_pChair;
@@ -119,5 +122,5 @@ void CGameState::RenderDebug(void)
 {
 	m_pChair->RenderDebug();
 	m_pTable->RenderDebug();
-	m_pPlayer->RenderDebug();
+//	m_pPlayer->RenderDebug();
 }
