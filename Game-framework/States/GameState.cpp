@@ -3,6 +3,8 @@
 #include "Application.h"
 #include "GameObjects/Player.h"
 #include "GameObjects/Table.h"
+#include "Chair.h"
+
 #include "Handlers/AudioHandler.h"
 
 #include <iostream>
@@ -42,6 +44,10 @@ bool CGameState::OnEnter(void)
 	if (!m_pTable->Create())
 		return false;
 
+	m_pChair = new CChair(m_pApplication);
+	if (!m_pChair->Create())
+		return false;
+
 	m_Obstacles.push_back(m_pTable);
 
 	return true;
@@ -58,6 +64,10 @@ void CGameState::OnExit(void)
 	// Easy access to handlers so you don't have to write application->Get_X_Handler() multiple times below
 	CTextureHandler&	textureHandler	= m_pApplication->GetTextureHandler();
 	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
+
+	m_pChair->Destroy();
+	delete m_pChair;
+	m_pChair = nullptr;
 
 	m_pTable->Destroy();
 	delete m_pTable;
@@ -100,12 +110,14 @@ void CGameState::Render(void)
 
 	m_pApplication->GetTextureHandler().RenderTexture(m_pBackground, {0.0f, 0.0f}, nullptr, &m_pApplication->GetWindow().GetSize());
 
+	m_pChair->Render();
 	m_pTable->Render();
 	m_pPlayer->Render();
 }
 
 void CGameState::RenderDebug(void)
 {
+	m_pChair->RenderDebug();
 	m_pTable->RenderDebug();
 	m_pPlayer->RenderDebug();
 }
