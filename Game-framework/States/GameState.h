@@ -35,6 +35,7 @@ private:
 	CGameObject*	m_pPlayer			= nullptr;
 	CGameObject*	m_pTable			= nullptr;
 	CGameObject*	m_pChair			= nullptr;
+	CGameObject*	m_pSpider			= nullptr;
 
 	int				m_VolumeLimiter		= 100;
 

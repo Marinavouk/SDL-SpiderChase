@@ -4,6 +4,7 @@
 #include "GameObjects/Chair.h"
 #include "GameObjects/Player.h"
 #include "GameObjects/Table.h"
+#include "Spider.h"
 
 #include "Handlers/AudioHandler.h"
 
@@ -48,8 +49,13 @@ bool CGameState::OnEnter(void)
 	if (!m_pChair->Create())
 		return false;
 
+	m_pSpider = new CSpider(m_pApplication);
+	if (!m_pSpider->Create())
+		return false;
+
 	m_Obstacles.push_back(m_pTable);
 	m_Obstacles.push_back(m_pChair);
+	//idk if i need to do the same for the spider
 
 	return true;
 }
@@ -67,6 +73,10 @@ void CGameState::OnExit(void)
 	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
 
 	m_Obstacles.clear();
+
+	m_pSpider->Destroy();
+	delete m_pSpider;
+	m_pSpider = nullptr;
 
 	m_pChair->Destroy();
 	delete m_pChair;
@@ -113,6 +123,7 @@ void CGameState::Render(void)
 
 	m_pApplication->GetTextureHandler().RenderTexture(m_pBackground, {0.0f, 0.0f}, nullptr, &m_pApplication->GetWindow().GetSize());
 
+	m_pSpider->Render();
 	m_pChair->Render();
 	m_pTable->Render();
 	m_pPlayer->Render();
@@ -120,6 +131,7 @@ void CGameState::Render(void)
 
 void CGameState::RenderDebug(void)
 {
+	m_pSpider->RenderDebug();
 	m_pChair->RenderDebug();
 	m_pTable->RenderDebug();
 //	m_pPlayer->RenderDebug();
