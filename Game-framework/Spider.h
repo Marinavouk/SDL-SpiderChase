@@ -16,9 +16,12 @@ public:
 	virtual bool Create(void) override;
 	virtual void Render(void) override;
 	virtual void RenderDebug(void) override;
+	void Update(float deltaTime);
 
 private:
 
 	SDL_FPoint m_Size = { 0.0f, 0.0f };
+
+	float Distance(float x1, float y1, float x2, float y2);
 };
 

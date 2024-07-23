@@ -33,3 +33,12 @@ void CSpider::RenderDebug(void)
 	SDL_SetRenderDrawColor(renderer, 200, 0, 0, 255);
 	SDL_RenderDrawRectF(renderer, &m_Collider); 
 }
+
+void CSpider::Update(float deltaTime)
+{
+}
+
+float CSpider::Distance(float x1, float y1, float x2, float y2)
+{
+	return 0.0f;
+}
