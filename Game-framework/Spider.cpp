@@ -14,9 +14,9 @@ bool CSpider::Create(void)
 
 	m_Size = { (float)(textureWidth * 0.7f), (float)(textureHeight * 0.7f) };
 
-	m_Rectangle = { 900.0f, m_pApplication->GetWindow().GetSize().y - m_Size.y, m_Size.x, m_Size.y };
+	m_Rectangle = { 500.0f, m_pApplication->GetWindow().GetSize().y - m_Size.y, m_Size.x, m_Size.y};
 
-	m_Collider = { m_Rectangle.x + 5.0f, m_Rectangle.y + 85.0f, m_Size.x - 10.0f, 20.0f };
+	m_Collider = { m_Rectangle.x + 230.0f, m_Rectangle.y + 150.0f, m_Size.x - 420.0f, 20.0f };
 
 	return true;
 }
@@ -31,5 +31,5 @@ void CSpider::RenderDebug(void)
 	SDL_Renderer* renderer = m_pApplication->GetWindow().GetRenderer();
 
 	SDL_SetRenderDrawColor(renderer, 200, 0, 0, 255);
-	SDL_RenderDrawRectF(renderer, &m_Collider);
+	SDL_RenderDrawRectF(renderer, &m_Collider); 
 }

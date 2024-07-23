@@ -55,6 +55,7 @@ bool CGameState::OnEnter(void)
 
 	m_Obstacles.push_back(m_pTable);
 	m_Obstacles.push_back(m_pChair);
+	m_Obstacles.push_back(m_pSpider);
 	//idk if i need to do the same for the spider
 
 	return true;
