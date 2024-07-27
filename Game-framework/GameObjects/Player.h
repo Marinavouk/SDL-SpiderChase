@@ -13,19 +13,22 @@ public:
 	 CPlayer(CApplication* application) : CGameObject(application)	{}
 	~CPlayer(void)													{}
 
-	virtual bool Create(void) override;
-	virtual void Destroy(void) override;
-	virtual void Update(const float deltaTime) override;
-	virtual void Render(void) override;
-	virtual void RenderDebug(void) override;
-	virtual void HandleInput(const float deltaTime) override;
-	virtual void HandleCollision(const std::vector<CGameObject*>& obstacles, const float deltaTime) override;
+	virtual bool	Create(void) override;
+	virtual void	Destroy(void) override;
+	virtual void	Update(const float deltaTime) override;
+	virtual void	Render(void) override;
+	virtual void	RenderDebug(void) override;
+	virtual void	HandleInput(const float deltaTime) override;
+	virtual void	HandleCollision(const GameObjectList& obstacles, const GameObjectList& enemies, const float deltaTime) override;
 
 private:
 
-	void SyncColliders();
-	void ResolveXCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount);
-	void ResolveYCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount);
+	void			SyncColliders(void);
+	void			ActivateDamageCooldown(void);
+	bool			ResolveObstacleXCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount);
+	bool			ResolveObstacleYCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount);
+	bool			ResolveEnemyXCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount);
+	bool			ResolveEnemyYCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount);
 
 private:
 
@@ -45,7 +48,23 @@ private:
 	float		m_MaxWalkingVelocity			= 200.0f;
 	float		m_MaxRunningVelocity			= 400.0f;
 	float		m_JumpStrength					= 660.0f;
+
+	// How much the player should be moved out of the enemy it's colliding with
+	float		m_HorizontalHitStrength			= 50.0f;
+
+	// How much the player should jump when colliding with an enemy
+	float		m_VerticalHitStrength			= 300.0f;
+
 	float		m_Gravity						= 1500.0f;
+
+	// How long the damage cooldown should last (2.0f = 2 seconds)
+	float		m_DamageCooldownTimerDefault	= 2.0f;
+	float		m_DamageCooldownTimer			= m_DamageCooldownTimerDefault;
+
+	// How fast the player should blink while being in the damage-cooldown state
+	// The lower the value, the faster the player will blink
+	float		m_BlinkingIntervalDefault		= 0.005f;
+	float		m_BlinkingInterval				= m_BlinkingIntervalDefault;
 
 	// 0 = facing left
 	// 1 = facing right
@@ -61,12 +80,15 @@ private:
 
 	bool		m_IsRunning						= false;
 	bool		m_IsJumping						= false;
+	bool		m_DamageCooldown				= false;
+	bool		m_Show							= true;
 
 
 	//////////////////////////////////////////////////////////////////////////
 	// Temporary data
-	SDL_FPoint m_HorizontalColliderOffset	= {24.0f * 2.0f, 78.0f * 2.0f};
-	SDL_FPoint m_VerticalColliderOffset		= {28.0f * 2.0f, 64.0f * 2.0f};
+	float		m_Scale						= 2.0f;
+	SDL_FPoint	m_HorizontalColliderOffset	= {24.0f * m_Scale, 78.0f * m_Scale};
+	SDL_FPoint	m_VerticalColliderOffset	= {28.0f * m_Scale, 64.0f * m_Scale};
 	//////////////////////////////////////////////////////////////////////////
 
 };

@@ -40,5 +40,6 @@ private:
 	int				m_VolumeLimiter		= 100;
 
 	GameObjectList	m_Obstacles			= {};
+	GameObjectList	m_Enemies			= {};
 
 };

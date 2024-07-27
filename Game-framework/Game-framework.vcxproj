@@ -16,6 +16,7 @@
     <ClCompile Include="GameObjects\Chair.cpp" />
     <ClCompile Include="GameObjects\GameObject.cpp" />
     <ClCompile Include="GameObjects\Player.cpp" />
+    <ClCompile Include="GameObjects\Spider.cpp" />
     <ClCompile Include="GameObjects\Table.cpp" />
     <ClCompile Include="Handlers\AudioHandler.cpp" />
     <ClCompile Include="Handlers\FontHandler.cpp" />
@@ -23,7 +24,6 @@
     <ClCompile Include="Handlers\LibraryHandler.cpp" />
     <ClCompile Include="Handlers\TextureHandler.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Spider.cpp" />
     <ClCompile Include="States\GameState.cpp" />
     <ClCompile Include="States\MainMenuState.cpp" />
     <ClCompile Include="States\QuitState.cpp" />
@@ -37,13 +37,13 @@
     <ClInclude Include="GameObjects\Chair.h" />
     <ClInclude Include="GameObjects\GameObject.h" />
     <ClInclude Include="GameObjects\Player.h" />
+    <ClInclude Include="GameObjects\Spider.h" />
     <ClInclude Include="GameObjects\Table.h" />
     <ClInclude Include="Handlers\AudioHandler.h" />
     <ClInclude Include="Handlers\FontHandler.h" />
     <ClInclude Include="Handlers\InputHandler.h" />
     <ClInclude Include="Handlers\LibraryHandler.h" />
     <ClInclude Include="Handlers\TextureHandler.h" />
-    <ClInclude Include="Spider.h" />
     <ClInclude Include="States\GameState.h" />
     <ClInclude Include="States\MainMenuState.h" />
     <ClInclude Include="States\QuitState.h" />

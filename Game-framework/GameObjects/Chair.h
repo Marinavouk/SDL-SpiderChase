@@ -22,4 +22,3 @@ private:
 	SDL_FPoint m_Size = {0.0f, 0.0f};
 
 };
-

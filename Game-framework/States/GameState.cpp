@@ -3,8 +3,8 @@
 #include "Application.h"
 #include "GameObjects/Chair.h"
 #include "GameObjects/Player.h"
+#include "GameObjects/Spider.h"
 #include "GameObjects/Table.h"
-#include "Spider.h"
 
 #include "Handlers/AudioHandler.h"
 
@@ -22,7 +22,7 @@ bool CGameState::OnEnter(void)
 
 	// Create objects that should be created/started when this state is entered/started (create textures, load/start game music etc)
 
-	// Easy access to handlers so you don't have to write application->Get_X_Handler() multiple times below
+	// Easy access to handlers so you don't have to write m_pApplication->Get_X_Handler() multiple times below
 	CTextureHandler&	textureHandler	= m_pApplication->GetTextureHandler();
 	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
 
@@ -55,8 +55,8 @@ bool CGameState::OnEnter(void)
 
 	m_Obstacles.push_back(m_pTable);
 	m_Obstacles.push_back(m_pChair);
-	m_Obstacles.push_back(m_pSpider);
-	//idk if i need to do the same for the spider
+
+	m_Enemies.push_back(m_pSpider);
 
 	return true;
 }
@@ -69,10 +69,11 @@ void CGameState::OnExit(void)
 
 	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures, unload/stop game music etc)
 
-	// Easy access to handlers so you don't have to write application->Get_X_Handler() multiple times below
+	// Easy access to handlers so you don't have to write m_pApplication->Get_X_Handler() multiple times below
 	CTextureHandler&	textureHandler	= m_pApplication->GetTextureHandler();
 	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
 
+	m_Enemies.clear();
 	m_Obstacles.clear();
 
 	m_pSpider->Destroy();
@@ -111,7 +112,9 @@ void CGameState::Update(const float deltaTime)
 
 	m_pPlayer->HandleInput(deltaTime);
 	m_pPlayer->Update(deltaTime);
-	m_pPlayer->HandleCollision(m_Obstacles, deltaTime);
+	m_pPlayer->HandleCollision(m_Obstacles, m_Enemies, deltaTime);
+
+	m_pSpider->Update(deltaTime);
 
 	// Will fade the game music in/out whenever the game switch to/from this state
 	if (transitionRenderer.IsTransitioning())
@@ -124,16 +127,16 @@ void CGameState::Render(void)
 
 	m_pApplication->GetTextureHandler().RenderTexture(m_pBackground, {0.0f, 0.0f}, nullptr, &m_pApplication->GetWindow().GetSize());
 
-	m_pSpider->Render();
 	m_pChair->Render();
 	m_pTable->Render();
+	m_pSpider->Render();
 	m_pPlayer->Render();
 }
 
 void CGameState::RenderDebug(void)
 {
-	m_pSpider->RenderDebug();
 	m_pChair->RenderDebug();
 	m_pTable->RenderDebug();
-//	m_pPlayer->RenderDebug();
+	m_pSpider->RenderDebug();
+	m_pPlayer->RenderDebug();
 }

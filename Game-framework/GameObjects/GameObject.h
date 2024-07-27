@@ -9,17 +9,21 @@ class CGameObject
 {
 public:
 
+	typedef std::vector<CGameObject*> GameObjectList;
+
+public:
+
 			 CGameObject(void)														{}
 			 CGameObject(CApplication* application) : m_pApplication(application)	{}
 	virtual ~CGameObject(void)														{}
 
-	virtual bool	Create(void)																		= 0;
+	virtual bool	Create(void)																							= 0;
 	virtual void	Destroy(void);
-	virtual void	Update(const float deltaTime)														{}
-	virtual void	Render(void)																		{}
-	virtual void	RenderDebug(void)																	{}
-	virtual void	HandleInput(const float deltaTime)													{}
-	virtual void	HandleCollision(const std::vector<CGameObject*>& obstacles, const float deltaTime)	{}
+	virtual void	Update(const float deltaTime)																			{}
+	virtual void	Render(void)																							{}
+	virtual void	RenderDebug(void)																						{}
+	virtual void	HandleInput(const float deltaTime)																		{}
+	virtual void	HandleCollision(const GameObjectList& obstacles, const GameObjectList& enemies, const float deltaTime)	{}
 
 public:
 

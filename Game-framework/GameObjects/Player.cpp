@@ -26,10 +26,10 @@ bool CPlayer::Create(void)
 	if (!m_pTexture)
 		return false;
 
-	m_Rectangle = {300.0f, m_pApplication->GetWindow().GetSize().y - 128.0f, 64.0f * 2.0f, 128.0f * 2.0f};
+	m_Rectangle = {300.0f, m_pApplication->GetWindow().GetSize().y - (128.0f * m_Scale), 64.0f * m_Scale, 128.0f * m_Scale};
 
-	m_HorizontalCollider	= {m_Rectangle.x + m_HorizontalColliderOffset.x,	m_Rectangle.y + m_HorizontalColliderOffset.y,	18.0f * 2.0f, 40.0f * 2.0f};
-	m_VerticalCollider		= {m_Rectangle.x + m_VerticalColliderOffset.x,		m_Rectangle.y + m_VerticalColliderOffset.y,		10.0f * 2.0f, 64.0f * 2.0f};
+	m_HorizontalCollider	= {m_Rectangle.x + m_HorizontalColliderOffset.x,	m_Rectangle.y + m_HorizontalColliderOffset.y,	18.0f * m_Scale, 40.0f * m_Scale};
+	m_VerticalCollider		= {m_Rectangle.x + m_VerticalColliderOffset.x,		m_Rectangle.y + m_VerticalColliderOffset.y,		10.0f * m_Scale, 64.0f * m_Scale};
 
 	return true;
 }
@@ -80,14 +80,38 @@ void CPlayer::Update(const float deltaTime)
 
 		m_IsJumping = false;
 	}
+
+	if (m_DamageCooldown)
+	{
+		m_DamageCooldownTimer -= deltaTime;
+
+		if (m_DamageCooldownTimer <= 0.0f)
+		{
+			m_DamageCooldown = false;
+
+			return;
+		}
+
+		m_BlinkingInterval -= deltaTime;
+
+		if (m_BlinkingInterval <= 0.0f)
+		{
+			m_BlinkingInterval = m_BlinkingIntervalDefault;
+
+			m_Show = !m_Show;
+		}
+	}
 }
 
 void CPlayer::Render(void)
 {
+	if (m_DamageCooldown && !m_Show)
+		return;
+
 	// Very temporary, will be removed when the character is animated
 	// This is just to have anything rendered to the screen
 	const SDL_Rect		clipRect	= {0, 0, 64, 128};
-	const SDL_FPoint	size		= {64.0f * 2.0f, 128.0f * 2.0f};
+	const SDL_FPoint	size		= {64.0f * m_Scale, 128.0f * m_Scale};
 	m_pApplication->GetTextureHandler().RenderTexture(m_pTexture, {m_Rectangle.x, m_Rectangle.y}, &clipRect, &size);
 }
 
@@ -164,22 +188,41 @@ void CPlayer::HandleInput(const float deltaTime)
 		m_HorizontalDirection = EState::IDLE;
 }
 
-void CPlayer::HandleCollision(const std::vector<CGameObject*>& obstacles, const float deltaTime)
+void CPlayer::HandleCollision(const GameObjectList& obstacles, const GameObjectList& enemies, const float deltaTime)
 {
 	const SDL_FPoint moveAmount = {m_Velocity.x * deltaTime, m_Velocity.y * deltaTime};
 
 	for (CGameObject* obstacle : obstacles)
 	{
-		ResolveXCollision(obstacle->GetCollider(), moveAmount);
+		if (ResolveObstacleXCollision(obstacle->GetCollider(), moveAmount))
+			break;
+
+		if (ResolveObstacleYCollision(obstacle->GetCollider(), moveAmount))
+			break;
 	}
 
-	for (CGameObject* obstacle : obstacles)
+	if (m_DamageCooldown)
+		return;
+
+	for (CGameObject* enemy : enemies)
 	{
-		ResolveYCollision(obstacle->GetCollider(), moveAmount);
+		if (ResolveEnemyXCollision(enemy->GetCollider(), moveAmount))
+		{
+			ActivateDamageCooldown();
+
+			break;
+		}
+
+		if (ResolveEnemyYCollision(enemy->GetCollider(), moveAmount))
+		{
+			ActivateDamageCooldown();
+
+			break;
+		}
 	}
 }
 
-void CPlayer::SyncColliders()
+void CPlayer::SyncColliders(void)
 {
 	m_HorizontalCollider.x	= m_Rectangle.x + m_HorizontalColliderOffset.x;
 	m_HorizontalCollider.y	= m_Rectangle.y + m_HorizontalColliderOffset.y;
@@ -187,8 +230,19 @@ void CPlayer::SyncColliders()
 	m_VerticalCollider.y	= m_Rectangle.y + m_VerticalColliderOffset.y;
 }
 
-void CPlayer::ResolveXCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount)
+void CPlayer::ActivateDamageCooldown(void)
 {
+	m_DamageCooldownTimer	= m_DamageCooldownTimerDefault;
+	m_BlinkingInterval		= m_BlinkingIntervalDefault;
+
+	m_DamageCooldown	= true;
+	m_Show				= true;
+}
+
+bool CPlayer::ResolveObstacleXCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount)
+{
+	bool hasCollided = false;
+
 	// The player is moving to the left
 	if (moveAmount.x < 0.0f)
 	{
@@ -198,9 +252,11 @@ void CPlayer::ResolveXCollision(const SDL_FRect& collider, const SDL_FPoint& mov
 		{
 			m_Rectangle.x += intersection.w;
 
-			m_HorizontalCollider.x = m_Rectangle.x + m_HorizontalColliderOffset.x;
+			SyncColliders();
 
 			m_Velocity.x = 0.0f;
+
+			hasCollided = true;
 		}
 	}
 
@@ -213,9 +269,11 @@ void CPlayer::ResolveXCollision(const SDL_FRect& collider, const SDL_FPoint& mov
 		{
 			m_Rectangle.x -= intersection.w;
 
-			m_HorizontalCollider.x = m_Rectangle.x + m_HorizontalColliderOffset.x;
+			SyncColliders();
 
 			m_Velocity.x = 0.0f;
+
+			hasCollided = true;
 		}
 	}
 
@@ -227,15 +285,21 @@ void CPlayer::ResolveXCollision(const SDL_FRect& collider, const SDL_FPoint& mov
 		{
 			m_Rectangle.x += ((m_HorizontalCollider.x < collider.x) ? -intersection.w : intersection.w);
 
-			m_HorizontalCollider.x = m_Rectangle.x + m_HorizontalColliderOffset.x;
+			SyncColliders();
 
 			m_Velocity.x = 0.0f;
+
+			hasCollided = true;
 		}
 	}
+
+	return hasCollided;
 }
 
-void CPlayer::ResolveYCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount)
+bool CPlayer::ResolveObstacleYCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount)
 {
+	bool hasCollided = false;
+
 	// The player is moving up
 	if (moveAmount.y < 0.0f)
 	{
@@ -245,9 +309,11 @@ void CPlayer::ResolveYCollision(const SDL_FRect& collider, const SDL_FPoint& mov
 		{
 			m_Rectangle.y += intersection.h;
 
-			m_VerticalCollider.y = m_Rectangle.y + m_VerticalColliderOffset.y;
+			SyncColliders();
 
 			m_Velocity.y = 0.0f;
+
+			hasCollided = true;
 		}
 	}
 
@@ -260,11 +326,137 @@ void CPlayer::ResolveYCollision(const SDL_FRect& collider, const SDL_FPoint& mov
 		{
 			m_Rectangle.y -= intersection.h;
 
-			m_VerticalCollider.y = m_Rectangle.y + m_VerticalColliderOffset.y;
+			SyncColliders();
 
 			m_Velocity.y = 0.0f;
 
 			m_IsJumping = false;
+
+			hasCollided = true;
 		}
 	}
+
+	return hasCollided;
+}
+
+bool CPlayer::ResolveEnemyXCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount)
+{
+	bool hasCollided = false;
+
+	// The player is moving to the left
+	if (moveAmount.x < 0.0f)
+	{
+		SDL_FRect intersection = {0.0f, 0.0f, 0.0f, 0.0f};
+
+		if (QuadVsQuad(m_HorizontalCollider, collider, &intersection))
+		{
+			m_Rectangle.x += intersection.w;
+
+			SyncColliders();
+
+			m_Velocity.x  = -m_Velocity.x;
+			m_Velocity.x += m_HorizontalHitStrength;
+			m_Velocity.y -= m_VerticalHitStrength;
+
+			hasCollided = true;
+		}
+	}
+
+	// The player is moving to the right
+	else if (moveAmount.x > 0.0f)
+	{
+		SDL_FRect intersection = {0.0f, 0.0f, 0.0f, 0.0f};
+
+		if (QuadVsQuad(m_HorizontalCollider, collider, &intersection))
+		{
+			m_Rectangle.x -= intersection.w;
+
+			SyncColliders();
+
+			m_Velocity.x  = -m_Velocity.x;
+			m_Velocity.x -= m_HorizontalHitStrength;
+			m_Velocity.y -= m_VerticalHitStrength;
+
+			hasCollided = true;
+		}
+	}
+
+	else
+	{
+		SDL_FRect intersection = {0.0f, 0.0f, 0.0f, 0.0f};
+
+		if (QuadVsQuad(m_HorizontalCollider, collider, &intersection))
+		{
+			m_Velocity.x += ((m_HorizontalCollider.x < collider.x) ? -(m_HorizontalHitStrength * 4.0f) : (m_HorizontalHitStrength * 4.0f));
+			m_Velocity.y -= m_VerticalHitStrength;
+
+			ActivateDamageCooldown();
+
+			hasCollided = true;
+		}
+	}
+
+	if (moveAmount.y > 0.0f)
+	{
+		SDL_FRect intersection = {0.0f, 0.0f, 0.0f, 0.0f};
+
+		if (QuadVsQuad(m_HorizontalCollider, collider, &intersection))
+		{
+			m_Rectangle.x += ((m_HorizontalCollider.x < collider.x) ? -intersection.w	: intersection.w);
+
+			SyncColliders();
+
+			m_Velocity.x  = -m_Velocity.x;
+			m_Velocity.x += ((m_Velocity.x < 0.0f) ? -(m_HorizontalHitStrength * 4.0f) : (m_HorizontalHitStrength * 4.0f));
+			m_Velocity.y -= m_VerticalHitStrength;
+
+			hasCollided = true;
+		}
+	}
+
+	return hasCollided;
+}
+
+bool CPlayer::ResolveEnemyYCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount)
+{
+	bool hasCollided = false;
+
+	// The player is moving up
+	if (moveAmount.y < 0.0f)
+	{
+		SDL_FRect intersection = {0.0f, 0.0f, 0.0f, 0.0f};
+
+		if (QuadVsQuad(m_VerticalCollider, collider, &intersection))
+		{
+			m_Rectangle.y += intersection.h;
+
+			SyncColliders();
+
+			m_Velocity.x  = -m_Velocity.x;
+			m_Velocity.x += ((m_Velocity.x < 0.0f) ? -(m_HorizontalHitStrength * 2.0f) : (m_HorizontalHitStrength * 2.0f));
+
+			hasCollided = true;
+		}
+	}
+
+	// The player is moving down
+	else if (moveAmount.y > 0.0f)
+	{
+		SDL_FRect intersection = {0.0f, 0.0f, 0.0f, 0.0f};
+
+		if (QuadVsQuad(m_VerticalCollider, collider, &intersection))
+		{
+			m_Rectangle.y -= intersection.h;
+
+			SyncColliders();
+
+			m_Velocity.x  = -m_Velocity.x;
+			m_Velocity.x += ((m_Velocity.x < 0.0f) ? -(m_HorizontalHitStrength * 2.0f) : (m_HorizontalHitStrength * 2.0f));
+			m_Velocity.y -= m_VerticalHitStrength;
+
+			hasCollided = true;
+		}
+	}
+
+	return hasCollided;
 }

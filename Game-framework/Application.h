@@ -47,17 +47,17 @@ public:
 
 	// Place getters and setters in their own public field
 
-	CWindow&				GetWindow(void)	const			{return (CWindow&)m_Window;}
+	CWindow&				GetWindow(void)	const				{return (CWindow&)m_Window;}
 
-	CTextureHandler&		GetTextureHandler(void) const	{return (CTextureHandler&)m_TextureHandler;}
-	CFontHandler&			GetFontHandler(void) const		{return (CFontHandler&)m_FontHandler;}
-	CAudioHandler&			GetAudioHandler(void) const		{return (CAudioHandler&)m_AudioHandler;}
-	CInputHandler&			GetInputHandler(void) const		{return (CInputHandler&)m_InputHandler;}
+	CTextureHandler&		GetTextureHandler(void) const		{return (CTextureHandler&)m_TextureHandler;}
+	CFontHandler&			GetFontHandler(void) const			{return (CFontHandler&)m_FontHandler;}
+	CAudioHandler&			GetAudioHandler(void) const			{return (CAudioHandler&)m_AudioHandler;}
+	CInputHandler&			GetInputHandler(void) const			{return (CInputHandler&)m_InputHandler;}
 
-	CTransitionRenderer&	GetTransitionRenderer() const	{return (CTransitionRenderer&)m_TransitionRenderer;}
+	CTransitionRenderer&	GetTransitionRenderer(void) const	{return (CTransitionRenderer&)m_TransitionRenderer;}
 
 	// Call this to shutdown the game
-	void					Quit(void)						{m_Running = false;}
+	void					Quit(void)							{m_Running = false;}
 
 private:
 

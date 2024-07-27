@@ -17,7 +17,7 @@ bool CMainMenuState::OnEnter(void)
 
 	// Create objects that should be created/started when this state is entered/started (create textures and buttons, load/start main menu music etc)
 
-	// Easy access to handlers so you don't have to write application->Get_X_Handler() multiple times below
+	// Easy access to handlers so you don't have to write m_pApplication->Get_X_Handler() multiple times below
 	CTextureHandler&	textureHandler	= m_pApplication->GetTextureHandler();
 	CFontHandler&		fontHandler		= m_pApplication->GetFontHandler();
 	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
@@ -92,7 +92,7 @@ void CMainMenuState::OnExit(void)
 	std::cout << "Exiting menu state" << std::endl;
 #endif
 
-	// Easy access to handlers so you don't have to write application->Get_X_Handler() multiple times below
+	// Easy access to handlers so you don't have to write m_pApplication->Get_X_Handler() multiple times below
 	CTextureHandler&	textureHandler	= m_pApplication->GetTextureHandler();
 	CFontHandler&		fontHandler		= m_pApplication->GetFontHandler();
 	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
@@ -122,7 +122,7 @@ void CMainMenuState::Update(const float deltaTime)
 {
 	// Update all the needed main menu objects here
 
-	// Easy access to the input handler so you don't have to write application->GetInputHandler() multiple times below
+	// Easy access to the input handler and the transition renderer, so you don't have to write m_pApplication->Get_X() multiple times below
 	CInputHandler&				inputHandler		= m_pApplication->GetInputHandler();
 	const CTransitionRenderer&	transitionRenderer	= m_pApplication->GetTransitionRenderer();
 
@@ -148,8 +148,9 @@ void CMainMenuState::Render(void)
 {
 	// Render all the main menu objects here
 
-	// It's always good practice to create local variables for data that is used in multiple places in a function, in this the renderer for example is used on multiple places below
-	// By having a local variable like this, application->GetWindow()->GetRenderer(), application->GetTextureHandler() etc isn't called multiple times
+	// It's always good practice to create local variables for data that is used in multiple places in a function
+	// In this case the renderer for example is used in multiple places below
+	// By having a local variable like this, m_pApplication->GetWindow()->GetRenderer(), m_pApplication->GetTextureHandler() etc isn't called multiple times
 	// This is both an optimization and also reduces repetitive code
 	CWindow&			window			= m_pApplication->GetWindow();
 	CTextureHandler&	textureHandler	= m_pApplication->GetTextureHandler();
