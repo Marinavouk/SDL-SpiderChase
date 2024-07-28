@@ -6,6 +6,7 @@
 #include "GameObjects/Spider.h"
 #include "GameObjects/Table.h"
 #include "Handlers/AudioHandler.h"
+#include "Utilities/Random.h"
 
 #include <iostream>
 
@@ -38,7 +39,7 @@ bool CGameState::OnEnter(void)
 	audioHandler.SetMusicVolume(0);
 
 	m_pPlayer = new CPlayer(m_pApplication);
-	if (!m_pPlayer->Create("player.png", {300.0f, windowSize.y}))
+	if (!m_pPlayer->Create("player.png", {150.0f, 260.0f}))
 		return false;
 
 	m_pTable = new CTable(m_pApplication);
@@ -50,8 +51,25 @@ bool CGameState::OnEnter(void)
 		return false;
 
 	m_pSpider = new CSpider(m_pApplication);
-	if (!m_pSpider->Create("spider.png", {500.0f, windowSize.y}))
+	if (!m_pSpider->Create("spider.png", {800.0f, 0.0f}))
 		return false;
+
+	/*
+	CRandom randomNumberGenerator;
+
+	for (int i = 0; i < 5; ++i)
+	{
+		const SDL_FPoint position = {(float)randomNumberGenerator.RandomUint(64, (int)windowSize.x - 128), 0.0f};
+
+		CGameObject* spider = new CSpider(m_pApplication);
+		if (!spider->Create("spider.png", position))
+			return false;
+
+		((CSpider*)spider)->SetDirection(randomNumberGenerator.RandomUint(0, 1));
+
+		m_Enemies.push_back(spider);
+	}
+	*/
 
 	m_Obstacles.push_back(m_pTable);
 	m_Obstacles.push_back(m_pChair);
@@ -72,6 +90,15 @@ void CGameState::OnExit(void)
 	// Easy access to handlers so you don't have to write m_pApplication->Get_X_Handler() multiple times below
 	CTextureHandler&	textureHandler	= m_pApplication->GetTextureHandler();
 	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
+
+	/*
+	for (CGameObject* spider : m_Enemies)
+	{
+		spider->Destroy();
+		delete spider;
+		spider = nullptr;
+	}
+	*/
 
 	m_Enemies.clear();
 	m_Obstacles.clear();
@@ -116,6 +143,15 @@ void CGameState::Update(const float deltaTime)
 	m_pPlayer->HandleEnemyCollision(m_Enemies, deltaTime);
 
 	m_pSpider->Update(deltaTime);
+	m_pSpider->HandleObstacleCollision(m_Obstacles, deltaTime);
+
+	/*
+	for (CGameObject* spider : m_Enemies)
+	{
+		spider->Update(deltaTime);
+		spider->HandleObstacleCollision(m_Obstacles, deltaTime);
+	}
+	*/
 
 	// Will fade the game music in/out whenever the game switch to/from this state
 	if (transitionRenderer.IsTransitioning())
@@ -130,7 +166,16 @@ void CGameState::Render(void)
 
 	m_pChair->Render();
 	m_pTable->Render();
+
 	m_pSpider->Render();
+
+	/*
+	for (CGameObject* spider : m_Enemies)
+	{
+		spider->Render();
+	}
+	*/
+
 	m_pPlayer->Render();
 }
 
@@ -138,6 +183,15 @@ void CGameState::RenderDebug(void)
 {
 	m_pChair->RenderDebug();
 	m_pTable->RenderDebug();
+
 	m_pSpider->RenderDebug();
+
+	/*
+	for (CGameObject* spider : m_Enemies)
+	{
+		spider->RenderDebug();
+	}
+	*/
+
 	m_pPlayer->RenderDebug();
 }

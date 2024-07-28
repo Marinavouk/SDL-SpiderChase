@@ -1,24 +1,9 @@
 #include "Player.h"
 
 #include "Application.h"
+#include "Utilities/CollisionUtilities.h"
 
 #include <SDL.h>
-
-static bool QuadVsQuad(const SDL_FRect& rQuad1, const SDL_FRect& rQuad2, SDL_FRect* pIntersection = nullptr)
-{
-	SDL_FRect	Intersection	= {0.0f, 0.0f, 0.0f, 0.0f};
-	const bool	Result			= (SDL_IntersectFRect(&rQuad1, &rQuad2, &Intersection) == SDL_TRUE);
-
-	if(pIntersection)
-	{
-		pIntersection->x = Intersection.x;
-		pIntersection->y = Intersection.y;
-		pIntersection->w = Intersection.w;
-		pIntersection->h = Intersection.h;
-	}
-
-	return Result;
-}
 
 bool CPlayer::Create(const std::string& textureFileName, const SDL_FPoint& position)
 {
@@ -28,7 +13,7 @@ bool CPlayer::Create(const std::string& textureFileName, const SDL_FPoint& posit
 	m_pTexture->SetSize({64.0f * m_Scale, 128.0f * m_Scale});
 	m_pTexture->SetTextureCoords(0, 64, 0, 128);
 
-	m_Rectangle = {position.x, m_pApplication->GetWindow().GetSize().y - (128.0f * m_Scale), 64.0f * m_Scale, 128.0f * m_Scale};
+	m_Rectangle = {position.x, position.y, 64.0f * m_Scale, 128.0f * m_Scale};
 
 	m_HorizontalCollider	= {m_Rectangle.x + m_HorizontalColliderOffset.x,	m_Rectangle.y + m_HorizontalColliderOffset.y,	18.0f * m_Scale, 40.0f * m_Scale};
 	m_VerticalCollider		= {m_Rectangle.x + m_VerticalColliderOffset.x,		m_Rectangle.y + m_VerticalColliderOffset.y,		10.0f * m_Scale, 64.0f * m_Scale};

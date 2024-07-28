@@ -5,14 +5,8 @@
 #include "States/MainMenuState.h"
 #include "States/QuitState.h"
 
-// Used by srand
-#include <time.h>
-
 bool CApplication::Create(void)
 {
-	// Seed the random number generator
-	srand((unsigned int)time(0));
-
 	// Creates all the libraries for you, for example SDL, SDL_Image etc
 	if(!m_LibraryHandler.Create())
 		return false;

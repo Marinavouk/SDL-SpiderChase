@@ -18,10 +18,18 @@ public:
 	virtual void	Update(const float deltaTime) override;
 	virtual void	Render(void) override;
 	virtual void	RenderDebug(void) override;
+	virtual void	HandleObstacleCollision(const GameObjectList& obstacles, const float deltaTime) override;
 
 public:
 
 	void			SetTarget(CGameObject* target) {m_pTarget = target;}
+
+	void			SetDirection(const int direction);
+
+private:
+
+	void			SyncCollider(void);
+	bool			ResolveObstacleYCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount);
 
 private:
 
@@ -36,13 +44,16 @@ private:
 
 	CGameObject*	m_pTarget	= nullptr;
 
+	float			m_Gravity	= 1500.0f;
+
+	SDL_FPoint		m_Velocity	= {0.0f, 0.0f};
+
 	EState			m_State		= EState::HANGING_FROM_CEILING;
 
 	//////////////////////////////////////////////////////////////////////////
 	// Temporary data
 	float		m_Scale				= 1.0f;
 	SDL_FPoint	m_ColliderOffset	= {16.0f * m_Scale, 15.0f * m_Scale};
-	int			m_Direction			= 1;
 	//////////////////////////////////////////////////////////////////////////
 
 };

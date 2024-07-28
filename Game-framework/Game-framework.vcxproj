@@ -28,6 +28,7 @@
     <ClCompile Include="States\MainMenuState.cpp" />
     <ClCompile Include="States\QuitState.cpp" />
     <ClCompile Include="States\TransitionRenderer.cpp" />
+    <ClCompile Include="Utilities\Random.cpp" />
     <ClCompile Include="Utilities\Texture.cpp" />
     <ClCompile Include="Utilities\Timer.cpp" />
     <ClCompile Include="Utilities\Window.cpp" />
@@ -50,6 +51,8 @@
     <ClInclude Include="States\QuitState.h" />
     <ClInclude Include="States\State.h" />
     <ClInclude Include="States\TransitionRenderer.h" />
+    <ClInclude Include="Utilities\CollisionUtilities.h" />
+    <ClInclude Include="Utilities\Random.h" />
     <ClInclude Include="Utilities\StringUtilities.h" />
     <ClInclude Include="Utilities\Texture.h" />
     <ClInclude Include="Utilities\Timer.h" />
