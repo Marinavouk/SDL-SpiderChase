@@ -7,7 +7,6 @@ bool CSpider::Create(const std::string& textureFileName, const SDL_FPoint& posit
 	if (!CGameObject::Create(textureFileName, position))
 		return false;
 
-	m_pTexture = m_pApplication->GetTextureHandler().CreateTexture("spider.png");
 	m_pTexture->SetSize({64.0f * m_Scale, 64.0f * m_Scale});
 	m_pTexture->SetTextureCoords(0, 64, 256, 320);
 

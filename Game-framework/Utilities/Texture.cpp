@@ -6,18 +6,16 @@
 #include <SDL_image.h>
 #include <iostream>
 
-bool CTexture::Create(SDL_Renderer* renderer, const std::string& fileName)
+bool CTexture::Create(SDL_Renderer* renderer, const std::string& filePath)
 {
 	m_pRenderer = renderer;
 
-	const std::string name = RemoveFileExtension(fileName);
-
-	m_pTexture = IMG_LoadTexture(renderer, fileName.c_str());
+	m_pTexture = IMG_LoadTexture(renderer, filePath.c_str());
 
 	if(!m_pTexture)
 	{
 	#ifdef _DEBUG
-		std::cout << "Error: failed to create texture '" << name.c_str() << "'"  << std::endl;
+		std::cout << "Error: failed to create texture '" << GetFileName(filePath).c_str() << "'"  << std::endl;
 		std::cout << IMG_GetError() << std::endl;
 	#endif
 
@@ -32,7 +30,7 @@ bool CTexture::Create(SDL_Renderer* renderer, const std::string& fileName)
 
 	m_Size = {(float)textureWidth, (float)textureHeight};
 
-	m_Name = name;
+	m_Name = RemoveFileExtension(GetFileName(filePath));
 
 	return true;
 }

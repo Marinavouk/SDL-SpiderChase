@@ -17,7 +17,7 @@ static std::string GetFileName(const std::string& path)
 	if(filenameStart >= path.length())
 		return path;
 
-	return path.substr(0, filenameStart);
+	return path.substr(filenameStart + 1);
 }
 
 /**
