@@ -35,20 +35,24 @@ private:
 
 	enum EState
 	{
-		HANGING_FROM_CEILING = 0,
+		MOVING_DOWN_FROM_CEILING = 0,
+		HANGING_IN_THREAD,
 		FALLING_DOWN,
 		CHASING_PLAYER
 	};
 
 private:
 
-	CGameObject*	m_pTarget	= nullptr;
+	CGameObject*	m_pTarget		= nullptr;
 
-	float			m_Gravity	= 1500.0f;
+	float			m_Gravity		= 1500.0f;
+	float			m_LifeTime		= 0.0f;
+	float			m_Angle			= 0.0f;
 
-	SDL_FPoint		m_Velocity	= {0.0f, 0.0f};
+	SDL_FPoint		m_StartPosition	= {0.0f, 0.0f};
+	SDL_FPoint		m_Velocity		= {0.0f, 0.0f};
 
-	EState			m_State		= EState::HANGING_FROM_CEILING;
+	EState			m_State			= EState::MOVING_DOWN_FROM_CEILING;
 
 	//////////////////////////////////////////////////////////////////////////
 	// Temporary data

@@ -51,8 +51,9 @@ bool CGameState::OnEnter(void)
 		return false;
 
 	m_pSpider = new CSpider(m_pApplication);
-	if (!m_pSpider->Create("spider.png", {800.0f, 0.0f}))
+	if (!m_pSpider->Create("spider.png", {800.0f, -50.0f}))
 		return false;
+	((CSpider*)m_pSpider)->SetTarget(m_pPlayer);
 
 	/*
 	CRandom randomNumberGenerator;

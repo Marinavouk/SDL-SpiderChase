@@ -14,11 +14,14 @@ bool CSpider::Create(const std::string& textureFileName, const SDL_FPoint& posit
 		m_pTexture->SetTextureCoords(0, 64, 256, 320);
 	}
 
-	m_Velocity.x = 120.0f;
-
 	m_Rectangle = {position.x, position.y, 64.0f * m_Scale, 64.0f * m_Scale};
 
 	m_Collider = {m_Rectangle.x + m_ColliderOffset.x, m_Rectangle.y + m_ColliderOffset.y, 34.0f * m_Scale, 36.0f * m_Scale};
+
+	m_Velocity.x = 100.0f;
+	m_Velocity.y = 100.0f;
+
+	m_StartPosition = {m_Rectangle.x, m_Rectangle.y};
 
 	return true;
 }
@@ -32,6 +35,61 @@ void CSpider::Destroy(void)
 
 void CSpider::Update(const float deltaTime)
 {
+	if (m_State == EState::MOVING_DOWN_FROM_CEILING)
+	{
+		m_Rectangle.y += m_Velocity.y * deltaTime;
+
+		SyncCollider();
+
+		if (m_Rectangle.y > 150.0f)
+		{
+			m_LifeTime = 0.0f;
+
+			m_StartPosition = {m_Rectangle.x, m_Rectangle.y};
+
+			m_State = EState::HANGING_IN_THREAD;
+		}
+
+		return;
+	}
+
+	else if (m_State == EState::HANGING_IN_THREAD)
+	{
+		m_LifeTime += deltaTime;
+
+		m_Angle = sinf(m_LifeTime * 1.5f) * 15.0f;
+
+		m_pTexture->SetAngle(-m_Angle);
+
+		m_Rectangle.x = m_StartPosition.x + (m_Angle * 2.0f);
+
+		SyncCollider();
+
+		if (m_pTarget)
+		{
+		#if defined(_DEBUG)
+			const SDL_FPoint targetPosition = m_pTarget->GetPosition();
+			const SDL_FPoint targetSize		= m_pTarget->GetSize();
+		//	printf("%f\n", fabs((targetPosition.x + (targetSize.x * 0.5f)) - (m_Collider.x + (m_Collider.w * 0.5f))));
+		#endif
+
+			if (fabs(m_pTarget->GetPosition().x - m_Collider.x) <= 40.0f)
+				m_State = EState::FALLING_DOWN;
+		}
+
+		return;
+	}
+
+	else if (m_State == EState::FALLING_DOWN)
+	{
+
+	}
+
+	else if (m_State == EState::CHASING_PLAYER)
+	{
+
+	}
+
 	m_Velocity.y += m_Gravity * deltaTime;
 
 	m_Rectangle.x += m_Velocity.x * deltaTime;
@@ -63,6 +121,10 @@ void CSpider::Update(const float deltaTime)
 
 		m_Rectangle.y = windowSize.y - (m_Rectangle.h - bottomOffset);
 
+		m_pTexture->SetAngle(0.0f);
+
+		m_Angle = 0.0f;
+
 		m_Velocity.y = 0.0f;
 	}
 
@@ -71,6 +133,14 @@ void CSpider::Update(const float deltaTime)
 
 void CSpider::Render(void)
 {
+	if ((m_State == EState::MOVING_DOWN_FROM_CEILING) || (m_State == EState::HANGING_IN_THREAD))
+	{
+		SDL_Renderer* renderer = m_pApplication->GetWindow().GetRenderer();
+
+		SDL_SetRenderDrawColor(renderer, 150, 150, 150, 200);
+		SDL_RenderDrawLineF(renderer, m_StartPosition.x + (m_Rectangle.w * 0.5f), 0.0f, m_Collider.x + (m_Collider.w * 0.5f), m_Collider.y + (m_Collider.h * 0.5f));
+	}
+
 	// Very temporary, will be removed when the spider is animated
 	// This is just to have anything rendered to the screen
 	m_pTexture->Render({m_Rectangle.x, m_Rectangle.y});
@@ -80,11 +150,11 @@ void CSpider::RenderDebug(void)
 {
 	SDL_Renderer* renderer = m_pApplication->GetWindow().GetRenderer();
 
-	SDL_SetRenderDrawColor(renderer, 200, 0, 0, 255);
-	SDL_RenderDrawRectF(renderer, &m_Rectangle);
+//	SDL_SetRenderDrawColor(renderer, 200, 0, 0, 255);
+//	SDL_RenderDrawRectF(renderer, &m_Rectangle);
 
 	SDL_SetRenderDrawColor(renderer, 0, 200, 0, 255);
-	SDL_RenderDrawRectF(renderer, &m_Collider); 
+	SDL_RenderDrawRectF(renderer, &m_Collider);
 }
 
 void CSpider::HandleObstacleCollision(const GameObjectList& obstacles, const float deltaTime)
@@ -121,6 +191,10 @@ bool CSpider::ResolveObstacleYCollision(const SDL_FRect& collider, const SDL_FPo
 	if (QuadVsQuad(m_Collider, collider, &intersection))
 	{
 		m_Rectangle.y -= intersection.h;
+
+		m_pTexture->SetAngle(0.0f);
+
+		m_Angle = 0.0f;
 
 		m_Velocity.y = 0.0f;
 

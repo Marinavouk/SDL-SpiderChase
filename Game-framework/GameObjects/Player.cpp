@@ -18,6 +18,8 @@ bool CPlayer::Create(const std::string& textureFileName, const SDL_FPoint& posit
 	m_HorizontalCollider	= {m_Rectangle.x + m_HorizontalColliderOffset.x,	m_Rectangle.y + m_HorizontalColliderOffset.y,	18.0f * m_Scale, 40.0f * m_Scale};
 	m_VerticalCollider		= {m_Rectangle.x + m_VerticalColliderOffset.x,		m_Rectangle.y + m_VerticalColliderOffset.y,		10.0f * m_Scale, 64.0f * m_Scale};
 
+	m_Collider = {m_VerticalCollider.x, m_VerticalCollider.y, m_VerticalCollider.w, m_VerticalCollider.h};
+
 	return true;
 }
 
@@ -95,14 +97,17 @@ void CPlayer::RenderDebug(void)
 {
 	SDL_Renderer* renderer = m_pApplication->GetWindow().GetRenderer();
 
-	SDL_SetRenderDrawColor(renderer, 200, 0, 0, 255);
-	SDL_RenderDrawRectF(renderer, &m_Rectangle);
+//	SDL_SetRenderDrawColor(renderer, 200, 0, 0, 255);
+//	SDL_RenderDrawRectF(renderer, &m_Rectangle);
 
 	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
 	SDL_RenderDrawRectF(renderer, &m_HorizontalCollider);
 
 	SDL_SetRenderDrawColor(renderer, 0, 255, 255, 255);
 	SDL_RenderDrawRectF(renderer, &m_VerticalCollider);
+
+//	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+//	SDL_RenderDrawRectF(renderer, &m_Collider);
 }
 
 void CPlayer::HandleInput(const float deltaTime)
@@ -207,6 +212,8 @@ void CPlayer::SyncColliders(void)
 	m_HorizontalCollider.y	= m_Rectangle.y + m_HorizontalColliderOffset.y;
 	m_VerticalCollider.x	= m_Rectangle.x + m_VerticalColliderOffset.x;
 	m_VerticalCollider.y	= m_Rectangle.y + m_VerticalColliderOffset.y;
+
+	m_Collider = {m_VerticalCollider.x, m_VerticalCollider.y, m_VerticalCollider.w, m_VerticalCollider.h};
 }
 
 void CPlayer::ActivateDamageCooldown(void)

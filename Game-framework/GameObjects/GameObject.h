@@ -31,8 +31,10 @@ public:
 
 public:
 
-	SDL_FPoint		GetPosition(void) const						{return {m_Rectangle.x, m_Rectangle.y};}
+	SDL_FPoint		GetPosition(void) const						{return {m_Collider.x, m_Collider.y};}
 	void			SetPosition(const SDL_FPoint newPosition)	{m_Rectangle = {newPosition.x, newPosition.y, m_Rectangle.w, m_Rectangle.h};}
+
+	SDL_FPoint		GetSize(void) const							{return {m_Collider.w, m_Collider.h};}
 
 	SDL_FRect&		GetCollider(void) const						{return (SDL_FRect&)m_Collider;}
 
