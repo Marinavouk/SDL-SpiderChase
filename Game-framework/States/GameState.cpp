@@ -27,7 +27,6 @@ bool CGameState::OnEnter(void)
 
 	// Create objects that should be created/started when this state is entered/started (create textures, load/start game music etc)
 
-
 	m_pBackground = textureHandler.CreateTexture("Assets/Textures/game_background.png");
 	if (!m_pBackground)
 		return false;

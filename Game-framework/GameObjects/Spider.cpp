@@ -27,7 +27,6 @@ void CSpider::Destroy(void)
 
 void CSpider::Update(const float deltaTime)
 {
-	/*
 	m_Rectangle.x += ((m_Direction == 1) ? 120.0f : -120.0f) * deltaTime;
 
 	const SDL_FPoint windowSize = m_pApplication->GetWindow().GetSize();
@@ -46,28 +45,6 @@ void CSpider::Update(const float deltaTime)
 		m_Rectangle.x = windowSize.x - (m_Rectangle.w - rightOffset);
 
 		m_Direction = 0;
-	}
-	*/
-
-	switch (m_State)
-	{
-		case EState::HANGING_FROM_CEILING:
-		{
-			break;
-		}
-
-		case EState::FALLING_DOWN:
-		{
-			break;
-		}
-
-		case EState::CHASING_PLAYER:
-		{
-			break;
-		}
-
-		default:
-			break;
 	}
 
 	m_Collider.x = m_Rectangle.x + m_ColliderOffset.x;
