@@ -2,7 +2,7 @@
 
 #include "Application.h"
 
-bool CTable::Create(void)
+bool CTable::Create(const SDL_FPoint& position)
 {
 	m_pTexture = m_pApplication->GetTextureHandler().CreateTexture("Assets/Textures/table.png");
 	if (!m_pTexture)
@@ -14,7 +14,7 @@ bool CTable::Create(void)
 
 	m_Size = {(float)(textureWidth * 0.7f), (float)(textureHeight * 0.7f)};
 
-	m_Rectangle = {100.0f, m_pApplication->GetWindow().GetSize().y - m_Size.y, m_Size.x, m_Size.y};
+	m_Rectangle = {position.x, m_pApplication->GetWindow().GetSize().y - m_Size.y, m_Size.x, m_Size.y};
 
 	m_Collider = {m_Rectangle.x + 10.0f, m_Rectangle.y + 10.0f, m_Size.x - 20.0f, 25.0f};
 

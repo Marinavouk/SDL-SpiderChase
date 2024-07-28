@@ -20,13 +20,13 @@ static bool QuadVsQuad(const SDL_FRect& rQuad1, const SDL_FRect& rQuad2, SDL_FRe
 	return Result;
 }
 
-bool CPlayer::Create(void)
+bool CPlayer::Create(const SDL_FPoint& position)
 {
 	m_pTexture = m_pApplication->GetTextureHandler().CreateTexture("Assets/Textures/character.png");
 	if (!m_pTexture)
 		return false;
 
-	m_Rectangle = {300.0f, m_pApplication->GetWindow().GetSize().y - (128.0f * m_Scale), 64.0f * m_Scale, 128.0f * m_Scale};
+	m_Rectangle = {position.x, m_pApplication->GetWindow().GetSize().y - (128.0f * m_Scale), 64.0f * m_Scale, 128.0f * m_Scale};
 
 	m_HorizontalCollider	= {m_Rectangle.x + m_HorizontalColliderOffset.x,	m_Rectangle.y + m_HorizontalColliderOffset.y,	18.0f * m_Scale, 40.0f * m_Scale};
 	m_VerticalCollider		= {m_Rectangle.x + m_VerticalColliderOffset.x,		m_Rectangle.y + m_VerticalColliderOffset.y,		10.0f * m_Scale, 64.0f * m_Scale};

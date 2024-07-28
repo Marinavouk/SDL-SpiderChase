@@ -2,13 +2,13 @@
 
 #include "Application.h"
 
-bool CSpider::Create(void)
+bool CSpider::Create(const SDL_FPoint& position)
 {
 	m_pTexture = m_pApplication->GetTextureHandler().CreateTexture("Assets/Textures/spider.png");
 	if (!m_pTexture)
 		return false;
 
-	m_Rectangle = {500.0f, m_pApplication->GetWindow().GetSize().y - ((64.0f - m_ColliderOffset.y) * m_Scale), 64.0f * m_Scale, 64.0f * m_Scale};
+	m_Rectangle = {position.x, m_pApplication->GetWindow().GetSize().y - ((64.0f - m_ColliderOffset.y) * m_Scale), 64.0f * m_Scale, 64.0f * m_Scale};
 
 	m_Collider = {m_Rectangle.x + m_ColliderOffset.x, m_Rectangle.y + m_ColliderOffset.y, 34.0f * m_Scale, 36.0f * m_Scale};
 

@@ -17,7 +17,7 @@ public:
 			 CGameObject(CApplication* application) : m_pApplication(application)	{}
 	virtual ~CGameObject(void)														{}
 
-	virtual bool	Create(void)																							= 0;
+	virtual bool	Create(const SDL_FPoint& position)																		= 0;
 	virtual void	Destroy(void);
 	virtual void	Update(const float deltaTime)																			{}
 	virtual void	Render(void)																							{}

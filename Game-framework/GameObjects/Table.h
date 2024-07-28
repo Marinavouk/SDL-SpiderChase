@@ -13,7 +13,7 @@ public:
 	 CTable(CApplication* application) : CGameObject(application)	{}
 	~CTable(void)													{}
 
-	virtual bool Create(void) override;
+	virtual bool Create(const SDL_FPoint& position) override;
 	virtual void Render(void) override;
 	virtual void RenderDebug(void) override;
 

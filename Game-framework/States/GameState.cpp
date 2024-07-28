@@ -16,15 +16,17 @@ bool CGameState::OnEnter(void)
 	std::cout << "Entering game state" << std::endl;
 #endif
 
-	// Set the clear color (the background color that is shown behind the menu background and other objects)
-	// This is completely optional
-	m_pApplication->GetWindow().SetClearColor({150, 150, 200, 255});
-
-	// Create objects that should be created/started when this state is entered/started (create textures, load/start game music etc)
-
 	// Easy access to handlers so you don't have to write m_pApplication->Get_X_Handler() multiple times below
 	CTextureHandler&	textureHandler	= m_pApplication->GetTextureHandler();
 	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
+	CWindow&			window			= m_pApplication->GetWindow();
+
+	// Set the clear color (the background color that is shown behind the menu background and other objects)
+	// This is completely optional
+	window.SetClearColor({150, 150, 200, 255});
+
+	// Create objects that should be created/started when this state is entered/started (create textures, load/start game music etc)
+
 
 	m_pBackground = textureHandler.CreateTexture("Assets/Textures/game_background.png");
 	if (!m_pBackground)
@@ -37,20 +39,22 @@ bool CGameState::OnEnter(void)
 	audioHandler.PlayMusic(m_pMusic, -1);
 	audioHandler.SetMusicVolume(0);
 
+	const SDL_FPoint windowSize = window.GetSize();
+
 	m_pPlayer = new CPlayer(m_pApplication);
-	if (!m_pPlayer->Create())
+	if (!m_pPlayer->Create({300.0f, windowSize.y}))
 		return false;
 
 	m_pTable = new CTable(m_pApplication);
-	if (!m_pTable->Create())
+	if (!m_pTable->Create({100.0f, windowSize.y} ))
 		return false;
 
 	m_pChair = new CChair(m_pApplication);
-	if (!m_pChair->Create())
+	if (!m_pChair->Create({900.0f, windowSize.y}))
 		return false;
 
 	m_pSpider = new CSpider(m_pApplication);
-	if (!m_pSpider->Create())
+	if (!m_pSpider->Create({500.0f, windowSize.y}))
 		return false;
 
 	m_Obstacles.push_back(m_pTable);

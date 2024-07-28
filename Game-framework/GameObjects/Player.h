@@ -13,7 +13,7 @@ public:
 	 CPlayer(CApplication* application) : CGameObject(application)	{}
 	~CPlayer(void)													{}
 
-	virtual bool	Create(void) override;
+	virtual bool	Create(const SDL_FPoint& position) override;
 	virtual void	Destroy(void) override;
 	virtual void	Update(const float deltaTime) override;
 	virtual void	Render(void) override;
