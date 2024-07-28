@@ -38,7 +38,7 @@ bool CGameState::OnEnter(void)
 	audioHandler.SetMusicVolume(0);
 
 	m_pPlayer = new CPlayer(m_pApplication);
-	if (!m_pPlayer->Create("character.png", {300.0f, windowSize.y}))
+	if (!m_pPlayer->Create("player.png", {300.0f, windowSize.y}))
 		return false;
 
 	m_pTable = new CTable(m_pApplication);

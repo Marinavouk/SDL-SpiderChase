@@ -33,7 +33,12 @@ void CTextureHandler::Destroy(void)
 CTexture* CTextureHandler::CreateTexture(const std::string& fileName)
 {
 	if(fileName.empty())
-		m_TextureMap.find("default")->second;
+	{
+		CTexture* defaultTexture = m_TextureMap.find("default")->second;
+		defaultTexture->m_ReferenceCount++;
+
+		return defaultTexture;
+	}
 
 	const std::string name = RemoveFileExtension(fileName);
 
@@ -53,7 +58,10 @@ CTexture* CTextureHandler::CreateTexture(const std::string& fileName)
 		delete texture;
 		texture = nullptr;
 
-		return (!m_TextureMap.empty() ? m_TextureMap.find("default")->second : nullptr); 
+		CTexture* defaultTexture = m_TextureMap.find("default")->second;
+		defaultTexture->m_ReferenceCount++;
+
+		return defaultTexture;
 	}
 
 	texture->m_ReferenceCount++;
@@ -69,14 +77,20 @@ CTexture* CTextureHandler::CreateTextureFromSurface(SDL_Surface* surface, const 
 	{
 		std::cout << "Error: failed to create texture from surface - surface is nullptr"  << std::endl;
 
-		m_TextureMap.find("default")->second;
+		CTexture* defaultTexture = m_TextureMap.find("default")->second;
+		defaultTexture->m_ReferenceCount++;
+
+		return defaultTexture;
 	}
 
 	if (name.empty())
 	{
 		std::cout << "Error: failed to create texture from surface - name is empty"  << std::endl;
 
-		m_TextureMap.find("default")->second;
+		CTexture* defaultTexture = m_TextureMap.find("default")->second;
+		defaultTexture->m_ReferenceCount++;
+
+		return defaultTexture;
 	}
 
 	CTexture* texture = new CTexture;
@@ -86,7 +100,10 @@ CTexture* CTextureHandler::CreateTextureFromSurface(SDL_Surface* surface, const 
 		delete texture;
 		texture = nullptr;
 
-		return (!m_TextureMap.empty() ? m_TextureMap.find("default")->second : nullptr); 
+		CTexture* defaultTexture = m_TextureMap.find("default")->second;
+		defaultTexture->m_ReferenceCount++;
+
+		return defaultTexture;
 	}
 
 	texture->m_ReferenceCount++;
