@@ -24,8 +24,6 @@ public:
 
 	void			SetTarget(CGameObject* target) {m_pTarget = target;}
 
-	void			SetDirection(const int direction);
-
 private:
 
 	void			SyncCollider(void);

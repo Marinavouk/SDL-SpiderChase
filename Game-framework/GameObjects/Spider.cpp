@@ -49,8 +49,6 @@ void CSpider::Update(const float deltaTime)
 
 			m_State = EState::HANGING_IN_THREAD;
 		}
-
-		return;
 	}
 
 	else if (m_State == EState::HANGING_IN_THREAD)
@@ -67,68 +65,47 @@ void CSpider::Update(const float deltaTime)
 
 		if (m_pTarget)
 		{
-		#if defined(_DEBUG)
-			const SDL_FPoint targetPosition = m_pTarget->GetPosition();
-			const SDL_FPoint targetSize		= m_pTarget->GetSize();
-		//	printf("%f\n", fabs((targetPosition.x + (targetSize.x * 0.5f)) - (m_Collider.x + (m_Collider.w * 0.5f))));
-		#endif
-
+			// Check if the player is under the spider
+			// If the player is under this spider, switch to the FALLING_DOWN state
 			if (fabs(m_pTarget->GetPosition().x - m_Collider.x) <= 40.0f)
-				m_State = EState::FALLING_DOWN;
-		}
+			{
+				m_Angle = 0.0f;
 
-		return;
+				m_pTexture->SetAngle(0.0f);
+
+				m_State = EState::FALLING_DOWN;
+			}
+		}
 	}
 
 	else if (m_State == EState::FALLING_DOWN)
 	{
+		m_Velocity.y += m_Gravity * deltaTime;
 
+		m_Rectangle.y += m_Velocity.y * deltaTime;
+
+		SyncCollider();
+
+		const SDL_FPoint windowSize = m_pApplication->GetWindow().GetSize();
+
+		if (m_Collider.y > windowSize.y - m_Collider.h)
+		{
+			const float bottomOffset = m_Rectangle.h - (m_Collider.h + m_ColliderOffset.y);
+
+			m_Rectangle.y = windowSize.y - (m_Rectangle.h - bottomOffset);
+
+			SyncCollider();
+
+			m_Velocity.y = 0.0f;
+
+			m_State = EState::CHASING_PLAYER;
+		}
 	}
 
 	else if (m_State == EState::CHASING_PLAYER)
 	{
 
 	}
-
-	m_Velocity.y += m_Gravity * deltaTime;
-
-	m_Rectangle.x += m_Velocity.x * deltaTime;
-	m_Rectangle.y += m_Velocity.y * deltaTime;
-
-	SyncCollider();
-
-	const SDL_FPoint windowSize = m_pApplication->GetWindow().GetSize();
-
-	if (m_Collider.x < 0.0f)
-	{
-		m_Rectangle.x = -m_ColliderOffset.x;
-
-		m_Velocity.x = -m_Velocity.x;
-	}
-
-	else if(m_Collider.x > (windowSize.x - m_Collider.w))
-	{
-		const float rightOffset = m_Rectangle.w - (m_Collider.w + m_ColliderOffset.x);
-
-		m_Rectangle.x = windowSize.x - (m_Rectangle.w - rightOffset);
-
-		m_Velocity.x = -m_Velocity.x;
-	}
-
-	if (m_Collider.y > windowSize.y - m_Collider.h)
-	{
-		const float bottomOffset = m_Rectangle.h - (m_Collider.h + m_ColliderOffset.y);
-
-		m_Rectangle.y = windowSize.y - (m_Rectangle.h - bottomOffset);
-
-		m_pTexture->SetAngle(0.0f);
-
-		m_Angle = 0.0f;
-
-		m_Velocity.y = 0.0f;
-	}
-
-	SyncCollider();
 }
 
 void CSpider::Render(void)
@@ -164,16 +141,13 @@ void CSpider::HandleObstacleCollision(const GameObjectList& obstacles, const flo
 	for (CGameObject* obstacle : obstacles)
 	{
 		if (ResolveObstacleYCollision(obstacle->GetCollider(), moveAmount))
+		{
+			if (m_State == EState::FALLING_DOWN)
+				m_State = EState::CHASING_PLAYER;
+
 			break;
+		}
 	}
-}
-
-void CSpider::SetDirection(const int direction)
-{
-	m_pTexture->SetFlipMethod(((direction == 0) ? SDL_RendererFlip::SDL_FLIP_HORIZONTAL : SDL_RendererFlip::SDL_FLIP_NONE));
-
-	if ((direction == 0) && (m_Velocity.x > 0.0f))
-		m_Velocity.x = -m_Velocity.x;
 }
 
 void CSpider::SyncCollider(void)
