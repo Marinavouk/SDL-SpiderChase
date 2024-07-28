@@ -2,6 +2,7 @@
 
 #include "GameObjects/GameObject.h"
 #include "State.h"
+#include "Utilities/Texture.h"
 
 #include <SDL.h>
 #include <SDL_mixer.h>
@@ -28,7 +29,7 @@ private:
 
 	// Declare the game objects here and then create/destroy them in the OnEnter- and OnExit functions
 
-	SDL_Texture*	m_pBackground		= nullptr;
+	CTexture*		m_pBackground		= nullptr;
 
 	Mix_Music*		m_pMusic			= nullptr;
 

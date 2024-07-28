@@ -25,6 +25,9 @@ bool CPlayer::Create(const std::string& textureFileName, const SDL_FPoint& posit
 	if (!CGameObject::Create(textureFileName, position))
 		return false;
 
+	m_pTexture->SetSize({64.0f * m_Scale, 128.0f * m_Scale});
+	m_pTexture->SetTextureCoords(0, 64, 0, 128);
+
 	m_Rectangle = {position.x, m_pApplication->GetWindow().GetSize().y - (128.0f * m_Scale), 64.0f * m_Scale, 128.0f * m_Scale};
 
 	m_HorizontalCollider	= {m_Rectangle.x + m_HorizontalColliderOffset.x,	m_Rectangle.y + m_HorizontalColliderOffset.y,	18.0f * m_Scale, 40.0f * m_Scale};
@@ -104,9 +107,7 @@ void CPlayer::Render(void)
 
 	// Very temporary, will be removed when the character is animated
 	// This is just to have anything rendered to the screen
-	const SDL_Rect		clipRect	= {0, 0, 64, 128};
-	const SDL_FPoint	size		= {64.0f * m_Scale, 128.0f * m_Scale};
-	m_pApplication->GetTextureHandler().RenderTexture(m_pTexture, {m_Rectangle.x, m_Rectangle.y}, &clipRect, &size);
+	m_pTexture->Render({m_Rectangle.x, m_Rectangle.y});
 }
 
 void CPlayer::RenderDebug(void)
@@ -148,6 +149,8 @@ void CPlayer::HandleInput(const float deltaTime)
 
 		m_LookDirection = 0;
 
+		m_pTexture->SetFlipMethod(SDL_RendererFlip::SDL_FLIP_HORIZONTAL);
+
 		m_HorizontalDirection = EState::MOVING_LEFT;
 	}
 
@@ -156,6 +159,8 @@ void CPlayer::HandleInput(const float deltaTime)
 		m_Velocity.x = std::min(m_Velocity.x + ((m_IsRunning ? m_AccelerationSpeedRunning : m_AccelerationSpeedWalking) * deltaTime), (m_IsRunning ? m_MaxRunningVelocity : m_MaxWalkingVelocity));
 
 		m_LookDirection = 1;
+
+		m_pTexture->SetFlipMethod(SDL_RendererFlip::SDL_FLIP_NONE);
 
 		m_HorizontalDirection = EState::MOVING_RIGHT;
 	}

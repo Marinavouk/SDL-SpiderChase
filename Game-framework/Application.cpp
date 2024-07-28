@@ -27,7 +27,9 @@ bool CApplication::Create(void)
 	// you can use this function
 //	m_Window.SetClearColor({ 255, 0, 0, 255 });
 
-	m_TextureHandler = CTextureHandler(m_Window.GetRenderer());
+//	m_TextureHandler = CTextureHandler(m_Window.GetRenderer(), "Assets/Textures");
+	if (!m_TextureHandler.Create(m_Window.GetRenderer(), "Assets/Textures"))
+		return false;
 
 	m_TransitionRenderer = CTransitionRenderer(this, m_Window.GetSize());
 
@@ -67,6 +69,7 @@ void CApplication::Destroy(void)
 		}
 	}
 
+	m_TextureHandler.Destroy();
 	m_Window.Destroy();
 	m_LibraryHandler.Destroy();
 }

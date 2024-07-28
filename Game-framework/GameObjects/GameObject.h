@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Utilities/Texture.h"
+
 #include <SDL.h>
 #include <string>
 #include <vector>
@@ -38,7 +40,7 @@ protected:
 
 	CApplication*	m_pApplication	= nullptr;
 
-	SDL_Texture*	m_pTexture		= nullptr;
+	CTexture*		m_pTexture		= nullptr;
 
 	SDL_FRect		m_Rectangle		= {0.0f, 0.0f, 0.0f, 0.0f};
 	SDL_FRect		m_Collider		= {0.0f, 0.0f, 0.0f, 0.0f};

@@ -1,92 +1,126 @@
 #include "TextureHandler.h"
 
+#include "Utilities/StringUtilities.h"
+
 #include <SDL_image.h>
 #include <iostream>
 
-SDL_Texture* CTextureHandler::CreateTexture(const std::string& fileName)
+bool CTextureHandler::Create(SDL_Renderer* renderer, const std::string& basePath)
 {
-	SDL_Texture* texture = IMG_LoadTexture(m_pRenderer, fileName.c_str());
+	m_pRenderer = renderer;
 
-	if (!texture)
+	m_BasePath = basePath;
+
+	CTexture* defaultTexture = CreateTexture("default.png");
+
+	if(!defaultTexture)
+		return false;
+
+	m_TextureMap["default"] = defaultTexture;
+
+	return true;
+}
+
+void CTextureHandler::Destroy(void)
+{
+	DestroyTexture("default");
+
+	m_TextureMap.clear();
+
+	m_pRenderer = nullptr;
+}
+
+CTexture* CTextureHandler::CreateTexture(const std::string& fileName)
+{
+	if(fileName.empty())
+		m_TextureMap.find("default")->second;
+
+	const std::string name = RemoveFileExtension(fileName);
+
+	TextureMap::const_iterator FindIt = m_TextureMap.find(name);
+
+	if(FindIt != m_TextureMap.end())
 	{
-	#if defined(_DEBUG)
-		std::cout << "Error: failed to load texture '" << fileName << "'"  << std::endl;
-		std::cout << IMG_GetError() << std::endl;
-	#endif
+		FindIt->second->m_ReferenceCount++;
+
+		return FindIt->second;
 	}
+
+	CTexture* texture = new CTexture;
+
+	if(!texture->Create(m_pRenderer, m_BasePath + "/" + fileName))
+	{
+		delete texture;
+		texture = nullptr;
+
+		return (!m_TextureMap.empty() ? m_TextureMap.find("default")->second : nullptr); 
+	}
+
+	texture->m_ReferenceCount++;
+
+	m_TextureMap[name] = texture;
 
 	return texture;
 }
 
-SDL_Texture* CTextureHandler::CreateTextureFromSurface(SDL_Surface* surface)
+CTexture* CTextureHandler::CreateTextureFromSurface(SDL_Surface* surface, const std::string& name)
 {
-	SDL_Texture* texture = SDL_CreateTextureFromSurface(m_pRenderer, surface);
-
-	if (!texture)
+	if (!surface)
 	{
-	#if defined(_DEBUG)
-		std::cout << "Error: failed to create texture from surface" << std::endl;
-		std::cout << SDL_GetError() << std::endl;
-	#endif
+		std::cout << "Error: failed to create texture from surface - surface is nullptr"  << std::endl;
+
+		m_TextureMap.find("default")->second;
 	}
+
+	if (name.empty())
+	{
+		std::cout << "Error: failed to create texture from surface - name is empty"  << std::endl;
+
+		m_TextureMap.find("default")->second;
+	}
+
+	CTexture* texture = new CTexture;
+
+	if(!texture->CreateFromSurface(m_pRenderer, surface, name))
+	{
+		delete texture;
+		texture = nullptr;
+
+		return (!m_TextureMap.empty() ? m_TextureMap.find("default")->second : nullptr); 
+	}
+
+	texture->m_ReferenceCount++;
+
+	m_TextureMap[name] = texture;
 
 	return texture;
 }
 
-SDL_Texture* CTextureHandler::CreateEmptyTexture(const SDL_Point& size, const SDL_TextureAccess access)
+void CTextureHandler::DestroyTexture(const std::string& name)
 {
-	SDL_Texture* texture = SDL_CreateTexture(m_pRenderer, SDL_PixelFormatEnum::SDL_PIXELFORMAT_RGBA8888, access, size.x, size.y);
+	if(name.empty())
+		return;
 
-	if (!texture)
+	TextureMap::iterator FindIt = m_TextureMap.find(name);
+
+	if(FindIt == m_TextureMap.end())
 	{
-	#if defined(_DEBUG)
-		std::cout << "Error: failed to create texture" << std::endl;
-		std::cout << SDL_GetError() << std::endl;
+	#ifdef _DEBUG
+		std::cout << "Error: failed to destroy texture '" << name.c_str() << "' - texture not found"  << std::endl;
 	#endif
+
+		return;
 	}
 
-	return texture;
-}
+	if(FindIt->second->m_ReferenceCount > 0)
+		FindIt->second->m_ReferenceCount--;
 
-void CTextureHandler::DestroyTexture(SDL_Texture* texture)
-{
-	SDL_DestroyTexture(texture);
-}
+	if(FindIt->second->m_ReferenceCount != 0)
+		return;
 
-void CTextureHandler::RenderTexture(SDL_Texture* texture, const SDL_FPoint& position, const SDL_Rect* srcRect, const SDL_FPoint* customSize)
-{
-	if (customSize)
-	{
-		const SDL_FRect dstRect2 = {position.x, position.y, customSize->x, customSize->y};
-		SDL_RenderCopyF(m_pRenderer, texture, srcRect, &dstRect2);
-	}
+	FindIt->second->Destroy();
+	delete FindIt->second;
+	FindIt->second = nullptr;
 
-	else
-	{
-		int textureWidth = 0;
-		int textureHeight = 0;
-		SDL_QueryTexture(texture, nullptr, nullptr, &textureWidth, &textureHeight);
-
-		const SDL_FRect dstRect2 = {position.x, position.y, (float)textureWidth, (float)textureHeight};
-		SDL_RenderCopyF(m_pRenderer, texture, srcRect, &dstRect2);
-	}
-}
-
-void CTextureHandler::RenderTextureRotated(SDL_Texture* texture, const SDL_FPoint& position, const float angle, const SDL_Rect* srcRect, const SDL_FPoint* customSize)
-{
-	if (customSize)
-	{
-		const SDL_FRect dstRect2 = {position.x, position.y, customSize->x, customSize->y};
-		SDL_RenderCopyExF(m_pRenderer, texture, srcRect, &dstRect2, angle, nullptr, SDL_RendererFlip::SDL_FLIP_NONE);
-	}
-
-	else
-	{
-		int textureWidth = 0;
-		int textureHeight = 0;
-		SDL_QueryTexture(texture, nullptr, nullptr, &textureWidth, &textureHeight);
-
-		const SDL_FRect dstRect2 = {position.x, position.y, (float)textureWidth, (float)textureHeight};
-		SDL_RenderCopyExF(m_pRenderer, texture, srcRect, &dstRect2, angle, nullptr, SDL_RendererFlip::SDL_FLIP_NONE);
-	}
+	m_TextureMap.erase(FindIt);
 }

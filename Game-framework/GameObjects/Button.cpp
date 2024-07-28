@@ -2,7 +2,6 @@
 
 #include "Application.h"
 
-#include <algorithm> // Used by std::max
 #include <iostream>
 #include <vector>
 
@@ -13,27 +12,18 @@ bool CButton::Create(CApplication* application, TTF_Font* font, const std::strin
 	{
 	#if defined(_DEBUG)
 		std::cout << "Error: failed to create surface" << std::endl;
-		std::cout << SDL_GetError() << std::endl;
+		std::cout << TTF_GetError() << std::endl;
 	#endif
 		return false;
 	}
 
-	m_pTexture = application->GetTextureHandler().CreateTextureFromSurface(surface);
+	m_pTexture = application->GetTextureHandler().CreateTextureFromSurface(surface, text);
+	m_pTexture->SetColorMod(textColor);
 
-	SDL_FreeSurface(surface);
-
-	if (!m_pTexture)
-		return false;
-
-	SDL_SetTextureBlendMode(m_pTexture, SDL_BlendMode::SDL_BLENDMODE_BLEND);
-	SDL_SetTextureColorMod(m_pTexture, textColor.r, textColor.g, textColor.b);
-
-	int textureWidth	= 0;
-	int textureHeight	= 0;
-	SDL_QueryTexture(m_pTexture, nullptr, nullptr, &textureWidth, &textureHeight);
+	const SDL_FPoint textureSize = m_pTexture->GetSize();
 
 	m_Position		= {0.0f, 0.0f};
-	m_TextRectangle	= {0.0f, 0.0f, (float)textureWidth, (float)textureHeight};
+	m_TextRectangle	= {0.0f, 0.0f, textureSize.x, textureSize.y};
 	m_TextColor		= textColor;
 
 	SetPosition(m_Position);
@@ -41,9 +31,9 @@ bool CButton::Create(CApplication* application, TTF_Font* font, const std::strin
 	return true;
 }
 
-void CButton::Destroy(void)
+void CButton::Destroy(CApplication* application)
 {
-	SDL_DestroyTexture(m_pTexture);
+	application->GetTextureHandler().DestroyTexture(m_pTexture->GetName());
 	m_pTexture = nullptr;
 }
 
@@ -78,24 +68,25 @@ void CButton::Render(SDL_Renderer* renderer, const SDL_FPoint* mousePosition)
 		SDL_RenderFillRectF(renderer, &m_TextRectangle);
 
 	if (mousePosition)
-	{
-		SDL_Color textColor = (PointInside(*mousePosition) ? m_TextColorHovered : m_TextColor);
-		SDL_SetTextureColorMod(m_pTexture, textColor.r, textColor.g, textColor.b);
-	}
+		m_pTexture->SetColorMod((PointInside(*mousePosition) ? m_TextColorHovered : m_TextColor));
 
 	if (m_Held)
 	{
-		SDL_SetTextureColorMod(m_pTexture, m_TextColorPressed.r, m_TextColorPressed.g, m_TextColorPressed.b);
+		m_pTexture->SetColorMod(m_TextColorPressed);
 
 		const float		diffW	= ((m_TextRectangle.w * m_ScalePressed) - (m_TextRectangle.w * m_ScaleDefault)) * 0.5f;
 		const float		diffH	= ((m_TextRectangle.h * m_ScalePressed) - (m_TextRectangle.h * m_ScaleDefault)) * 0.5f;
 		const SDL_FRect dstRect	= {m_TextRectangle.x - diffW, m_TextRectangle.y - diffH, m_TextRectangle.w * m_ScalePressed, m_TextRectangle.h * m_ScalePressed};
 
-		SDL_RenderCopyF(renderer, m_pTexture, nullptr, &dstRect);
+		m_pTexture->SetSize({dstRect.w, dstRect.h});
+		m_pTexture->Render({dstRect.x, dstRect.y});
 	}
 
 	else
-		SDL_RenderCopyF(renderer, m_pTexture, nullptr, &m_TextRectangle);
+	{
+		m_pTexture->SetSize({m_TextRectangle.w, m_TextRectangle.h});
+		m_pTexture->Render({m_TextRectangle.x, m_TextRectangle.y});
+	}
 }
 
 bool CButton::IsPressed(CInputHandler& inputHandler)

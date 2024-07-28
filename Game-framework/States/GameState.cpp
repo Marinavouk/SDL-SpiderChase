@@ -5,7 +5,6 @@
 #include "GameObjects/Player.h"
 #include "GameObjects/Spider.h"
 #include "GameObjects/Table.h"
-
 #include "Handlers/AudioHandler.h"
 
 #include <iostream>
@@ -20,6 +19,7 @@ bool CGameState::OnEnter(void)
 	CTextureHandler&	textureHandler	= m_pApplication->GetTextureHandler();
 	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
 	CWindow&			window			= m_pApplication->GetWindow();
+	const SDL_FPoint	windowSize		= window.GetSize();
 
 	// Set the clear color (the background color that is shown behind the menu background and other objects)
 	// This is completely optional
@@ -27,9 +27,8 @@ bool CGameState::OnEnter(void)
 
 	// Create objects that should be created/started when this state is entered/started (create textures, load/start game music etc)
 
-	m_pBackground = textureHandler.CreateTexture("Assets/Textures/game_background.png");
-	if (!m_pBackground)
-		return false;
+	m_pBackground = textureHandler.CreateTexture("game_background.png");
+	m_pBackground->SetSize(windowSize);
 
 	m_pMusic = audioHandler.CreateMusic("Assets/Audio/game.mp3");
 	if (!m_pMusic)
@@ -37,8 +36,6 @@ bool CGameState::OnEnter(void)
 
 	audioHandler.PlayMusic(m_pMusic, -1);
 	audioHandler.SetMusicVolume(0);
-
-	const SDL_FPoint windowSize = window.GetSize();
 
 	m_pPlayer = new CPlayer(m_pApplication);
 	if (!m_pPlayer->Create("character.png", {300.0f, windowSize.y}))
@@ -99,7 +96,7 @@ void CGameState::OnExit(void)
 	audioHandler.DestroyMusic(m_pMusic);
 	m_pMusic = nullptr;
 
-	textureHandler.DestroyTexture(m_pBackground);
+	textureHandler.DestroyTexture(m_pBackground->GetName());
 	m_pBackground = nullptr;
 }
 
@@ -129,7 +126,7 @@ void CGameState::Render(void)
 {
 	// Render all the game objects here
 
-	m_pApplication->GetTextureHandler().RenderTexture(m_pBackground, {0.0f, 0.0f}, nullptr, &m_pApplication->GetWindow().GetSize());
+	m_pBackground->Render({0.0f, 0.0f});
 
 	m_pChair->Render();
 	m_pTable->Render();

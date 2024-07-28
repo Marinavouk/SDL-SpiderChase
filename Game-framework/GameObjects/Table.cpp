@@ -7,11 +7,12 @@ bool CTable::Create(const std::string& textureFileName, const SDL_FPoint& positi
 	if (!CGameObject::Create(textureFileName, position))
 		return false;
 
-	int textureWidth	= 0;
-	int textureHeight	= 0;
-	SDL_QueryTexture(m_pTexture, nullptr, nullptr, &textureWidth, &textureHeight);
+	const SDL_FPoint textureSize	= m_pTexture->GetSize();
+	const SDL_FPoint newTextureSize = {textureSize.x * 0.7f, textureSize.y * 0.7f};
 
-	m_Size = {(float)(textureWidth * 0.7f), (float)(textureHeight * 0.7f)};
+	m_pTexture->SetSize(newTextureSize);
+
+	m_Size = newTextureSize;
 
 	m_Rectangle = {position.x, m_pApplication->GetWindow().GetSize().y - m_Size.y, m_Size.x, m_Size.y};
 
@@ -22,7 +23,7 @@ bool CTable::Create(const std::string& textureFileName, const SDL_FPoint& positi
 
 void CTable::Render(void)
 {
-	m_pApplication->GetTextureHandler().RenderTexture(m_pTexture, {m_Rectangle.x, m_pApplication->GetWindow().GetSize().y - m_Size.y}, nullptr, &m_Size);
+	m_pTexture->Render({m_Rectangle.x, m_pApplication->GetWindow().GetSize().y - m_Size.y});
 }
 
 void CTable::RenderDebug(void)

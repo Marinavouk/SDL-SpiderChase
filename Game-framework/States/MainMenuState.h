@@ -2,6 +2,7 @@
 
 #include "GameObjects/Button.h"
 #include "State.h"
+#include "Utilities/Texture.h"
 
 #include <SDL.h>
 #include <SDL_ttf.h>
@@ -24,23 +25,23 @@ private:
 
 	// Declare the main menu objects here and then create/destroy them in the OnEnter- and OnExit functions
 
-	SDL_Texture*	m_pBackground		= nullptr;
-	SDL_Texture*	m_pSpider			= nullptr;
+	CTexture*	m_pBackground		= nullptr;
+	CTexture*	m_pSpider			= nullptr;
 
-	TTF_Font*		m_TextFont			= nullptr;
-	TTF_Font*		m_ButtonFont		= nullptr;
+	TTF_Font*	m_TextFont			= nullptr;
+	TTF_Font*	m_ButtonFont		= nullptr;
 
-	Mix_Music*		m_pMusic			= nullptr;
+	Mix_Music*	m_pMusic			= nullptr;
 
-	CButton			m_TitleTextBlock	= {};
-	CButton			m_PlayButton		= {};
-	CButton			m_QuitButton		= {};
+	CButton		m_TitleTextBlock	= {};
+	CButton		m_PlayButton		= {};
+	CButton		m_QuitButton		= {};
 
-	SDL_FPoint		m_SpiderWebStart	= {0.0f, 0.0f};  
-	SDL_FPoint		m_SpiderSize		= {0.0f, 0.0f};
-	SDL_FPoint		m_SpiderPosition	= {0.0f, 0.0f};
+	SDL_FPoint	m_SpiderWebStart	= {0.0f, 0.0f};  
+	SDL_FPoint	m_SpiderSize		= {0.0f, 0.0f};
+	SDL_FPoint	m_SpiderPosition	= {0.0f, 0.0f};
 
-	float			m_LifeTime			= 0.0f;
-	float			m_SpiderAngle		= 0.0f;
+	float		m_LifeTime			= 0.0f;
+	float		m_SpiderAngle		= 0.0f;
 
 };

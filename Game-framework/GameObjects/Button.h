@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Utilities/Texture.h"
+
 #include <SDL.h> 
 #include <SDL_ttf.h>
 #include <string>
@@ -15,7 +17,7 @@ public:
 	~CButton(void) {}
 
 	bool		Create(CApplication* application, TTF_Font* font, const std::string& text, const SDL_Color& textColor);
-	void		Destroy(void);
+	void		Destroy(CApplication* application);
 
 	void		Update(CInputHandler& inputHandler);
 	void		Render(SDL_Renderer* renderer, const SDL_FPoint* mousePosition = nullptr);
@@ -43,24 +45,24 @@ private:
 
 private:
 
-	SDL_Texture*	m_pTexture					= nullptr;
+	CTexture*	m_pTexture					= nullptr;
 
-	SDL_FPoint		m_Position					= {0.0f, 0.0f};
+	SDL_FPoint	m_Position					= {0.0f, 0.0f};
 
-	SDL_FRect		m_TextRectangle				= {0.0f, 0.0f, 0.0f, 0.0f};
+	SDL_FRect	m_TextRectangle				= {0.0f, 0.0f, 0.0f, 0.0f};
 
-	SDL_Color		m_BackgroundColor			= {0,	0,		0,		255};
-	SDL_Color		m_BackgroundColorPressed	= {0,	0,		0,		255};
-	SDL_Color		m_TextColor					= {255, 255,	255,	255};
-	SDL_Color		m_TextColorHovered			= {255, 255,	255,	255};
-	SDL_Color		m_TextColorPressed			= {255, 255,	255,	255};
+	SDL_Color	m_BackgroundColor			= {0,	0,		0,		255};
+	SDL_Color	m_BackgroundColorPressed	= {0,	0,		0,		255};
+	SDL_Color	m_TextColor					= {255, 255,	255,	255};
+	SDL_Color	m_TextColorHovered			= {255, 255,	255,	255};
+	SDL_Color	m_TextColorPressed			= {255, 255,	255,	255};
 
-	float			m_ScaleDefault				= 1.0f;
-	float			m_ScalePressed				= 1.1f;
-	float			m_CurrentScale				= m_ScaleDefault;
+	float		m_ScaleDefault				= 1.0f;
+	float		m_ScalePressed				= 1.1f;
+	float		m_CurrentScale				= m_ScaleDefault;
 
-	int				m_TriggerButton				= SDL_BUTTON_LEFT;
+	int			m_TriggerButton				= SDL_BUTTON_LEFT;
 
-	bool			m_Held						= false;
+	bool		m_Held						= false;
 
 };

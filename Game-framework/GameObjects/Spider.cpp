@@ -7,9 +7,9 @@ bool CSpider::Create(const std::string& textureFileName, const SDL_FPoint& posit
 	if (!CGameObject::Create(textureFileName, position))
 		return false;
 
-	m_pTexture = m_pApplication->GetTextureHandler().CreateTexture("Assets/Textures/spider.png");
-	if (!m_pTexture)
-		return false;
+	m_pTexture = m_pApplication->GetTextureHandler().CreateTexture("spider.png");
+	m_pTexture->SetSize({64.0f * m_Scale, 64.0f * m_Scale});
+	m_pTexture->SetTextureCoords(0, 64, 256, 320);
 
 	m_Rectangle = {position.x, m_pApplication->GetWindow().GetSize().y - ((64.0f - m_ColliderOffset.y) * m_Scale), 64.0f * m_Scale, 64.0f * m_Scale};
 
@@ -55,9 +55,7 @@ void CSpider::Render(void)
 {
 	// Very temporary, will be removed when the spider is animated
 	// This is just to have anything rendered to the screen
-	const SDL_Rect		clipRect	= {256, 192, 64, 64};
-	const SDL_FPoint	size		= {64.0f * m_Scale, 64.0f * m_Scale};
-	m_pApplication->GetTextureHandler().RenderTexture(m_pTexture, {m_Rectangle.x, m_Rectangle.y}, &clipRect, &size);
+	m_pTexture->Render({m_Rectangle.x, m_Rectangle.y});
 }
 
 void CSpider::RenderDebug(void)
