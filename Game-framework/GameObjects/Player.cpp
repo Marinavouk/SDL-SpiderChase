@@ -51,8 +51,6 @@ void CPlayer::Update(const float deltaTime)
 	{
 		m_Rectangle.x = -m_HorizontalColliderOffset.x;
 
-		SyncColliders();
-
 		m_Velocity.x = 0.0f;
 	}
 
@@ -62,8 +60,6 @@ void CPlayer::Update(const float deltaTime)
 
 		m_Rectangle.x = windowSize.x - (m_Rectangle.w - rightOffset);
 
-		SyncColliders();
-
 		m_Velocity.x = 0.0f;
 	}
 
@@ -71,12 +67,12 @@ void CPlayer::Update(const float deltaTime)
 	{
 		m_Rectangle.y = windowSize.y - m_Rectangle.h;
 
-		SyncColliders();
-
 		m_Velocity.y = 0.0f;
 
 		m_IsJumping = false;
 	}
+
+	SyncColliders();
 
 	if (m_DamageCooldown)
 	{
@@ -147,8 +143,6 @@ void CPlayer::HandleInput(const float deltaTime)
 	{
 		m_Velocity.x = std::max(m_Velocity.x - ((m_IsRunning ? m_AccelerationSpeedRunning : m_AccelerationSpeedWalking) * deltaTime), (m_IsRunning ? -m_MaxRunningVelocity : -m_MaxWalkingVelocity));
 
-		m_LookDirection = 0;
-
 		m_pTexture->SetFlipMethod(SDL_RendererFlip::SDL_FLIP_HORIZONTAL);
 
 		m_HorizontalDirection = EState::MOVING_LEFT;
@@ -157,8 +151,6 @@ void CPlayer::HandleInput(const float deltaTime)
 	else if (inputHandler.KeyHeld(SDL_SCANCODE_RIGHT) && !inputHandler.KeyHeld(SDL_SCANCODE_LEFT))
 	{
 		m_Velocity.x = std::min(m_Velocity.x + ((m_IsRunning ? m_AccelerationSpeedRunning : m_AccelerationSpeedWalking) * deltaTime), (m_IsRunning ? m_MaxRunningVelocity : m_MaxWalkingVelocity));
-
-		m_LookDirection = 1;
 
 		m_pTexture->SetFlipMethod(SDL_RendererFlip::SDL_FLIP_NONE);
 
@@ -169,22 +161,16 @@ void CPlayer::HandleInput(const float deltaTime)
 	{
 		const float speed = (m_IsRunning ? m_DeaccelerationSpeedRunning : m_DeaccelerationSpeedWalking) * deltaTime;
 
-		if (m_Velocity.x < 0.0f)
-			m_Velocity.x = std::min(0.0f, m_Velocity.x + speed);
-
-		else if (m_Velocity.x > 0.0f)
-			m_Velocity.x = std::max(0.0f, m_Velocity.x - speed);
+			 if (m_Velocity.x < 0.0f) m_Velocity.x = std::min(0.0f, m_Velocity.x + speed);
+		else if (m_Velocity.x > 0.0f) m_Velocity.x = std::max(0.0f, m_Velocity.x - speed);
 	}
 
 	//////////////////////////////////////////////////////////////////////////
 
 	// Released keys
 
-	if (inputHandler.KeyReleased(SDL_SCANCODE_LEFT) && (m_HorizontalDirection == EState::MOVING_LEFT))
-		m_HorizontalDirection = EState::IDLE;
-
-	else if (inputHandler.KeyReleased(SDL_SCANCODE_RIGHT) && (m_HorizontalDirection == EState::MOVING_RIGHT))
-		m_HorizontalDirection = EState::IDLE;
+		 if (inputHandler.KeyReleased(SDL_SCANCODE_LEFT)	&& (m_HorizontalDirection == EState::MOVING_LEFT))	m_HorizontalDirection = EState::IDLE;
+	else if (inputHandler.KeyReleased(SDL_SCANCODE_RIGHT)	&& (m_HorizontalDirection == EState::MOVING_RIGHT))	m_HorizontalDirection = EState::IDLE;
 }
 
 void CPlayer::HandleObstacleCollision(const GameObjectList& obstacles, const float deltaTime)
@@ -206,24 +192,28 @@ void CPlayer::HandleEnemyCollision(const GameObjectList& enemies, const float de
 	if (m_DamageCooldown)
 		return;
 
-	const SDL_FPoint moveAmount = {m_Velocity.x * deltaTime, m_Velocity.y * deltaTime};
+	const SDL_FPoint	moveAmount	= {m_Velocity.x * deltaTime, m_Velocity.y * deltaTime};
+	bool				hasCollided = false;
 
 	for (CGameObject* enemy : enemies)
 	{
 		if (ResolveEnemyXCollision(enemy->GetCollider(), moveAmount))
 		{
-			ActivateDamageCooldown();
+			hasCollided = true;
 
 			break;
 		}
 
 		if (ResolveEnemyYCollision(enemy->GetCollider(), moveAmount))
 		{
-			ActivateDamageCooldown();
+			hasCollided = true;
 
 			break;
 		}
 	}
+
+	if (hasCollided)
+		ActivateDamageCooldown();
 }
 
 void CPlayer::SyncColliders(void)
@@ -238,9 +228,8 @@ void CPlayer::ActivateDamageCooldown(void)
 {
 	m_DamageCooldownTimer	= m_DamageCooldownTimerDefault;
 	m_BlinkingInterval		= m_BlinkingIntervalDefault;
-
-	m_DamageCooldown	= true;
-	m_Show				= true;
+	m_DamageCooldown		= true;
+	m_Show					= true;
 }
 
 bool CPlayer::ResolveObstacleXCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount)
@@ -255,8 +244,6 @@ bool CPlayer::ResolveObstacleXCollision(const SDL_FRect& collider, const SDL_FPo
 		if (QuadVsQuad(m_HorizontalCollider, collider, &intersection))
 		{
 			m_Rectangle.x += intersection.w;
-
-			SyncColliders();
 
 			m_Velocity.x = 0.0f;
 
@@ -273,13 +260,14 @@ bool CPlayer::ResolveObstacleXCollision(const SDL_FRect& collider, const SDL_FPo
 		{
 			m_Rectangle.x -= intersection.w;
 
-			SyncColliders();
-
 			m_Velocity.x = 0.0f;
 
 			hasCollided = true;
 		}
 	}
+
+	if (hasCollided)
+		SyncColliders();
 
 	if (moveAmount.y > 0.0f)
 	{
@@ -313,8 +301,6 @@ bool CPlayer::ResolveObstacleYCollision(const SDL_FRect& collider, const SDL_FPo
 		{
 			m_Rectangle.y += intersection.h;
 
-			SyncColliders();
-
 			m_Velocity.y = 0.0f;
 
 			hasCollided = true;
@@ -330,8 +316,6 @@ bool CPlayer::ResolveObstacleYCollision(const SDL_FRect& collider, const SDL_FPo
 		{
 			m_Rectangle.y -= intersection.h;
 
-			SyncColliders();
-
 			m_Velocity.y = 0.0f;
 
 			m_IsJumping = false;
@@ -339,6 +323,9 @@ bool CPlayer::ResolveObstacleYCollision(const SDL_FRect& collider, const SDL_FPo
 			hasCollided = true;
 		}
 	}
+
+	if (hasCollided)
+		SyncColliders();
 
 	return hasCollided;
 }
@@ -356,8 +343,6 @@ bool CPlayer::ResolveEnemyXCollision(const SDL_FRect& collider, const SDL_FPoint
 		{
 			m_Rectangle.x += intersection.w;
 
-			SyncColliders();
-
 			m_Velocity.x  = -m_Velocity.x;
 			m_Velocity.x += m_HorizontalHitStrength;
 			m_Velocity.y -= m_VerticalHitStrength;
@@ -374,8 +359,6 @@ bool CPlayer::ResolveEnemyXCollision(const SDL_FRect& collider, const SDL_FPoint
 		if (QuadVsQuad(m_HorizontalCollider, collider, &intersection))
 		{
 			m_Rectangle.x -= intersection.w;
-
-			SyncColliders();
 
 			m_Velocity.x  = -m_Velocity.x;
 			m_Velocity.x -= m_HorizontalHitStrength;
@@ -399,6 +382,9 @@ bool CPlayer::ResolveEnemyXCollision(const SDL_FRect& collider, const SDL_FPoint
 			hasCollided = true;
 		}
 	}
+
+	if (hasCollided)
+		SyncColliders();
 
 	if (moveAmount.y > 0.0f)
 	{
@@ -434,8 +420,6 @@ bool CPlayer::ResolveEnemyYCollision(const SDL_FRect& collider, const SDL_FPoint
 		{
 			m_Rectangle.y += intersection.h;
 
-			SyncColliders();
-
 			m_Velocity.x  = -m_Velocity.x;
 			m_Velocity.x += ((m_Velocity.x < 0.0f) ? -(m_HorizontalHitStrength * 2.0f) : (m_HorizontalHitStrength * 2.0f));
 
@@ -452,8 +436,6 @@ bool CPlayer::ResolveEnemyYCollision(const SDL_FRect& collider, const SDL_FPoint
 		{
 			m_Rectangle.y -= intersection.h;
 
-			SyncColliders();
-
 			m_Velocity.x  = -m_Velocity.x;
 			m_Velocity.x += ((m_Velocity.x < 0.0f) ? -(m_HorizontalHitStrength * 2.0f) : (m_HorizontalHitStrength * 2.0f));
 			m_Velocity.y -= m_VerticalHitStrength;
@@ -461,6 +443,9 @@ bool CPlayer::ResolveEnemyYCollision(const SDL_FRect& collider, const SDL_FPoint
 			hasCollided = true;
 		}
 	}
+
+	if (hasCollided)
+		SyncColliders();
 
 	return hasCollided;
 }

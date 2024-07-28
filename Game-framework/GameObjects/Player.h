@@ -66,10 +66,6 @@ private:
 	float		m_BlinkingIntervalDefault		= 0.005f;
 	float		m_BlinkingInterval				= m_BlinkingIntervalDefault;
 
-	// 0 = facing left
-	// 1 = facing right
-	int			m_LookDirection					= 1;
-
 	int			m_HorizontalDirection			= EState::IDLE;
 	int			m_VerticalDirection				= EState::IDLE;
 
