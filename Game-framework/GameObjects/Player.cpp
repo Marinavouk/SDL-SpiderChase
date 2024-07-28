@@ -20,10 +20,9 @@ static bool QuadVsQuad(const SDL_FRect& rQuad1, const SDL_FRect& rQuad2, SDL_FRe
 	return Result;
 }
 
-bool CPlayer::Create(const SDL_FPoint& position)
+bool CPlayer::Create(const std::string& textureFileName, const SDL_FPoint& position)
 {
-	m_pTexture = m_pApplication->GetTextureHandler().CreateTexture("Assets/Textures/character.png");
-	if (!m_pTexture)
+	if (!CGameObject::Create(textureFileName, position))
 		return false;
 
 	m_Rectangle = {position.x, m_pApplication->GetWindow().GetSize().y - (128.0f * m_Scale), 64.0f * m_Scale, 128.0f * m_Scale};
@@ -32,11 +31,6 @@ bool CPlayer::Create(const SDL_FPoint& position)
 	m_VerticalCollider		= {m_Rectangle.x + m_VerticalColliderOffset.x,		m_Rectangle.y + m_VerticalColliderOffset.y,		10.0f * m_Scale, 64.0f * m_Scale};
 
 	return true;
-}
-
-void CPlayer::Destroy(void)
-{
-	CGameObject::Destroy();
 }
 
 void CPlayer::Update(const float deltaTime)
@@ -188,7 +182,7 @@ void CPlayer::HandleInput(const float deltaTime)
 		m_HorizontalDirection = EState::IDLE;
 }
 
-void CPlayer::HandleCollision(const GameObjectList& obstacles, const GameObjectList& enemies, const float deltaTime)
+void CPlayer::HandleObstacleCollision(const GameObjectList& obstacles, const float deltaTime)
 {
 	const SDL_FPoint moveAmount = {m_Velocity.x * deltaTime, m_Velocity.y * deltaTime};
 
@@ -200,9 +194,14 @@ void CPlayer::HandleCollision(const GameObjectList& obstacles, const GameObjectL
 		if (ResolveObstacleYCollision(obstacle->GetCollider(), moveAmount))
 			break;
 	}
+}
 
+void CPlayer::HandleEnemyCollision(const GameObjectList& enemies, const float deltaTime)
+{
 	if (m_DamageCooldown)
 		return;
+
+	const SDL_FPoint moveAmount = {m_Velocity.x * deltaTime, m_Velocity.y * deltaTime};
 
 	for (CGameObject* enemy : enemies)
 	{

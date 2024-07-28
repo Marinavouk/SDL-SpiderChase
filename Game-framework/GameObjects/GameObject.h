@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL.h>
+#include <string>
 #include <vector>
 
 class CApplication;
@@ -17,13 +18,14 @@ public:
 			 CGameObject(CApplication* application) : m_pApplication(application)	{}
 	virtual ~CGameObject(void)														{}
 
-	virtual bool	Create(const SDL_FPoint& position)																		= 0;
+	virtual bool	Create(const std::string& textureFileName, const SDL_FPoint& position);
 	virtual void	Destroy(void);
-	virtual void	Update(const float deltaTime)																			{}
-	virtual void	Render(void)																							{}
-	virtual void	RenderDebug(void)																						{}
-	virtual void	HandleInput(const float deltaTime)																		{}
-	virtual void	HandleCollision(const GameObjectList& obstacles, const GameObjectList& enemies, const float deltaTime)	{}
+	virtual void	Update(const float deltaTime)													{}
+	virtual void	Render(void)																	{}
+	virtual void	RenderDebug(void)																{}
+	virtual void	HandleInput(const float deltaTime)												{}
+	virtual void	HandleObstacleCollision(const GameObjectList& obstacles, const float deltaTime)	{}
+	virtual void	HandleEnemyCollision(const GameObjectList& enemies, const float deltaTime)		{}
 
 public:
 

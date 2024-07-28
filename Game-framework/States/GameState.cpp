@@ -42,19 +42,19 @@ bool CGameState::OnEnter(void)
 	const SDL_FPoint windowSize = window.GetSize();
 
 	m_pPlayer = new CPlayer(m_pApplication);
-	if (!m_pPlayer->Create({300.0f, windowSize.y}))
+	if (!m_pPlayer->Create("character.png", {300.0f, windowSize.y}))
 		return false;
 
 	m_pTable = new CTable(m_pApplication);
-	if (!m_pTable->Create({100.0f, windowSize.y} ))
+	if (!m_pTable->Create("table.png", {100.0f, windowSize.y} ))
 		return false;
 
 	m_pChair = new CChair(m_pApplication);
-	if (!m_pChair->Create({900.0f, windowSize.y}))
+	if (!m_pChair->Create("chair.png", {900.0f, windowSize.y}))
 		return false;
 
 	m_pSpider = new CSpider(m_pApplication);
-	if (!m_pSpider->Create({500.0f, windowSize.y}))
+	if (!m_pSpider->Create("spider.png", {500.0f, windowSize.y}))
 		return false;
 
 	m_Obstacles.push_back(m_pTable);
@@ -116,7 +116,8 @@ void CGameState::Update(const float deltaTime)
 
 	m_pPlayer->HandleInput(deltaTime);
 	m_pPlayer->Update(deltaTime);
-	m_pPlayer->HandleCollision(m_Obstacles, m_Enemies, deltaTime);
+	m_pPlayer->HandleObstacleCollision(m_Obstacles, deltaTime);
+	m_pPlayer->HandleEnemyCollision(m_Enemies, deltaTime);
 
 	m_pSpider->Update(deltaTime);
 

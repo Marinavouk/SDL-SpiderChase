@@ -2,10 +2,9 @@
 
 #include "Application.h"
 
-bool CChair::Create(const SDL_FPoint& position)
+bool CChair::Create(const std::string& textureFileName, const SDL_FPoint& position)
 {
-	m_pTexture = m_pApplication->GetTextureHandler().CreateTexture("Assets/Textures/chair.png");
-	if (!m_pTexture)
+	if (!CGameObject::Create(textureFileName, position))
 		return false;
 
 	int textureWidth	= 0;

@@ -2,8 +2,11 @@
 
 #include "Application.h"
 
-bool CSpider::Create(const SDL_FPoint& position)
+bool CSpider::Create(const std::string& textureFileName, const SDL_FPoint& position)
 {
+	if (!CGameObject::Create(textureFileName, position))
+		return false;
+
 	m_pTexture = m_pApplication->GetTextureHandler().CreateTexture("Assets/Textures/spider.png");
 	if (!m_pTexture)
 		return false;
@@ -15,8 +18,16 @@ bool CSpider::Create(const SDL_FPoint& position)
 	return true;
 }
 
+void CSpider::Destroy(void)
+{
+	m_pTarget = nullptr;
+
+	CGameObject::Destroy();
+}
+
 void CSpider::Update(const float deltaTime)
 {
+	/*
 	m_Rectangle.x += ((m_Direction == 1) ? 120.0f : -120.0f) * deltaTime;
 
 	const SDL_FPoint windowSize = m_pApplication->GetWindow().GetSize();
@@ -35,6 +46,28 @@ void CSpider::Update(const float deltaTime)
 		m_Rectangle.x = windowSize.x - (m_Rectangle.w - rightOffset);
 
 		m_Direction = 0;
+	}
+	*/
+
+	switch (m_State)
+	{
+		case EState::HANGING_FROM_CEILING:
+		{
+			break;
+		}
+
+		case EState::FALLING_DOWN:
+		{
+			break;
+		}
+
+		case EState::CHASING_PLAYER:
+		{
+			break;
+		}
+
+		default:
+			break;
 	}
 
 	m_Collider.x = m_Rectangle.x + m_ColliderOffset.x;

@@ -2,10 +2,9 @@
 
 #include "Application.h"
 
-bool CTable::Create(const SDL_FPoint& position)
+bool CTable::Create(const std::string& textureFileName, const SDL_FPoint& position)
 {
-	m_pTexture = m_pApplication->GetTextureHandler().CreateTexture("Assets/Textures/table.png");
-	if (!m_pTexture)
+	if (!CGameObject::Create(textureFileName, position))
 		return false;
 
 	int textureWidth	= 0;
