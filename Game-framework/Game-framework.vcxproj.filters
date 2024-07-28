@@ -87,7 +87,7 @@
     <ClCompile Include="GameObjects\Chair.cpp">
       <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Spider.cpp">
+    <ClCompile Include="GameObjects\Spider.cpp">
       <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
   </ItemGroup>
@@ -146,7 +146,7 @@
     <ClInclude Include="GameObjects\Chair.h">
       <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Spider.h">
+    <ClInclude Include="GameObjects\Spider.h">
       <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
   </ItemGroup>
