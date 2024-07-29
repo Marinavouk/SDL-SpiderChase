@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GameObjects/GameObject.h"
+#include "GameObjects/Player.h"
 
 #include <SDL.h>
 #include <vector>
@@ -42,6 +43,7 @@ private:
 private:
 
 	CGameObject*	m_pTarget		= nullptr;
+	CPlayer*		m_pPlayer		= nullptr;
 
 	float			m_Gravity		= 1500.0f;
 	float			m_LifeTime		= 0.0f;

@@ -104,7 +104,13 @@ void CSpider::Update(const float deltaTime)
 
 	else if (m_State == EState::CHASING_PLAYER)
 	{
-
+		if (m_pPlayer)
+		{
+			float moveSpeed = 2.0f;
+			SDL_FPoint playerPos = m_pPlayer->GetPosition();
+			SDL_FPoint direction = {};
+		}
+		
 	}
 }
 
