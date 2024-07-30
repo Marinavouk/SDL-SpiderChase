@@ -15,10 +15,9 @@ public:
 	~CSpider(void)													{}
 
 	virtual bool	Create(const std::string& textureFileName, const SDL_FPoint& position) override;
-	virtual void	Destroy(void) override;
-	virtual void	Update(const float deltaTime) override;
 	virtual void	Render(void) override;
 	virtual void	RenderDebug(void) override;
+	virtual void	Update(const float deltaTime) override;
 	virtual void	HandleObstacleCollision(const GameObjectList& obstacles, const float deltaTime) override;
 
 public:
@@ -28,7 +27,7 @@ public:
 private:
 
 	void			SyncCollider(void);
-	bool			ResolveObstacleYCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount);
+	bool			ResolveObstacleYCollision(const SDL_FRect& collider);
 
 private:
 
@@ -43,11 +42,9 @@ private:
 private:
 
 	CGameObject*	m_pTarget		= nullptr;
-	CPlayer*		m_pPlayer		= nullptr;
 
 	float			m_Gravity		= 1500.0f;
 	float			m_LifeTime		= 0.0f;
-	float			m_Angle			= 0.0f;
 
 	SDL_FPoint		m_StartPosition	= {0.0f, 0.0f};
 	SDL_FPoint		m_Velocity		= {0.0f, 0.0f};

@@ -22,21 +22,24 @@ public:
 
 	virtual bool	Create(const std::string& textureFileName, const SDL_FPoint& position);
 	virtual void	Destroy(void);
+	virtual void	Render(void);
+	virtual void	RenderDebug(void);
 	virtual void	Update(const float deltaTime)													{}
-	virtual void	Render(void)																	{}
-	virtual void	RenderDebug(void)																{}
 	virtual void	HandleInput(const float deltaTime)												{}
 	virtual void	HandleObstacleCollision(const GameObjectList& obstacles, const float deltaTime)	{}
 	virtual void	HandleEnemyCollision(const GameObjectList& enemies, const float deltaTime)		{}
 
 public:
 
-	SDL_FPoint		GetPosition(void) const						{return {m_Collider.x, m_Collider.y};}
-	void			SetPosition(const SDL_FPoint newPosition)	{m_Rectangle = {newPosition.x, newPosition.y, m_Rectangle.w, m_Rectangle.h};}
+	SDL_FPoint		GetRectanglePosition(void) const				{return {m_Rectangle.x, m_Rectangle.y};}
+	void			SetRectanglePosition(const SDL_FPoint position)	{m_Rectangle.x = position.x; m_Rectangle.y = position.y;}
 
-	SDL_FPoint		GetSize(void) const							{return {m_Collider.w, m_Collider.h};}
+	SDL_FPoint		GetColliderPosition(void) const					{return {m_Collider.x, m_Collider.y};}
 
-	SDL_FRect&		GetCollider(void) const						{return (SDL_FRect&)m_Collider;}
+	SDL_FPoint		GetRectangleSize(void) const					{return {m_Rectangle.w, m_Rectangle.h};}
+	SDL_FPoint		GetColliderSize(void) const						{return {m_Collider.w, m_Collider.h};}
+
+	SDL_FRect&		GetCollider(void) const							{return (SDL_FRect&)m_Collider;}
 
 protected:
 

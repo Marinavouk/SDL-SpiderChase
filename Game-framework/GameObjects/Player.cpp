@@ -89,7 +89,7 @@ void CPlayer::Render(void)
 		return;
 
 	// Very temporary, will be removed when the character is animated
-	// This is just to have anything rendered to the screen
+	// This is just to have something rendered to the screen
 	m_pTexture->Render({m_Rectangle.x, m_Rectangle.y});
 }
 
@@ -100,14 +100,14 @@ void CPlayer::RenderDebug(void)
 //	SDL_SetRenderDrawColor(renderer, 200, 0, 0, 255);
 //	SDL_RenderDrawRectF(renderer, &m_Rectangle);
 
-	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+//	SDL_SetRenderDrawColor(renderer, 0, 200, 0, 255);
+//	SDL_RenderDrawRectF(renderer, &m_Collider);
+
+	SDL_SetRenderDrawColor(renderer, 200, 255, 0, 255);
 	SDL_RenderDrawRectF(renderer, &m_HorizontalCollider);
 
-	SDL_SetRenderDrawColor(renderer, 0, 255, 255, 255);
+	SDL_SetRenderDrawColor(renderer, 0, 200, 200, 255);
 	SDL_RenderDrawRectF(renderer, &m_VerticalCollider);
-
-//	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-//	SDL_RenderDrawRectF(renderer, &m_Collider);
 }
 
 void CPlayer::HandleInput(const float deltaTime)

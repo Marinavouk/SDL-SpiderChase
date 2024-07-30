@@ -15,6 +15,9 @@ public:
 	static uint32_t RandomUint(void);
 	static uint32_t RandomUint(const uint32_t Min, const uint32_t Max);
 
+	static float	RandomFloat(void);
+	static float	RandomFloat(const float Min, const float Max);
+
 private:
 
 	static std::mt19937												m_sRandomEngine;

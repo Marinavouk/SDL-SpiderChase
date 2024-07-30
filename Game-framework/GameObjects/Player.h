@@ -14,9 +14,9 @@ public:
 	~CPlayer(void)													{}
 
 	virtual bool	Create(const std::string& textureFileName, const SDL_FPoint& position) override;
-	virtual void	Update(const float deltaTime) override;
 	virtual void	Render(void) override;
 	virtual void	RenderDebug(void) override;
+	virtual void	Update(const float deltaTime) override;
 	virtual void	HandleInput(const float deltaTime) override;
 	virtual void	HandleObstacleCollision(const GameObjectList& obstacles, const float deltaTime) override;
 	virtual void	HandleEnemyCollision(const GameObjectList& enemies, const float deltaTime) override;
