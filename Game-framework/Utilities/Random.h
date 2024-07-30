@@ -7,20 +7,20 @@ class CRandom
 {
 public:
 
-	 CRandom(void) {Seed();}
+	 CRandom(void) {}
 	~CRandom(void) {}
 
-	static void		Seed(void);
+	void		Seed(void);
 
-	static uint32_t RandomUint(void);
-	static uint32_t RandomUint(const uint32_t Min, const uint32_t Max);
+	uint32_t	RandomUint(void);
+	uint32_t	RandomUint(const uint32_t Min, const uint32_t Max);
 
-	static float	RandomFloat(void);
-	static float	RandomFloat(const float Min, const float Max);
+	float		RandomFloat(void);
+	float		RandomFloat(const float Min, const float Max);
 
 private:
 
-	static std::mt19937												m_sRandomEngine;
-	static std::uniform_int_distribution<std::mt19937::result_type>	m_sDistribution;
+	std::mt19937												m_RandomEngine;
+	std::uniform_int_distribution<std::mt19937::result_type>	m_Distribution;
 
 };

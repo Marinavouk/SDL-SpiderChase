@@ -7,7 +7,7 @@
 /**
 * Removes the filename in a path and returns the result as a new std::string
 */
-static std::string GetFileName(const std::string& path)
+inline std::string GetFileName(const std::string& path)
 {
 	if(path.empty())
 		return path;
@@ -23,7 +23,7 @@ static std::string GetFileName(const std::string& path)
 /**
 * Removes the file extension from a filename or a filepath string and returns the result as a new std::string
 */
-static std::string RemoveFileExtension(const std::string& string)
+inline std::string RemoveFileExtension(const std::string& string)
 {
 	if(string.empty())
 		return string;

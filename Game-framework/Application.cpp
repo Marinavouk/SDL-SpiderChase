@@ -32,6 +32,8 @@ bool CApplication::Create(void)
 	// NOTE. Don't set it to 0.0f or a negative value, the transition will not work
 	m_TransitionRenderer.SetSpeed(100.0f); // Default: 2.0f
 
+	m_RandomNumberGenerator.Seed();
+
 	/**
 	* Create the various states for the application.
 	* Here you can add more states if wanted, for example a Settings menu, a Guide menu that explains the game, a Credits menu showing who made the game etc

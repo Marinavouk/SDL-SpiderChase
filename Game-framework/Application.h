@@ -9,6 +9,7 @@
 
 #include "States/State.h"
 #include "States/TransitionRenderer.h"
+#include "Utilities/Random.h"
 #include "Utilities/Timer.h"
 #include "Utilities/Window.h"
 
@@ -47,17 +48,19 @@ public:
 
 	// Place getters and setters in their own public field
 
-	CWindow&				GetWindow(void)	const				{return (CWindow&)m_Window;}
+	CWindow&				GetWindow(void)	const					{return (CWindow&)m_Window;}
 
-	CTextureHandler&		GetTextureHandler(void) const		{return (CTextureHandler&)m_TextureHandler;}
-	CFontHandler&			GetFontHandler(void) const			{return (CFontHandler&)m_FontHandler;}
-	CAudioHandler&			GetAudioHandler(void) const			{return (CAudioHandler&)m_AudioHandler;}
-	CInputHandler&			GetInputHandler(void) const			{return (CInputHandler&)m_InputHandler;}
+	CTextureHandler&		GetTextureHandler(void) const			{return (CTextureHandler&)m_TextureHandler;}
+	CFontHandler&			GetFontHandler(void) const				{return (CFontHandler&)m_FontHandler;}
+	CAudioHandler&			GetAudioHandler(void) const				{return (CAudioHandler&)m_AudioHandler;}
+	CInputHandler&			GetInputHandler(void) const				{return (CInputHandler&)m_InputHandler;}
 
-	CTransitionRenderer&	GetTransitionRenderer(void) const	{return (CTransitionRenderer&)m_TransitionRenderer;}
+	CTransitionRenderer&	GetTransitionRenderer(void) const		{return (CTransitionRenderer&)m_TransitionRenderer;}
+
+	CRandom&				GetRandomNumberGenerator(void) const	{return (CRandom&)m_RandomNumberGenerator;}
 
 	// Call this to shutdown the game
-	void					Quit(void)							{m_Running = false;}
+	void					Quit(void)								{m_Running = false;}
 
 private:
 
@@ -76,6 +79,8 @@ private:
 	CTransitionRenderer	m_TransitionRenderer	= {};
 
 	CTimer				m_Timer					= {};
+
+	CRandom				m_RandomNumberGenerator	= {};
 
 	bool				m_Running				= true;
 
