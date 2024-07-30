@@ -23,12 +23,12 @@ public:
 
 private:
 
-	void			SyncColliders(void);
-	void			ActivateDamageCooldown(void);
 	bool			ResolveObstacleXCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount);
 	bool			ResolveObstacleYCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount);
 	bool			ResolveEnemyXCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount);
 	bool			ResolveEnemyYCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount);
+	void			SyncColliders(void);
+	void			ActivateDamageCooldown(void);
 
 private:
 

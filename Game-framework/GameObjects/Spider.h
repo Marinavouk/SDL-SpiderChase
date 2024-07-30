@@ -26,8 +26,8 @@ public:
 
 private:
 
-	void			SyncCollider(void);
 	bool			ResolveObstacleYCollision(const SDL_FRect& collider);
+	void			SyncCollider(void);
 
 private:
 

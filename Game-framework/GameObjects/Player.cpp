@@ -202,24 +202,6 @@ void CPlayer::HandleEnemyCollision(const GameObjectList& enemies, const float de
 		ActivateDamageCooldown();
 }
 
-void CPlayer::SyncColliders(void)
-{
-	m_HorizontalCollider.x	= m_Rectangle.x + m_HorizontalColliderOffset.x;
-	m_HorizontalCollider.y	= m_Rectangle.y + m_HorizontalColliderOffset.y;
-	m_VerticalCollider.x	= m_Rectangle.x + m_VerticalColliderOffset.x;
-	m_VerticalCollider.y	= m_Rectangle.y + m_VerticalColliderOffset.y;
-
-	m_Collider = {m_VerticalCollider.x, m_VerticalCollider.y, m_VerticalCollider.w, m_VerticalCollider.h};
-}
-
-void CPlayer::ActivateDamageCooldown(void)
-{
-	m_DamageCooldownTimer	= m_DamageCooldownTimerDefault;
-	m_BlinkingInterval		= m_BlinkingIntervalDefault;
-	m_DamageCooldown		= true;
-	m_Show					= true;
-}
-
 bool CPlayer::ResolveObstacleXCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount)
 {
 	bool hasCollided = false;
@@ -280,7 +262,7 @@ bool CPlayer::ResolveObstacleYCollision(const SDL_FRect& collider, const SDL_FPo
 {
 	bool hasCollided = false;
 
-	// The player is moving up
+	// The player is moving up (jumping)
 	if (moveAmount.y < 0.0f)
 	{
 		SDL_FRect intersection = {0.0f, 0.0f, 0.0f, 0.0f};
@@ -358,9 +340,7 @@ bool CPlayer::ResolveEnemyXCollision(const SDL_FRect& collider, const SDL_FPoint
 
 	else
 	{
-		SDL_FRect intersection = {0.0f, 0.0f, 0.0f, 0.0f};
-
-		if (QuadVsQuad(m_HorizontalCollider, collider, &intersection))
+		if (QuadVsQuad(m_HorizontalCollider, collider))
 		{
 			m_Velocity.x += ((m_HorizontalCollider.x < collider.x) ? -(m_HorizontalHitStrength * 4.0f) : (m_HorizontalHitStrength * 4.0f));
 			m_Velocity.y -= m_VerticalHitStrength;
@@ -399,7 +379,7 @@ bool CPlayer::ResolveEnemyYCollision(const SDL_FRect& collider, const SDL_FPoint
 {
 	bool hasCollided = false;
 
-	// The player is moving up
+	// The player is moving up (jumping)
 	if (moveAmount.y < 0.0f)
 	{
 		SDL_FRect intersection = {0.0f, 0.0f, 0.0f, 0.0f};
@@ -436,4 +416,22 @@ bool CPlayer::ResolveEnemyYCollision(const SDL_FRect& collider, const SDL_FPoint
 		SyncColliders();
 
 	return hasCollided;
+}
+
+void CPlayer::SyncColliders(void)
+{
+	m_HorizontalCollider.x	= m_Rectangle.x + m_HorizontalColliderOffset.x;
+	m_HorizontalCollider.y	= m_Rectangle.y + m_HorizontalColliderOffset.y;
+	m_VerticalCollider.x	= m_Rectangle.x + m_VerticalColliderOffset.x;
+	m_VerticalCollider.y	= m_Rectangle.y + m_VerticalColliderOffset.y;
+
+	m_Collider = {m_VerticalCollider.x, m_VerticalCollider.y, m_VerticalCollider.w, m_VerticalCollider.h};
+}
+
+void CPlayer::ActivateDamageCooldown(void)
+{
+	m_DamageCooldownTimer	= m_DamageCooldownTimerDefault;
+	m_BlinkingInterval		= m_BlinkingIntervalDefault;
+	m_DamageCooldown		= true;
+	m_Show					= true;
 }

@@ -148,12 +148,6 @@ void CSpider::HandleObstacleCollision(const GameObjectList& obstacles, const flo
 	}
 }
 
-void CSpider::SyncCollider(void)
-{
-	m_Collider.x = m_Rectangle.x + m_ColliderOffset.x;
-	m_Collider.y = m_Rectangle.y + m_ColliderOffset.y;
-}
-
 bool CSpider::ResolveObstacleYCollision(const SDL_FRect& collider)
 {
 	bool hasCollided = false;
@@ -174,4 +168,10 @@ bool CSpider::ResolveObstacleYCollision(const SDL_FRect& collider)
 	}
 
 	return hasCollided;
+}
+
+void CSpider::SyncCollider(void)
+{
+	m_Collider.x = m_Rectangle.x + m_ColliderOffset.x;
+	m_Collider.y = m_Rectangle.y + m_ColliderOffset.y;
 }
