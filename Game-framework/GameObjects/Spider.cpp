@@ -43,13 +43,16 @@ void CSpider::Render(void)
 
 void CSpider::RenderDebug(void)
 {
-	SDL_Renderer* renderer = m_pApplication->GetWindow().GetRenderer();
+	CGameObject::RenderDebug();
 
-//	SDL_SetRenderDrawColor(renderer, 200, 0, 0, 255);
-//	SDL_RenderDrawRectF(renderer, &m_Rectangle);
+	SDL_Renderer*		renderer		= m_pApplication->GetWindow().GetRenderer();
+	const SDL_FPoint	centerPosition	= {m_Collider.x + (m_Collider.w * 0.5f), m_Collider.y + (m_Collider.w * 0.5f)};
+	const SDL_FPoint	targetPosition	= m_pTarget->GetColliderCenterPosition();
 
-	SDL_SetRenderDrawColor(renderer, 0, 200, 0, 255);
-	SDL_RenderDrawRectF(renderer, &m_Collider);
+		 if (centerPosition.x > targetPosition.x) SDL_SetRenderDrawColor(renderer, 255, 255,	255,	255);
+	else if (centerPosition.x < targetPosition.x) SDL_SetRenderDrawColor(renderer, 255,	0,		0,		255);
+
+	SDL_RenderDrawLineF(renderer, centerPosition.x, centerPosition.y, targetPosition.x, targetPosition.y);
 }
 
 void CSpider::Update(const float deltaTime)

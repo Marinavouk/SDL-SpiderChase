@@ -95,13 +95,9 @@ void CPlayer::Render(void)
 
 void CPlayer::RenderDebug(void)
 {
+	CGameObject::RenderDebug();
+
 	SDL_Renderer* renderer = m_pApplication->GetWindow().GetRenderer();
-
-//	SDL_SetRenderDrawColor(renderer, 200, 0, 0, 255);
-//	SDL_RenderDrawRectF(renderer, &m_Rectangle);
-
-//	SDL_SetRenderDrawColor(renderer, 0, 200, 0, 255);
-//	SDL_RenderDrawRectF(renderer, &m_Collider);
 
 	SDL_SetRenderDrawColor(renderer, 200, 255, 0, 255);
 	SDL_RenderDrawRectF(renderer, &m_HorizontalCollider);
