@@ -126,17 +126,16 @@ void CSpider::Update(const float deltaTime)
 
 	else if (m_State == EState::CHASING_PLAYER)
 	{
+		const SDL_FPoint playerPosition = m_pTarget->GetColliderCenterPosition();
+		const SDL_FPoint centerPosition = GetColliderCenterPosition();
 		if (m_pTarget)
 		{
-			const SDL_FPoint playerPosition = m_pTarget->GetColliderCenterPosition();
-			const SDL_FPoint centerPosition = GetColliderCenterPosition();
 			
 			if (centerPosition.x > playerPosition.x)
 				m_Rectangle.x -= m_Velocity.x * deltaTime;
 			else if (centerPosition.x < playerPosition.x)
 				m_Rectangle.x += m_Velocity.x * deltaTime;
 			
-
 			SyncCollider();
 		}
 		
