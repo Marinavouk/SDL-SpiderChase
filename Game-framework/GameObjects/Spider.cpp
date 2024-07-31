@@ -20,7 +20,7 @@ bool CSpider::Create(const std::string& textureFileName, const SDL_FPoint& posit
 
 	m_ColliderOffset = {16.0f * m_Scale, 15.0f * m_Scale};
 
-	m_Velocity.x = 100.0f;
+	m_Velocity.x = 130.0f;
 	m_Velocity.y = 100.0f;
 
 	m_StartPosition = {m_Rectangle.x, m_Rectangle.y};
@@ -128,13 +128,15 @@ void CSpider::Update(const float deltaTime)
 	{
 		if (m_pTarget)
 		{
-			float moveSpeed = 2.0f;
-			SDL_FPoint playerPos = m_pTarget->GetColliderPosition();
+			const SDL_FPoint playerPosition = m_pTarget->GetColliderCenterPosition();
+			const SDL_FPoint centerPosition = GetColliderCenterPosition();
 			
-			if (m_Rectangle.x > playerPos.x)
-				m_Rectangle.x -= m_Velocity.x * deltaTime;	
-			else if (m_Rectangle.x < playerPos.x)
+			if (centerPosition.x > playerPosition.x)
+				m_Rectangle.x -= m_Velocity.x * deltaTime;
+			else if (centerPosition.x < playerPosition.x)
 				m_Rectangle.x += m_Velocity.x * deltaTime;
+			
+
 			SyncCollider();
 		}
 		
