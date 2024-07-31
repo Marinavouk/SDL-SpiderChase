@@ -10,17 +10,27 @@ bool CPlayer::Create(const std::string& textureFileName, const SDL_FPoint& posit
 	if (!CGameObject::Create(textureFileName, position))
 		return false;
 
-	m_pTexture->SetSize({64.0f * m_Scale, 128.0f * m_Scale});
-	m_pTexture->SetTextureCoords(0, 64, 0, 128);
-
 	const SDL_FPoint frameSize = {64.0f, 128.0f};
 
-	m_pAnimatorIdle = new CAnimator;
-	m_pAnimatorIdle->Set(7, 0, 6, 0, frameSize, 7.0f, true, CAnimator::EDirection::FORWARD);
+	m_pAnimatorIdle			= new CAnimator;
+	m_pAnimatorWalking		= new CAnimator;
+	m_pAnimatorRunning		= new CAnimator;
+	m_pAnimatorJumping		= new CAnimator;
+	m_pAnimatorAttacking	= new CAnimator;
+	m_pAnimatorIdle->Set(		7, 0, 6, 0, frameSize,  7.0f, true,		CAnimator::EDirection::FORWARD);
+	m_pAnimatorWalking->Set(	6, 0, 5, 1, frameSize,  8.0f, true,		CAnimator::EDirection::FORWARD);
+	m_pAnimatorRunning->Set(	8, 0, 7, 2, frameSize, 14.0f, true,		CAnimator::EDirection::FORWARD);
+	m_pAnimatorJumping->Set(	9, 0, 8, 7, frameSize,  8.0f, false,	CAnimator::EDirection::FORWARD);
+	m_pAnimatorAttacking->Set(	8, 0, 7, 5, frameSize, 14.0f, false,	CAnimator::EDirection::FORWARD);
+
+	m_pAnimatorAttacking->SetAnimationEndCallback(std::bind(&CPlayer::OnAttackAnimationEnd, this));
 
 	m_pCurrentAnimator = m_pAnimatorIdle;
 
-	m_Rectangle = {position.x, position.y, 64.0f * m_Scale, 128.0f * m_Scale};
+	m_pTexture->SetSize({frameSize.x * m_Scale, frameSize.y * m_Scale});
+	m_pTexture->SetTextureCoords(m_pCurrentAnimator->GetClipRectangle());
+
+	m_Rectangle = {position.x, position.y, frameSize.x * m_Scale, frameSize.y * m_Scale};
 
 	m_HorizontalColliderOffset	= {24.0f * m_Scale, 78.0f * m_Scale};
 	m_VerticalColliderOffset	= {28.0f * m_Scale, 64.0f * m_Scale};
@@ -35,9 +45,17 @@ bool CPlayer::Create(const std::string& textureFileName, const SDL_FPoint& posit
 
 void CPlayer::Destroy(void)
 {
+	delete m_pAnimatorAttacking;
+	delete m_pAnimatorJumping;
+	delete m_pAnimatorRunning;
+	delete m_pAnimatorWalking;
 	delete m_pAnimatorIdle;
-	m_pCurrentAnimator	= nullptr;
-	m_pAnimatorIdle		= nullptr;
+	m_pAnimatorAttacking	= nullptr;
+	m_pAnimatorJumping		= nullptr;
+	m_pAnimatorRunning		= nullptr;
+	m_pAnimatorWalking		= nullptr;
+	m_pAnimatorIdle			= nullptr;
+	m_pCurrentAnimator		= nullptr;
 
 	CGameObject::Destroy();
 }
@@ -75,7 +93,44 @@ void CPlayer::Update(const float deltaTime)
 
 		m_Velocity.y = 0.0f;
 
+		if (m_IsJumping && !m_IsAttacking)
+		{
+			if ((m_pCurrentAnimator != m_pAnimatorIdle) && (m_HorizontalDirection == EState::IDLE) && (m_VerticalDirection == EState::IDLE))
+				ActivateIdleAnimation();
+
+			else
+			{
+				if (m_HorizontalDirection != EState::IDLE)
+				{
+					if (m_IsRunning)
+					{
+						if (m_pCurrentAnimator != m_pAnimatorRunning)
+						{
+							m_pCurrentAnimator = m_pAnimatorRunning;
+							m_pCurrentAnimator->Reset();
+						}
+					}
+
+					else
+					{
+						if (m_pCurrentAnimator != m_pAnimatorWalking)
+						{
+							m_pCurrentAnimator = m_pAnimatorWalking;
+							m_pCurrentAnimator->Reset();
+						}
+					}
+				}
+			}
+		}
+
 		m_IsJumping = false;
+	}
+
+	if (m_pCurrentAnimator)
+	{
+		m_pCurrentAnimator->Update(deltaTime);
+
+		m_pTexture->SetTextureCoords(m_pCurrentAnimator->GetClipRectangle());
 	}
 
 	SyncColliders();
@@ -99,13 +154,6 @@ void CPlayer::Update(const float deltaTime)
 
 			m_Show = !m_Show;
 		}
-	}
-
-	if (m_pCurrentAnimator)
-	{
-		m_pCurrentAnimator->Update(deltaTime);
-
-		m_pTexture->SetTextureCoords(m_pCurrentAnimator->GetClipRectangle());
 	}
 }
 
@@ -138,9 +186,23 @@ void CPlayer::HandleInput(const float deltaTime)
 
 	// Pressed keys
 
+	if (inputHandler.KeyPressed(SDL_SCANCODE_A) && !m_IsAttacking)
+	{
+		m_pCurrentAnimator = m_pAnimatorAttacking;
+		m_pCurrentAnimator->Reset();
+
+		m_IsAttacking = true;
+	}
+
 	if (inputHandler.KeyPressed(SDL_SCANCODE_SPACE) && !m_IsJumping)
 	{
 		m_Velocity.y = -m_JumpStrength;
+
+		if (!m_IsAttacking)
+		{
+			m_pCurrentAnimator = m_pAnimatorJumping;
+			m_pCurrentAnimator->Reset();
+		}
 
 		m_IsJumping = true;
 	}
@@ -158,6 +220,15 @@ void CPlayer::HandleInput(const float deltaTime)
 		m_pTexture->SetFlipMethod(SDL_RendererFlip::SDL_FLIP_HORIZONTAL);
 
 		m_HorizontalDirection = EState::MOVING_LEFT;
+
+		if (!m_IsJumping && !m_IsAttacking)
+		{
+			if (m_IsRunning)
+				ActivateRunningAnimation();
+
+			else
+				ActivateWalkingAnimation();
+		}
 	}
 
 	else if (inputHandler.KeyHeld(SDL_SCANCODE_RIGHT) && !inputHandler.KeyHeld(SDL_SCANCODE_LEFT))
@@ -167,6 +238,15 @@ void CPlayer::HandleInput(const float deltaTime)
 		m_pTexture->SetFlipMethod(SDL_RendererFlip::SDL_FLIP_NONE);
 
 		m_HorizontalDirection = EState::MOVING_RIGHT;
+
+		if (!m_IsJumping && !m_IsAttacking)
+		{
+			if (m_IsRunning)
+				ActivateRunningAnimation();
+
+			else
+				ActivateWalkingAnimation();
+		}
 	}
 
 	else
@@ -181,8 +261,24 @@ void CPlayer::HandleInput(const float deltaTime)
 
 	// Released keys
 
-		 if (inputHandler.KeyReleased(SDL_SCANCODE_LEFT)	&& (m_HorizontalDirection == EState::MOVING_LEFT))	m_HorizontalDirection = EState::IDLE;
-	else if (inputHandler.KeyReleased(SDL_SCANCODE_RIGHT)	&& (m_HorizontalDirection == EState::MOVING_RIGHT))	m_HorizontalDirection = EState::IDLE;
+	if (inputHandler.KeyReleased(SDL_SCANCODE_LEFT) && (m_HorizontalDirection == EState::MOVING_LEFT))
+	{
+		m_HorizontalDirection = EState::IDLE;
+
+		if((m_VerticalDirection == EState::IDLE) && !m_IsJumping && !m_IsAttacking)
+			ActivateIdleAnimation();
+	}
+
+	else if (inputHandler.KeyReleased(SDL_SCANCODE_RIGHT) && (m_HorizontalDirection == EState::MOVING_RIGHT))
+	{
+		m_HorizontalDirection = EState::IDLE;
+
+		if((m_VerticalDirection == EState::IDLE) && !m_IsJumping && !m_IsAttacking)
+			ActivateIdleAnimation();
+	}
+
+	if ((m_HorizontalDirection == EState::IDLE) && (m_VerticalDirection == EState::IDLE) && !m_IsJumping && !m_IsAttacking)
+		ActivateIdleAnimation();
 }
 
 void CPlayer::HandleObstacleCollision(const GameObjectList& obstacles, const float deltaTime)
@@ -460,4 +556,65 @@ void CPlayer::ActivateDamageCooldown(void)
 	m_BlinkingInterval		= m_BlinkingIntervalDefault;
 	m_DamageCooldown		= true;
 	m_Show					= true;
+}
+
+void CPlayer::ActivateIdleAnimation(void)
+{
+	if (m_pCurrentAnimator != m_pAnimatorIdle)
+	{
+		m_pCurrentAnimator = m_pAnimatorIdle;
+		m_pCurrentAnimator->Reset();
+	}
+}
+
+void CPlayer::ActivateWalkingAnimation(void)
+{
+	if (m_pCurrentAnimator != m_pAnimatorWalking)
+	{
+		m_pCurrentAnimator = m_pAnimatorWalking;
+		m_pCurrentAnimator->Reset();
+	}
+}
+
+void CPlayer::ActivateRunningAnimation(void)
+{
+	if (m_pCurrentAnimator != m_pAnimatorRunning)
+	{
+		m_pCurrentAnimator = m_pAnimatorRunning;
+		m_pCurrentAnimator->Reset();
+	}
+}
+
+void CPlayer::ActivateJumpingAnimation(void)
+{
+	if (m_pCurrentAnimator != m_pAnimatorJumping)
+	{
+		m_pCurrentAnimator = m_pAnimatorJumping;
+		m_pCurrentAnimator->Reset();
+	}
+}
+
+void CPlayer::OnAttackAnimationEnd(void)
+{
+	if (m_IsJumping)
+		m_pCurrentAnimator = m_pAnimatorJumping;
+
+	else
+	{
+		if (m_HorizontalDirection != EState::IDLE)
+		{
+			if (m_IsRunning)
+				m_pCurrentAnimator = m_pAnimatorRunning;
+
+			else
+				m_pCurrentAnimator = m_pAnimatorRunning;
+		}
+
+		else
+			m_pCurrentAnimator = m_pAnimatorIdle;
+	}
+
+	m_pCurrentAnimator->Reset();
+
+	m_IsAttacking = false;
 }
