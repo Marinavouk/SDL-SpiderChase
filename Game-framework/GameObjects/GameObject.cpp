@@ -6,8 +6,8 @@ bool CGameObject::Create(const std::string& textureFileName, const SDL_FPoint& p
 {
 	m_pTexture = m_pApplication->GetTextureHandler().CreateTexture(textureFileName);
 
-	int textureWidth	= 0;
-	int textureHeight	= 0;
+	int32_t textureWidth	= 0;
+	int32_t textureHeight	= 0;
 	SDL_QueryTexture(m_pTexture->GetTexture(), nullptr, nullptr, &textureWidth, &textureHeight);
 
 	m_Rectangle = {position.x, position.y, (float)textureWidth, (float)textureHeight};

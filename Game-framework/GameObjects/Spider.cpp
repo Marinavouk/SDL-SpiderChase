@@ -18,6 +18,8 @@ bool CSpider::Create(const std::string& textureFileName, const SDL_FPoint& posit
 
 	m_Collider = {m_Rectangle.x + m_ColliderOffset.x, m_Rectangle.y + m_ColliderOffset.y, 34.0f * m_Scale, 36.0f * m_Scale};
 
+	m_ColliderOffset = {16.0f * m_Scale, 15.0f * m_Scale};
+
 	m_Velocity.x = 100.0f;
 	m_Velocity.y = 100.0f;
 

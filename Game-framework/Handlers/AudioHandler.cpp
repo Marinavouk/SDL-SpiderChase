@@ -48,7 +48,7 @@ void CAudioHandler::DestroyMusic(Mix_Music* music)
 	Mix_FreeMusic(music);
 }
 
-bool CAudioHandler::PlayMusic(Mix_Music* music, const int numLoops)
+bool CAudioHandler::PlayMusic(Mix_Music* music, const int32_t numLoops)
 {
 	if (!music)
 		return false;
@@ -92,7 +92,7 @@ bool CAudioHandler::StopMusic()
 	return true;
 }
 
-void CAudioHandler::SetMusicVolume(const int volume)
+void CAudioHandler::SetMusicVolume(const int32_t volume)
 {
 	if (volume < 0)
 	{

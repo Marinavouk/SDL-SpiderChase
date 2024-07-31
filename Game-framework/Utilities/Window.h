@@ -42,7 +42,6 @@ private:
 
 	SDL_FPoint		m_Size			= {0.0f, 0.0f};
 
-									//	R, G, B, A (transparency/alpha)
-	SDL_Color		m_ClearColor	=  {0, 0, 0, 255};
+	SDL_Color		m_ClearColor	=  {0, 0, 0, 255}; // R, G, B, A (alpha/transparency)
 
 };

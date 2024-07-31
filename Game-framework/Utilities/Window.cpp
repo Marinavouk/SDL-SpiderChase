@@ -76,8 +76,8 @@ void CWindow::SetRenderTarget(SDL_Texture* renderTarget)
 
 void CWindow::OnResized()
 {
-	int windowWidth		= 0;
-	int windowHeight	= 0;
+	int32_t windowWidth		= 0;
+	int32_t windowHeight	= 0;
 	SDL_GetWindowSize(m_pWindow, &windowWidth, &windowHeight);
 
 	m_Size = {(float)windowWidth, (float)windowHeight};

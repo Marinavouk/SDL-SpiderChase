@@ -58,7 +58,7 @@ bool CGameState::OnEnter(void)
 	/*
 	CRandom randomNumberGenerator;
 
-	for (int i = 0; i < 5; ++i)
+	for (uint32_t i = 0; i < 5; ++i)
 	{
 		const SDL_FPoint position = {(float)randomNumberGenerator.RandomUint(64, (int)windowSize.x - 128), 0.0f};
 

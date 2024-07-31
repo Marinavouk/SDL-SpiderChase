@@ -17,10 +17,10 @@ public:
 	void		DestroyMusic(Mix_Music* music);
 
 	// If parameter 'numLoops' is -1, the music will loop forever
-	bool		PlayMusic(Mix_Music* music, const int numLoops);
+	bool		PlayMusic(Mix_Music* music, const int32_t numLoops);
 	bool		StopMusic();
 
 	// Must be a value between 0 (complete silence) and MIX_MAX_VOLUME (which is 128)
-	void		SetMusicVolume(const int volume);
+	void		SetMusicVolume(const int32_t volume);
 
 };

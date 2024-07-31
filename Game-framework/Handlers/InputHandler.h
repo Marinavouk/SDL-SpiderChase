@@ -15,9 +15,9 @@ public:
 	bool		KeyHeld(const SDL_Scancode keyboardKey);
 	bool		KeyReleased(const SDL_Scancode keyboardKey);
 
-	bool		MouseButtonPressed(const int mouseButton);
-	bool		MouseButtonHeld(const int mouseButton);
-	bool		MouseButtonReleased(const int mouseButton);
+	bool		MouseButtonPressed(const int32_t mouseButton);
+	bool		MouseButtonHeld(const int32_t mouseButton);
+	bool		MouseButtonReleased(const int32_t mouseButton);
 
 public:
 

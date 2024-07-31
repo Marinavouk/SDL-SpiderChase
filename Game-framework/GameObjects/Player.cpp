@@ -15,6 +15,9 @@ bool CPlayer::Create(const std::string& textureFileName, const SDL_FPoint& posit
 
 	m_Rectangle = {position.x, position.y, 64.0f * m_Scale, 128.0f * m_Scale};
 
+	m_HorizontalColliderOffset	= {24.0f * m_Scale, 78.0f * m_Scale};
+	m_VerticalColliderOffset	= {28.0f * m_Scale, 64.0f * m_Scale};
+
 	m_HorizontalCollider	= {m_Rectangle.x + m_HorizontalColliderOffset.x,	m_Rectangle.y + m_HorizontalColliderOffset.y,	18.0f * m_Scale, 40.0f * m_Scale};
 	m_VerticalCollider		= {m_Rectangle.x + m_VerticalColliderOffset.x,		m_Rectangle.y + m_VerticalColliderOffset.y,		10.0f * m_Scale, 64.0f * m_Scale};
 

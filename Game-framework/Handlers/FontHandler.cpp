@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-TTF_Font* CFontHandler::CreateFont(const std::string& fileName, const int textSize)
+TTF_Font* CFontHandler::CreateFont(const std::string& fileName, const int32_t textSize)
 {
 	TTF_Font* font = TTF_OpenFont(fileName.c_str(), textSize);
 
@@ -35,8 +35,8 @@ bool CFontHandler::RenderText(SDL_Renderer* renderer, TTF_Font* font, const std:
 	if (!texture)
 		return false;
 
-	int textureWidth = 0;
-	int textureHeight = 0;
+	int32_t textureWidth = 0;
+	int32_t textureHeight = 0;
 	SDL_QueryTexture(texture, nullptr, nullptr, &textureWidth, &textureHeight);
 
 	const SDL_FRect rect = {position.x, position.y, (float)textureWidth, (float)textureHeight};
@@ -50,8 +50,8 @@ bool CFontHandler::RenderText(SDL_Renderer* renderer, TTF_Font* font, const std:
 
 SDL_FPoint CFontHandler::GetTextSize(TTF_Font* font, const std::string& text)
 {
-	int textWidth	= 0;
-	int textHeight	= 0;
+	int32_t textWidth	= 0;
+	int32_t textHeight	= 0;
 	TTF_SizeText(font, text.c_str(), &textWidth, &textHeight);
 
 	return {(float)textWidth, (float)textHeight};

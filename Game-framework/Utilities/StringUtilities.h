@@ -5,7 +5,7 @@
 #include <vector>
 
 /**
-* Removes the filename in a path and returns the result as a new std::string
+* Retrieves the filename in a filepath (file extension included) and returns the result as a new std::string
 */
 inline std::string GetFileName(const std::string& path)
 {

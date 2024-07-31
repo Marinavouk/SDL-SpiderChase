@@ -41,20 +41,16 @@ private:
 
 private:
 
-	CGameObject*	m_pTarget		= nullptr;
+	CGameObject*	m_pTarget			= nullptr;
 
-	float			m_Gravity		= 1500.0f;
-	float			m_LifeTime		= 0.0f;
+	float			m_Gravity			= 1500.0f;
+	float			m_Scale				= 1.0f;
+	float			m_LifeTime			= 0.0f;
 
-	SDL_FPoint		m_StartPosition	= {0.0f, 0.0f};
-	SDL_FPoint		m_Velocity		= {0.0f, 0.0f};
+	SDL_FPoint		m_StartPosition		= {0.0f, 0.0f};
+	SDL_FPoint		m_Velocity			= {0.0f, 0.0f};
+	SDL_FPoint		m_ColliderOffset	= {16.0f * m_Scale, 15.0f * m_Scale};
 
-	EState			m_State			= EState::MOVING_DOWN_FROM_CEILING;
-
-	//////////////////////////////////////////////////////////////////////////
-	// Temporary data
-	float		m_Scale				= 1.0f;
-	SDL_FPoint	m_ColliderOffset	= {16.0f * m_Scale, 15.0f * m_Scale};
-	//////////////////////////////////////////////////////////////////////////
+	EState			m_State				= EState::MOVING_DOWN_FROM_CEILING;
 
 };

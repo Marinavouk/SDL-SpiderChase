@@ -56,7 +56,7 @@ void CApplication::Destroy(void)
 	if(m_pCurrentState)
 		m_pCurrentState->OnExit();
 
-	for(int i = 0; i < EState::NUM_STATES; ++i)
+	for(uint32_t i = 0; i < EState::NUM_STATES; ++i)
 	{
 		if(m_pStates[i])
 		{

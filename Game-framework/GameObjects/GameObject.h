@@ -32,15 +32,15 @@ public:
 public:
 
 	SDL_FPoint		GetRectanglePosition(void) const				{return {m_Rectangle.x, m_Rectangle.y};}
-	void			SetRectanglePosition(const SDL_FPoint position)	{m_Rectangle.x = position.x; m_Rectangle.y = position.y;}
 	SDL_FPoint		GetRectangleCenterPosition(void) const			{return {m_Rectangle.x + (m_Rectangle.w * 0.5f), m_Rectangle.y + (m_Rectangle.h * 0.5f)};}
+	SDL_FPoint		GetRectangleSize(void) const					{return {m_Rectangle.w, m_Rectangle.h};}
+	void			SetRectanglePosition(const SDL_FPoint position)	{m_Rectangle.x = position.x; m_Rectangle.y = position.y;}
 
 	SDL_FPoint		GetColliderPosition(void) const					{return {m_Collider.x, m_Collider.y};}
 	SDL_FPoint		GetColliderCenterPosition(void) const			{return {m_Collider.x + (m_Collider.w * 0.5f), m_Collider.y + (m_Collider.h * 0.5f)};}
-
-	SDL_FPoint		GetRectangleSize(void) const					{return {m_Rectangle.w, m_Rectangle.h};}
 	SDL_FPoint		GetColliderSize(void) const						{return {m_Collider.w, m_Collider.h};}
 
+	SDL_FRect&		GetRectangle(void) const						{return (SDL_FRect&)m_Rectangle;}
 	SDL_FRect&		GetCollider(void) const							{return (SDL_FRect&)m_Collider;}
 
 protected:

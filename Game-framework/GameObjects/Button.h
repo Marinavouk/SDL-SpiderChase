@@ -37,7 +37,7 @@ public:
 	void		SetTextColorHovered(const SDL_Color& color)			{m_TextColorHovered = color;}
 	void		SetTextColorPressed(const SDL_Color& color)			{m_TextColorPressed = color;}
 
-	void		SetTriggerButton(const int newTriggerButton)		{m_TriggerButton = newTriggerButton;}
+	void		SetTriggerButton(const int32_t newTriggerButton)	{m_TriggerButton = newTriggerButton;}
 
 private:
 
@@ -61,7 +61,7 @@ private:
 	float		m_ScalePressed				= 1.1f;
 	float		m_CurrentScale				= m_ScaleDefault;
 
-	int			m_TriggerButton				= SDL_BUTTON_LEFT;
+	int32_t		m_TriggerButton				= SDL_BUTTON_LEFT;
 
 	bool		m_Held						= false;
 

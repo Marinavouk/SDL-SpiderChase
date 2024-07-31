@@ -38,17 +38,17 @@ bool CInputHandler::KeyReleased(const SDL_Scancode keyboardKey)
 	return (!m_CurrentKeyboardState[keyboardKey] && m_PreviousKeyboardState[keyboardKey]);
 }
 
-bool CInputHandler::MouseButtonPressed(const int mouseButton)
+bool CInputHandler::MouseButtonPressed(const int32_t mouseButton)
 {
 	return (m_CurrentMouseState[mouseButton] && !m_previousMouseState[mouseButton]);
 }
 
-bool CInputHandler::MouseButtonHeld(const int mouseButton)
+bool CInputHandler::MouseButtonHeld(const int32_t mouseButton)
 {
 	return m_CurrentMouseState[mouseButton];
 }
 
-bool CInputHandler::MouseButtonReleased(const int mouseButton)
+bool CInputHandler::MouseButtonReleased(const int32_t mouseButton)
 {
 	return (!m_CurrentMouseState[mouseButton] && m_previousMouseState[mouseButton]);
 }
