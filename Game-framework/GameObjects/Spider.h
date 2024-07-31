@@ -2,6 +2,7 @@
 
 #include "GameObjects/GameObject.h"
 #include "GameObjects/Player.h"
+#include "Utilities/Animator.h"
 
 #include <SDL.h>
 #include <vector>
@@ -15,6 +16,7 @@ public:
 	~CSpider(void)													{}
 
 	virtual bool	Create(const std::string& textureFileName, const SDL_FPoint& position) override;
+	virtual void	Destroy(void);
 	virtual void	Render(void) override;
 	virtual void	RenderDebug(void) override;
 	virtual void	Update(const float deltaTime) override;
@@ -28,6 +30,8 @@ private:
 
 	bool			ResolveObstacleYCollision(const SDL_FRect& collider);
 	void			SyncCollider(void);
+	void			ActivateIdleAnimation(void);
+	void			ActivateWalkingAnimation(void);
 
 private:
 
@@ -42,6 +46,10 @@ private:
 private:
 
 	CGameObject*	m_pTarget			= nullptr;
+
+	CAnimator*		m_pAnimatorIdle		= nullptr;
+	CAnimator*		m_pAnimatorWalking	= nullptr;
+	CAnimator*		m_pCurrentAnimator	= nullptr;
 
 	float			m_Gravity			= 1500.0f;
 	float			m_Scale				= 1.0f;

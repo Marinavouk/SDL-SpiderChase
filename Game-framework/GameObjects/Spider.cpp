@@ -8,13 +8,19 @@ bool CSpider::Create(const std::string& textureFileName, const SDL_FPoint& posit
 	if (!CGameObject::Create(textureFileName, position))
 		return false;
 
-	if (m_pTexture->GetName() != "default")
-	{
-		m_pTexture->SetSize({64.0f * m_Scale, 64.0f * m_Scale});
-		m_pTexture->SetTextureCoords(0, 64, 256, 320);
-	}
+	const SDL_FPoint frameSize = {64.0f, 64.0f};
 
-	m_Rectangle = {position.x, position.y, 64.0f * m_Scale, 64.0f * m_Scale};
+	m_pAnimatorIdle		= new CAnimator;
+	m_pAnimatorWalking	= new CAnimator;
+	m_pAnimatorIdle->Set(	10, 0, 9, 0, frameSize, 7.0f, true, CAnimator::EDirection::FORWARD);
+	m_pAnimatorWalking->Set(10, 0, 9, 3, frameSize, 7.0f, true, CAnimator::EDirection::FORWARD);
+
+	m_pCurrentAnimator = m_pAnimatorWalking;
+
+	m_pTexture->SetSize({frameSize.x * m_Scale, frameSize.y * m_Scale});
+	m_pTexture->SetTextureCoords(m_pCurrentAnimator->GetClipRectangle());
+
+	m_Rectangle = {position.x, position.y, frameSize.x * m_Scale, frameSize.y * m_Scale};
 
 	m_Collider = {m_Rectangle.x + m_ColliderOffset.x, m_Rectangle.y + m_ColliderOffset.y, 34.0f * m_Scale, 36.0f * m_Scale};
 
@@ -26,6 +32,17 @@ bool CSpider::Create(const std::string& textureFileName, const SDL_FPoint& posit
 	m_StartPosition = {m_Rectangle.x, m_Rectangle.y};
 
 	return true;
+}
+
+void CSpider::Destroy(void)
+{
+	delete m_pAnimatorWalking;
+	delete m_pAnimatorIdle;
+	m_pAnimatorWalking	= nullptr;
+	m_pAnimatorIdle		= nullptr;
+	m_pCurrentAnimator	= nullptr;
+
+	CGameObject::Destroy();
 }
 
 void CSpider::Render(void)
@@ -130,12 +147,34 @@ void CSpider::Update(const float deltaTime)
 		if (m_pTarget)
 		{	
 			if (centerPosition.x > (playerPosition.x + 10.0f))
+			{
 				m_Rectangle.x -= m_Velocity.x * deltaTime;
 
+				m_pTexture->SetFlipMethod(SDL_RendererFlip::SDL_FLIP_HORIZONTAL);
+
+				ActivateWalkingAnimation();
+			}
+
 			else if (centerPosition.x < (playerPosition.x - 10.0f))
+			{
 				m_Rectangle.x += m_Velocity.x * deltaTime;
 
+				m_pTexture->SetFlipMethod(SDL_RendererFlip::SDL_FLIP_NONE);
+
+				ActivateWalkingAnimation();
+			}
+
+			else
+				ActivateIdleAnimation();
+
 			SyncCollider();
+		}
+
+		if (m_pCurrentAnimator)
+		{
+			m_pCurrentAnimator->Update(deltaTime);
+
+			m_pTexture->SetTextureCoords(m_pCurrentAnimator->GetClipRectangle());
 		}
 	}
 }
@@ -180,4 +219,22 @@ void CSpider::SyncCollider(void)
 {
 	m_Collider.x = m_Rectangle.x + m_ColliderOffset.x;
 	m_Collider.y = m_Rectangle.y + m_ColliderOffset.y;
+}
+
+void CSpider::ActivateIdleAnimation(void)
+{
+	if (m_pCurrentAnimator != m_pAnimatorIdle)
+	{
+		m_pCurrentAnimator = m_pAnimatorIdle;
+		m_pCurrentAnimator->Reset();
+	}
+}
+
+void CSpider::ActivateWalkingAnimation(void)
+{
+	if (m_pCurrentAnimator != m_pAnimatorWalking)
+	{
+		m_pCurrentAnimator = m_pAnimatorWalking;
+		m_pCurrentAnimator->Reset();
+	}
 }
