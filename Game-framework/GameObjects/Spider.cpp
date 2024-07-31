@@ -133,7 +133,7 @@ void CSpider::Update(const float deltaTime)
 			
 			if (m_Rectangle.x > playerPos.x)
 				m_Rectangle.x -= m_Velocity.x * deltaTime;	
-			else if (m_Rectangle.x < playerPos.x);
+			else if (m_Rectangle.x < playerPos.x)
 				m_Rectangle.x += m_Velocity.x * deltaTime;
 			SyncCollider();
 		}
