@@ -130,7 +130,11 @@ void CSpider::Update(const float deltaTime)
 		{
 			float moveSpeed = 2.0f;
 			SDL_FPoint playerPos = m_pTarget->GetColliderPosition();
-			SDL_FPoint direction = {};
+			
+			if (m_Rectangle.x -= m_Velocity.x * deltaTime);
+			else if (m_Rectangle.x += m_Velocity.x * deltaTime);
+			SyncCollider();
+
 		}
 		
 	}
