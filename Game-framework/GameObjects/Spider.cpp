@@ -128,12 +128,12 @@ void CSpider::Update(const float deltaTime)
 	{
 		const SDL_FPoint playerPosition = m_pTarget->GetColliderCenterPosition();
 		const SDL_FPoint centerPosition = GetColliderCenterPosition();
+	
 		if (m_pTarget)
-		{
-			
-			if (centerPosition.x > playerPosition.x)
+		{	
+			if (centerPosition.x > (playerPosition.x + 10.0f))
 				m_Rectangle.x -= m_Velocity.x * deltaTime;
-			else if (centerPosition.x < playerPosition.x)
+			else if (centerPosition.x < (playerPosition.x - 10.0f))
 				m_Rectangle.x += m_Velocity.x * deltaTime;
 			
 			SyncCollider();
