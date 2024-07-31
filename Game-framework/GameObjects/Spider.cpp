@@ -38,9 +38,7 @@ void CSpider::Render(void)
 		SDL_RenderDrawLineF(renderer, m_StartPosition.x + (m_Rectangle.w * 0.5f), 0.0f, m_Collider.x + (m_Collider.w * 0.5f), m_Collider.y + (m_Collider.h * 0.5f));
 	}
 
-	// Very temporary, will be removed when the spider is animated
-	// This is just to have something rendered to the screen
-	m_pTexture->Render({m_Rectangle.x, m_Rectangle.y});
+	CGameObject::Render();
 }
 
 void CSpider::RenderDebug(void)
@@ -133,12 +131,12 @@ void CSpider::Update(const float deltaTime)
 		{	
 			if (centerPosition.x > (playerPosition.x + 10.0f))
 				m_Rectangle.x -= m_Velocity.x * deltaTime;
+
 			else if (centerPosition.x < (playerPosition.x - 10.0f))
 				m_Rectangle.x += m_Velocity.x * deltaTime;
-			
+
 			SyncCollider();
 		}
-		
 	}
 }
 

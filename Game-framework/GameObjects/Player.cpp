@@ -162,9 +162,7 @@ void CPlayer::Render(void)
 	if (m_DamageCooldown && !m_Show)
 		return;
 
-	// Very temporary, will be removed when the character is animated
-	// This is just to have something rendered to the screen
-	m_pTexture->Render({m_Rectangle.x, m_Rectangle.y});
+	CGameObject::Render();
 }
 
 void CPlayer::RenderDebug(void)
