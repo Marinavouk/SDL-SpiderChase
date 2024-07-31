@@ -83,5 +83,6 @@ private:
 	CRandom				m_RandomNumberGenerator	= {};
 
 	bool				m_Running				= true;
+	bool				m_DebugRendering		= false;
 
 };

@@ -106,6 +106,9 @@ void CApplication::Update(void)
 	m_InputHandler.Update();
 	m_Timer.Update();
 
+	if (m_InputHandler.KeyPressed(SDL_SCANCODE_F1))
+		m_DebugRendering = !m_DebugRendering;
+
 	const float deltaTime = (float)m_Timer.GetDeltaTime();
 
 	if(m_pCurrentState)
@@ -121,8 +124,11 @@ void CApplication::Render(void)
 		if(m_pCurrentState)
 			m_pCurrentState->Render();
 
-		if(m_pCurrentState)
-			m_pCurrentState->RenderDebug();
+		if (m_DebugRendering)
+		{
+			if(m_pCurrentState)
+				m_pCurrentState->RenderDebug();
+		}
 
 		m_TransitionRenderer.Render();
 
