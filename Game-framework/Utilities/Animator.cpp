@@ -1,64 +1,37 @@
 #include "Animator.h"
 
-CAnimator::CAnimator(void)
-: m_pTexture(nullptr)
-, m_ClipQuad({0, 0, 0, 0})
-, m_Speed(0.0f)
-, m_Advance(0.0f)
-, m_NumFrames(0)
-, m_StartFrame(0)
-, m_EndFrame(0)
-, m_FrameWidth(0)
-, m_FrameHeight(0)
-, m_Row(0)
-, m_CurrentFrame(0)
-, m_Name("")
-, m_Started(true)
-, m_Loop(true)
-, m_Direction(EDirection::FORWARD)
+void CAnimator::Set(const uint32_t numFrames, const uint32_t startFrame, const uint32_t endFrame, const uint32_t row, const SDL_FPoint& frameSize, const float speed, const bool loop, const EDirection direction)
 {
-
-}
-
-CAnimator::~CAnimator(void)
-{
-
-}
-
-void CAnimator::Set(SDL_Texture* pTexture, const uint32_t NumFrames, const uint32_t StartFrame, const uint32_t EndFrame, const uint32_t Row, const SDL_FPoint& rFrameSize, const float Speed, const std::string& rName, const bool Loop, const EDirection Direction)
-{
-	m_pTexture		= pTexture;
-	m_Speed			= Speed;
-	m_NumFrames		= NumFrames;
-	m_StartFrame	= StartFrame;
-	m_EndFrame		= EndFrame;
-	m_FrameWidth	= (uint32_t)rFrameSize.x;
-	m_FrameHeight	= (uint32_t)rFrameSize.y;
-	m_Row			= Row;
-	m_CurrentFrame	= StartFrame;
-	m_Name			= rName;
-	m_Loop			= Loop;
-	m_Direction		= Direction;
+	m_Speed			= speed;
+	m_NumFrames		= numFrames;
+	m_StartFrame	= startFrame;
+	m_EndFrame		= endFrame;
+	m_FrameWidth	= (uint32_t)frameSize.x;
+	m_FrameHeight	= (uint32_t)frameSize.y;
+	m_Row			= row;
+	m_CurrentFrame	= startFrame;
+	m_Loop			= loop;
+	m_Direction		= direction;
 
 	Reset();
 }
 
-void CAnimator::Update(const float DeltaTime)
+void CAnimator::Update(const float deltaTime)
 {
 	if(!m_Started)
 		return;
 
-	m_Advance += m_Speed * DeltaTime;
+	m_Advance += m_Speed * deltaTime;
 
-	if(m_Advance > 1.0f)
+	if (m_Advance > 1.0f)
 	{
 		const bool Forward = (m_Direction == EDirection::FORWARD);
 
 		m_CurrentFrame += (Forward ? 1 : -1);
 
-		if(Forward)
+		if (Forward)
 		{
-			if(m_CurrentFrame > (int32_t)m_EndFrame)
+			if (m_CurrentFrame > (int32_t)m_EndFrame)
 			{
 				m_CurrentFrame = (m_Loop ? m_StartFrame : m_EndFrame);
 
@@ -69,7 +42,7 @@ void CAnimator::Update(const float DeltaTime)
 
 		else
 		{
-			if(m_CurrentFrame < (int32_t)m_EndFrame)
+			if (m_CurrentFrame < (int32_t)m_EndFrame)
 			{
 				m_CurrentFrame = (m_Loop ? m_StartFrame : m_EndFrame);
 
@@ -78,7 +51,7 @@ void CAnimator::Update(const float DeltaTime)
 			}
 		}
 
-		SetClipQuad();
+		SetClipRectangle();
 
 		m_Advance = 0.0f;
 	}
@@ -102,13 +75,13 @@ void CAnimator::Reset(void)
 
 	m_CurrentFrame = m_StartFrame;
 
-	SetClipQuad();
+	SetClipRectangle();
 }
 
-void CAnimator::SetClipQuad(void)
+void CAnimator::SetClipRectangle(void)
 {
-	m_ClipQuad.x = m_FrameWidth		* m_CurrentFrame;
-	m_ClipQuad.y = m_FrameHeight	* m_Row;
-	m_ClipQuad.w = m_FrameWidth;
-	m_ClipQuad.h = m_FrameHeight;
+	m_ClipRectangle.x = m_FrameWidth	* m_CurrentFrame;
+	m_ClipRectangle.y = m_FrameHeight	* m_Row;
+	m_ClipRectangle.w = m_FrameWidth;
+	m_ClipRectangle.h = m_FrameHeight;
 }

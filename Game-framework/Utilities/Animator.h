@@ -18,64 +18,60 @@ public:
 
 public:
 
-	 CAnimator							(void);
-	~CAnimator							(void);
+	 CAnimator(void) {}
+	~CAnimator(void) {}
 
-	void		Set						(SDL_Texture* pTexture, const uint32_t NumFrames, const uint32_t StartFrame, const uint32_t EndFrame, const uint32_t Row, const SDL_FPoint& rFrameSize, const float Speed, const std::string& rName, const bool Loop, const EDirection Direction);
+	void		Set(const uint32_t numFrames, const uint32_t startFrame, const uint32_t endFrame, const uint32_t row, const SDL_FPoint& frameSize, const float speed, const bool loop, const EDirection direction);
 
-	void		Update					(const float DeltaTime);
+	void		Update(const float deltaTime);
 
-	void		Start					(void);
-	void		Stop					(void);
+	void		Start(void);
+	void		Stop(void);
 
-	void		Reset					(void);
+	void		Reset(void);
 
 public:
 
-	void		SetAnimationEndCallback	(AnimantionEndedCB pAnimationEndCallback) {m_pAnimationEndCallback = pAnimationEndCallback;}
+	void		SetAnimationEndCallback(AnimantionEndedCB animationEndCallback)	{m_pAnimationEndCallback = animationEndCallback;}
 
-	SDL_Rect&	GetClipQuad				(void) const		{return (SDL_Rect&)m_ClipQuad;}
+	SDL_Rect&	GetClipRectangle(void) const									{return (SDL_Rect&)m_ClipRectangle;}
 
-	float		GetSpeed				(void) const		{return m_Speed;}
-	void		SetSpeed				(const float Speed)	{m_Speed = Speed;}
+	float		GetSpeed(void) const											{return m_Speed;}
+	void		SetSpeed(const float speed)										{m_Speed = speed;}
 
-	uint32_t	GetEndFrame				(void) const		{return m_EndFrame;}
+	uint32_t	GetEndFrame(void) const											{return m_EndFrame;}
 
-	int32_t		GetCurrentFrame			(void) const		{return m_CurrentFrame;}
+	int32_t		GetCurrentFrame(void) const										{return m_CurrentFrame;}
 
-	SDL_FPoint	GetFrameSize			(void) const		{return {(float)m_FrameWidth, (float)m_FrameHeight};}
+	SDL_FPoint	GetFrameSize(void) const										{return {(float)m_FrameWidth, (float)m_FrameHeight};}
 
-	bool		IsStarted				(void) const		{return m_Started;}
-
-private:
-
-	void		SetClipQuad				(void);
+	bool		IsStarted(void) const											{return m_Started;}
 
 private:
 
-	AnimantionEndedCB	m_pAnimationEndCallback;
+	void		SetClipRectangle(void);
 
-	SDL_Texture*		m_pTexture;
+private:
 
-	SDL_Rect			m_ClipQuad;
+	AnimantionEndedCB	m_pAnimationEndCallback	= nullptr;
 
-	float				m_Speed;
-	float				m_Advance;
+	SDL_Rect			m_ClipRectangle			= {0, 0, 0, 0};
 
-	uint32_t			m_NumFrames;
-	uint32_t			m_StartFrame;
-	uint32_t			m_EndFrame;
-	uint32_t			m_FrameWidth;
-	uint32_t			m_FrameHeight;
-	uint32_t			m_Row;
+	float				m_Speed					= 0.0f;
+	float				m_Advance				= 0.0f;
 
-	int32_t				m_CurrentFrame;
+	uint32_t			m_NumFrames				= 0;
+	uint32_t			m_StartFrame			= 0;
+	uint32_t			m_EndFrame				= 0;
+	uint32_t			m_FrameWidth			= 0;
+	uint32_t			m_FrameHeight			= 0;
+	uint32_t			m_Row					= 0;
 
-	std::string			m_Name;
+	int32_t				m_CurrentFrame			= 0;
 
-	bool				m_Started;
-	bool				m_Loop;
+	bool				m_Started				= true;
+	bool				m_Loop					= true;
 
-	EDirection			m_Direction;
+	EDirection			m_Direction				= EDirection::FORWARD;
 
 };

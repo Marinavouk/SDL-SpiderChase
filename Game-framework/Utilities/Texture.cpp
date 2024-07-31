@@ -91,6 +91,14 @@ void CTexture::SetTextureCoords(const uint32_t Left, const uint32_t Right, const
 	m_pClipRectangle->h = Bottom - Top;
 }
 
+void CTexture::SetTextureCoords(const SDL_Rect& clipRectangle)
+{
+	if(!m_pClipRectangle)
+		m_pClipRectangle = new SDL_Rect;
+
+	*m_pClipRectangle = clipRectangle;
+}
+
 void CTexture::SetColorMod(const Uint8 r, const Uint8 g, const Uint8 b)
 {
 	SDL_SetTextureColorMod(m_pTexture, r, g, b);

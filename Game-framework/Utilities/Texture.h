@@ -20,6 +20,7 @@ public:
 	void				Render(const SDL_FPoint& position);
 
 	void				SetTextureCoords(const uint32_t left, const uint32_t right, const uint32_t top, const uint32_t bottom);
+	void				SetTextureCoords(const SDL_Rect& clipRectangle);
 
 	void				SetColorMod(const Uint8 r, const Uint8 g, const Uint8 b);
 	void				SetColorMod(const SDL_Color& color);

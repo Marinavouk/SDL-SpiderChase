@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GameObject.h"
+#include "Utilities\Animator.h"
 
 #include <SDL.h>
 #include <vector>
@@ -14,6 +15,7 @@ public:
 	~CPlayer(void)													{}
 
 	virtual bool	Create(const std::string& textureFileName, const SDL_FPoint& position) override;
+	virtual void	Destroy(void) override;
 	virtual void	Render(void) override;
 	virtual void	RenderDebug(void) override;
 	virtual void	Update(const float deltaTime) override;
@@ -40,6 +42,9 @@ private:
 	};
 
 private:
+
+	CAnimator*	m_pAnimatorIdle					= nullptr;
+	CAnimator*	m_pCurrentAnimator				= nullptr;
 
 	float		m_AccelerationSpeedWalking		= 800.0f;
 	float		m_DeaccelerationSpeedWalking	= 500.0f;

@@ -13,6 +13,13 @@ bool CPlayer::Create(const std::string& textureFileName, const SDL_FPoint& posit
 	m_pTexture->SetSize({64.0f * m_Scale, 128.0f * m_Scale});
 	m_pTexture->SetTextureCoords(0, 64, 0, 128);
 
+	const SDL_FPoint frameSize = {64.0f, 128.0f};
+
+	m_pAnimatorIdle = new CAnimator;
+	m_pAnimatorIdle->Set(7, 0, 6, 0, frameSize, 7.0f, true, CAnimator::EDirection::FORWARD);
+
+	m_pCurrentAnimator = m_pAnimatorIdle;
+
 	m_Rectangle = {position.x, position.y, 64.0f * m_Scale, 128.0f * m_Scale};
 
 	m_HorizontalColliderOffset	= {24.0f * m_Scale, 78.0f * m_Scale};
@@ -24,6 +31,15 @@ bool CPlayer::Create(const std::string& textureFileName, const SDL_FPoint& posit
 	m_Collider = {m_VerticalCollider.x, m_VerticalCollider.y, m_VerticalCollider.w, m_VerticalCollider.h};
 
 	return true;
+}
+
+void CPlayer::Destroy(void)
+{
+	delete m_pAnimatorIdle;
+	m_pCurrentAnimator	= nullptr;
+	m_pAnimatorIdle		= nullptr;
+
+	CGameObject::Destroy();
 }
 
 void CPlayer::Update(const float deltaTime)
@@ -83,6 +99,13 @@ void CPlayer::Update(const float deltaTime)
 
 			m_Show = !m_Show;
 		}
+	}
+
+	if (m_pCurrentAnimator)
+	{
+		m_pCurrentAnimator->Update(deltaTime);
+
+		m_pTexture->SetTextureCoords(m_pCurrentAnimator->GetClipRectangle());
 	}
 }
 
