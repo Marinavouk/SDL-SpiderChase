@@ -64,7 +64,7 @@ void CPlayer::Update(const float deltaTime)
 {
 	const SDL_FPoint windowSize = m_pApplication->GetWindow().GetSize();
 
-	m_Velocity.y += m_Gravity * deltaTime;
+	m_Velocity.y = std::min(m_Velocity.y + m_Gravity * deltaTime, m_MaxFallVelocity);
 
 	m_Rectangle.x += m_Velocity.x * deltaTime;
 	m_Rectangle.y += m_Velocity.y * deltaTime;

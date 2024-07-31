@@ -61,6 +61,7 @@ private:
 	float		m_DeaccelerationSpeedRunning	= 700.0f;
 	float		m_MaxWalkingVelocity			= 200.0f;
 	float		m_MaxRunningVelocity			= 400.0f;
+	float		m_MaxFallVelocity				= 600.0f;
 	float		m_JumpStrength					= 660.0f;
 
 	// How much (in pixels) the player should be moved out of the spider it's colliding with

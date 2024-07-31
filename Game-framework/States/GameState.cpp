@@ -56,17 +56,18 @@ bool CGameState::OnEnter(void)
 	((CSpider*)m_pSpider)->SetTarget(m_pPlayer);
 
 	/*
-	CRandom randomNumberGenerator;
+	CRandom& randomNumberGenerator = m_pApplication->GetRandomNumberGenerator();
 
-	for (uint32_t i = 0; i < 5; ++i)
+	for (uint32_t i = 0; i < 3; ++i)
 	{
-		const SDL_FPoint position = {(float)randomNumberGenerator.RandomUint(64, (int)windowSize.x - 128), 0.0f};
+		const SDL_FPoint position = {randomNumberGenerator.RandomFloat(64.0f, windowSize.x - 128.0f), randomNumberGenerator.RandomFloat(-50.0f, 0.0f)};
 
 		CGameObject* spider = new CSpider(m_pApplication);
 		if (!spider->Create("spider.png", position))
 			return false;
 
-		((CSpider*)spider)->SetDirection(randomNumberGenerator.RandomUint(0, 1));
+	//	((CSpider*)spider)->SetDirection(randomNumberGenerator.RandomUint(0, 1));
+		((CSpider*)spider)->SetTarget(m_pPlayer);
 
 		m_Enemies.push_back(spider);
 	}
