@@ -99,6 +99,7 @@
     <ClCompile Include="Utilities\Animator.cpp">
       <Filter>Source Files\Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="Life.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -173,5 +174,6 @@
     <ClInclude Include="Utilities\Animator.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="Life.h" />
   </ItemGroup>
 </Project>

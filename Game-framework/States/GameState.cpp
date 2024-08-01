@@ -5,6 +5,7 @@
 #include "GameObjects/Player.h"
 #include "GameObjects/Spider.h"
 #include "GameObjects/Table.h"
+#include "GameObjects/Life.h"
 #include "Handlers/AudioHandler.h"
 #include "Utilities/Random.h"
 
@@ -55,6 +56,10 @@ bool CGameState::OnEnter(void)
 		return false;
 	((CSpider*)m_pSpider)->SetTarget(m_pPlayer);
 
+	m_pHeart = new CLife(m_pApplication);
+	if (!m_pSpider->Create("lifeSpiderChase.png", { 100.0f, 100.0f }))
+		return false;
+
 	/*
 	CRandom& randomNumberGenerator = m_pApplication->GetRandomNumberGenerator();
 
@@ -75,6 +80,7 @@ bool CGameState::OnEnter(void)
 
 	m_Obstacles.push_back(m_pTable);
 	m_Obstacles.push_back(m_pChair);
+	m_Obstacles.push_back(m_pHeart);
 
 	m_Enemies.push_back(m_pSpider);
 
@@ -104,6 +110,10 @@ void CGameState::OnExit(void)
 
 	m_Enemies.clear();
 	m_Obstacles.clear();
+
+	m_pHeart->Destroy();
+	delete m_pHeart;
+	m_pHeart = nullptr;
 
 	m_pSpider->Destroy();
 	delete m_pSpider;
@@ -166,8 +176,10 @@ void CGameState::Render(void)
 
 	m_pBackground->Render({0.0f, 0.0f});
 
+	m_pHeart->Render();
 	m_pChair->Render();
 	m_pTable->Render();
+
 
 	m_pSpider->Render();
 
@@ -183,6 +195,7 @@ void CGameState::Render(void)
 
 void CGameState::RenderDebug(void)
 {
+	m_pHeart->RenderDebug();
 	m_pChair->RenderDebug();
 	m_pTable->RenderDebug();
 
