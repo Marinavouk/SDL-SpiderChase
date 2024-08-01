@@ -89,10 +89,6 @@ void CSpider::Update(const float deltaTime)
 
 		SyncCollider();
 
-		ActivateHangingAnimation();
-
-		m_Angle = 0.0f;
-
 		if (m_Rectangle.y > 150.0f)
 		{
 			m_LifeTime = 0.0f;
@@ -112,8 +108,6 @@ void CSpider::Update(const float deltaTime)
 		m_Rectangle.x = m_StartPosition.x + (m_Angle * 2.0f);
 
 		SyncCollider();
-
-		ActivateHangingAnimation();
 
 		if (m_pTarget)
 		{
@@ -136,8 +130,6 @@ void CSpider::Update(const float deltaTime)
 
 		SyncCollider();
 
-		ActivateHangingAnimation();
-
 		const SDL_FPoint windowSize = m_pApplication->GetWindow().GetSize();
 
 		if (m_Collider.y > windowSize.y - m_Collider.h)
@@ -149,8 +141,6 @@ void CSpider::Update(const float deltaTime)
 			SyncCollider();
 
 			m_Velocity.y = 0.0f;
-
-			m_Angle = 0.0f;
 
 			m_State = EState::CHASING_PLAYER;
 		}
@@ -175,8 +165,6 @@ void CSpider::Update(const float deltaTime)
 			SyncCollider();
 
 			m_Velocity.y = 0.0f;
-
-			m_Angle = 0.0f;
 		}
 
 		const SDL_FPoint playerPosition = m_pTarget->GetColliderCenterPosition();

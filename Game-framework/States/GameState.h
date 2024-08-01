@@ -31,6 +31,8 @@ private:
 	// Declare the game objects here and then create/destroy them in the OnEnter- and OnExit functions
 
 	CTexture*		m_pBackground		= nullptr;
+	CTexture*		m_pHeartRed			= nullptr;
+	CTexture*		m_pHeartBlack		= nullptr;
 
 	Mix_Music*		m_pMusic			= nullptr;
 
@@ -38,9 +40,6 @@ private:
 	CGameObject*	m_pTable			= nullptr;
 	CGameObject*	m_pChair			= nullptr;
 	CGameObject*	m_pSpider			= nullptr;
-
-	CTexture*		m_pHeartRed			= nullptr;
-	CTexture*		m_pHeartBlack		= nullptr;
 
 	int				m_VolumeLimiter		= 100;
 

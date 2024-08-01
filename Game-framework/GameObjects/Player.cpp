@@ -71,14 +71,14 @@ void CPlayer::Update(const float deltaTime)
 
 	SyncColliders();
 
-	if(m_HorizontalCollider.x < 0.0f)
+	if (m_HorizontalCollider.x < 0.0f)
 	{
 		m_Rectangle.x = -m_HorizontalColliderOffset.x;
 
 		m_Velocity.x = 0.0f;
 	}
 
-	else if(m_HorizontalCollider.x > (windowSize.x - m_HorizontalCollider.w))
+	else if (m_HorizontalCollider.x > (windowSize.x - m_HorizontalCollider.w))
 	{
 		const float rightOffset = m_Rectangle.w - (m_HorizontalCollider.w + m_HorizontalColliderOffset.x);
 
@@ -103,22 +103,10 @@ void CPlayer::Update(const float deltaTime)
 				if (m_HorizontalDirection != EState::IDLE)
 				{
 					if (m_IsRunning)
-					{
-						if (m_pCurrentAnimator != m_pAnimatorRunning)
-						{
-							m_pCurrentAnimator = m_pAnimatorRunning;
-							m_pCurrentAnimator->Reset();
-						}
-					}
+						ActivateRunningAnimation();
 
 					else
-					{
-						if (m_pCurrentAnimator != m_pAnimatorWalking)
-						{
-							m_pCurrentAnimator = m_pAnimatorWalking;
-							m_pCurrentAnimator->Reset();
-						}
-					}
+						ActivateWalkingAnimation();
 				}
 			}
 		}
@@ -126,14 +114,14 @@ void CPlayer::Update(const float deltaTime)
 		m_IsJumping = false;
 	}
 
+	SyncColliders();
+
 	if (m_pCurrentAnimator)
 	{
 		m_pCurrentAnimator->Update(deltaTime);
 
 		m_pTexture->SetTextureCoords(m_pCurrentAnimator->GetClipRectangle());
 	}
-
-	SyncColliders();
 
 	if (m_DamageCooldown)
 	{
@@ -434,8 +422,8 @@ bool CPlayer::ResolveEnemyXCollision(const SDL_FRect& collider, const SDL_FPoint
 			m_Rectangle.x += intersection.w;
 
 			m_Velocity.x  = -m_Velocity.x;
-			m_Velocity.x += m_HorizontalHitStrength;
-			m_Velocity.y -= m_VerticalHitStrength;
+			m_Velocity.x +=  m_HorizontalHitStrength;
+			m_Velocity.y -=  m_VerticalHitStrength;
 
 			hasCollided = true;
 		}
@@ -451,8 +439,8 @@ bool CPlayer::ResolveEnemyXCollision(const SDL_FRect& collider, const SDL_FPoint
 			m_Rectangle.x -= intersection.w;
 
 			m_Velocity.x  = -m_Velocity.x;
-			m_Velocity.x -= m_HorizontalHitStrength;
-			m_Velocity.y -= m_VerticalHitStrength;
+			m_Velocity.x -=	 m_HorizontalHitStrength;
+			m_Velocity.y -=	 m_VerticalHitStrength;
 
 			hasCollided = true;
 		}
@@ -462,7 +450,9 @@ bool CPlayer::ResolveEnemyXCollision(const SDL_FRect& collider, const SDL_FPoint
 	{
 		if (QuadVsQuad(m_HorizontalCollider, collider))
 		{
-			m_Velocity.x += ((m_HorizontalCollider.x < collider.x) ? -(m_HorizontalHitStrength * 4.0f) : (m_HorizontalHitStrength * 4.0f));
+			const float hitStrength = (m_HorizontalHitStrength * 4.0f);
+
+			m_Velocity.x += ((m_HorizontalCollider.x < collider.x) ? -hitStrength : hitStrength);
 			m_Velocity.y -= m_VerticalHitStrength;
 
 			ActivateDamageCooldown();
@@ -484,9 +474,11 @@ bool CPlayer::ResolveEnemyXCollision(const SDL_FRect& collider, const SDL_FPoint
 
 			SyncColliders();
 
+			const float hitStrength = (m_HorizontalHitStrength * 4.0f);
+
 			m_Velocity.x  = -m_Velocity.x;
-			m_Velocity.x += ((m_Velocity.x < 0.0f) ? -(m_HorizontalHitStrength * 4.0f) : (m_HorizontalHitStrength * 4.0f));
-			m_Velocity.y -= m_VerticalHitStrength;
+			m_Velocity.x +=  ((m_Velocity.x < 0.0f) ? -hitStrength : hitStrength);
+			m_Velocity.y -=  m_VerticalHitStrength;
 
 			hasCollided = true;
 		}
@@ -508,8 +500,10 @@ bool CPlayer::ResolveEnemyYCollision(const SDL_FRect& collider, const SDL_FPoint
 		{
 			m_Rectangle.y += intersection.h;
 
+			const float hitStrength = (m_HorizontalHitStrength * 2.0f);
+
 			m_Velocity.x  = -m_Velocity.x;
-			m_Velocity.x += ((m_Velocity.x < 0.0f) ? -(m_HorizontalHitStrength * 2.0f) : (m_HorizontalHitStrength * 2.0f));
+			m_Velocity.x +=  ((m_Velocity.x < 0.0f) ? -hitStrength : hitStrength);
 
 			hasCollided = true;
 		}
@@ -524,8 +518,10 @@ bool CPlayer::ResolveEnemyYCollision(const SDL_FRect& collider, const SDL_FPoint
 		{
 			m_Rectangle.y -= intersection.h;
 
+			const float hitStrength = (m_HorizontalHitStrength * 2.0f);
+
 			m_Velocity.x  = -m_Velocity.x;
-			m_Velocity.x += ((m_Velocity.x < 0.0f) ? -(m_HorizontalHitStrength * 2.0f) : (m_HorizontalHitStrength * 2.0f));
+			m_Velocity.x += ((m_Velocity.x < 0.0f) ? -hitStrength : hitStrength);
 			m_Velocity.y -= m_VerticalHitStrength;
 
 			hasCollided = true;
