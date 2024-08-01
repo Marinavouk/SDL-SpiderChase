@@ -40,7 +40,7 @@ private:
 	CGameObject*	m_pSpider			= nullptr;
 
 	CTexture*		m_pHeartRed			= nullptr;
-	CTexture*		m_pHeartBlack			= nullptr;
+	CTexture*		m_pHeartBlack		= nullptr;
 
 	int				m_VolumeLimiter		= 100;
 

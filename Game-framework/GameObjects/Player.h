@@ -22,10 +22,6 @@ public:
 	virtual void	HandleInput(const float deltaTime) override;
 	virtual void	HandleObstacleCollision(const GameObjectList& obstacles, const float deltaTime) override;
 	virtual void	HandleEnemyCollision(const GameObjectList& enemies, const float deltaTime) override;
-			int		GetHealth(void) const { return m_Health; }
-
-public:
-	int				m_Health = 5;
 
 private:
 

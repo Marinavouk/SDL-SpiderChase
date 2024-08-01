@@ -178,11 +178,10 @@ void CGameState::Update(const float deltaTime)
 void CGameState::Render(void)
 {
 	// Render all the game objects here
-	CPlayer player;
 
 	m_pBackground->Render({0.0f, 0.0f});
 	
-	for (int i = 0; i < player.m_Health; i++)
+	for (int i = 0; i < m_pPlayer->GetHealth(); i++)
 	{
 		m_pHeartRed->Render({ 50.0f + (i * 35.0f), 50.0f });
 	}

@@ -42,6 +42,10 @@ public:
 
 	SDL_FRect&		GetRectangle(void) const						{return (SDL_FRect&)m_Rectangle;}
 	SDL_FRect&		GetCollider(void) const							{return (SDL_FRect&)m_Collider;}
+	int				GetHealth(void) const							{ return m_Health; }
+
+
+	int				m_Health = 5;
 
 protected:
 
