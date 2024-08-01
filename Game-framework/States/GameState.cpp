@@ -5,7 +5,7 @@
 #include "GameObjects/Player.h"
 #include "GameObjects/Spider.h"
 #include "GameObjects/Table.h"
-#include "GameObjects/Life.h"
+#include "Life.h"
 #include "Handlers/AudioHandler.h"
 #include "Utilities/Random.h"
 
@@ -57,7 +57,7 @@ bool CGameState::OnEnter(void)
 	((CSpider*)m_pSpider)->SetTarget(m_pPlayer);
 
 	m_pHeart = new CLife(m_pApplication);
-	if (!m_pSpider->Create("lifeSpiderChase.png", { 100.0f, 100.0f }))
+	if (!m_pHeart->Create("lifeSpiderChase.png", { 900.0f, windowSize.y }))
 		return false;
 
 	/*
@@ -80,7 +80,9 @@ bool CGameState::OnEnter(void)
 
 	m_Obstacles.push_back(m_pTable);
 	m_Obstacles.push_back(m_pChair);
+
 	m_Obstacles.push_back(m_pHeart);
+
 
 	m_Enemies.push_back(m_pSpider);
 

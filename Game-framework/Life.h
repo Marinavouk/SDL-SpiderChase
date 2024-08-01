@@ -4,6 +4,7 @@
 #include "GameObjects/Player.h"
 
 #include <SDL.h>
+#include <vector>
 
 class CLife final : public CGameObject
 {
@@ -13,7 +14,7 @@ public:
 	CLife(CApplication* application) : CGameObject(application) {}
 	~CLife(void) {}
 
-	virtual bool	Create(const std::string& textureFileName, const SDL_FPoint& position) override;
+	virtual bool Create(const std::string& textureFileName, const SDL_FPoint& position) override;
 
 };
 
