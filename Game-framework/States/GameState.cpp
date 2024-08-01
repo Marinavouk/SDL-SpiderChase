@@ -58,7 +58,8 @@ bool CGameState::OnEnter(void)
 
 	m_pHeartRed = textureHandler.CreateTexture("lifeSpiderChase.png");
 	m_pHeartRed->SetSize({ 50.0f, 50.0f });
-	m_pHeartBlack = textureHandler.CreateTexture("sblackHeart.png");
+	m_pHeartBlack = textureHandler.CreateTexture("blackHeart.png");
+	m_pHeartBlack->SetSize({ 50.0f, 50.0f });
 
 	/*
 	CRandom& randomNumberGenerator = m_pApplication->GetRandomNumberGenerator();
@@ -181,9 +182,12 @@ void CGameState::Render(void)
 
 	m_pBackground->Render({0.0f, 0.0f});
 	
-	for (int i = 0; i < m_pPlayer->GetHealth(); i++)
+	for (int i = 0; i < 5; i++)
 	{
-		m_pHeartRed->Render({ 50.0f + (i * 35.0f), 50.0f });
+		if (i < m_pPlayer->GetHealth()) 
+			m_pHeartRed->Render({ 50.0f + (i * 35.0f), 50.0f });
+		else
+			m_pHeartBlack->Render({ 50.0f + (i * 35.0f), 50.0f });
 	}
 	
 	m_pChair->Render();

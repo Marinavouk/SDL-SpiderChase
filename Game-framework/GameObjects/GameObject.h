@@ -45,7 +45,7 @@ public:
 	int				GetHealth(void) const							{ return m_Health; }
 
 
-	int				m_Health = 5;
+	int				m_Health = 3;
 
 protected:
 
