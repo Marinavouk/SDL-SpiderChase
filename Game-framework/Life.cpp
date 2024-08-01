@@ -14,7 +14,5 @@ bool CLife::Create(const std::string& textureFileName, const SDL_FPoint& positio
 
 	m_Rectangle = { position.x, m_pApplication->GetWindow().GetSize().y - newTextureSize.y, newTextureSize.x, newTextureSize.y };
 
-	m_Collider = { m_Rectangle.x + 5.0f, m_Rectangle.y + 85.0f, newTextureSize.x - 10.0f, 20.0f };
-
 	return true;
 }
