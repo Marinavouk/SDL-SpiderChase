@@ -113,12 +113,10 @@ void CGameState::OnExit(void)
 	m_Enemies.clear();
 	m_Obstacles.clear();
 
-	m_pHeartBlack->Destroy();
-	delete m_pHeartBlack;
+	textureHandler.DestroyTexture(m_pHeartBlack->GetName());
 	m_pHeartBlack = nullptr;
 
-	m_pHeartRed->Destroy();
-	delete m_pHeartRed;
+	textureHandler.DestroyTexture(m_pHeartRed->GetName());
 	m_pHeartRed = nullptr;
 
 	m_pSpider->Destroy();
