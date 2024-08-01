@@ -57,6 +57,7 @@ bool CGameState::OnEnter(void)
 	((CSpider*)m_pSpider)->SetTarget(m_pPlayer);
 
 	m_pHeartRed = textureHandler.CreateTexture("lifeSpiderChase.png");
+	m_pHeartRed->SetSize({ 50.0f, 50.0f });
 	m_pHeartBlack = textureHandler.CreateTexture("sblackHeart.png");
 
 	/*
@@ -183,7 +184,7 @@ void CGameState::Render(void)
 	
 	for (int i = 0; i < player.m_Health; i++)
 	{
-		m_pHeartRed->Render({ 100.0f + (i * 100.0f), 100.0f });
+		m_pHeartRed->Render({ 50.0f + (i * 35.0f), 50.0f });
 	}
 	
 	m_pChair->Render();
