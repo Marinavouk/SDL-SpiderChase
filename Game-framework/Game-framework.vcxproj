@@ -23,7 +23,6 @@
     <ClCompile Include="Handlers\InputHandler.cpp" />
     <ClCompile Include="Handlers\LibraryHandler.cpp" />
     <ClCompile Include="Handlers\TextureHandler.cpp" />
-    <ClCompile Include="Life.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="States\GameState.cpp" />
     <ClCompile Include="States\MainMenuState.cpp" />
@@ -48,7 +47,6 @@
     <ClInclude Include="Handlers\InputHandler.h" />
     <ClInclude Include="Handlers\LibraryHandler.h" />
     <ClInclude Include="Handlers\TextureHandler.h" />
-    <ClInclude Include="Life.h" />
     <ClInclude Include="States\GameState.h" />
     <ClInclude Include="States\MainMenuState.h" />
     <ClInclude Include="States\QuitState.h" />

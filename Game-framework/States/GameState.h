@@ -3,6 +3,7 @@
 #include "GameObjects/GameObject.h"
 #include "State.h"
 #include "Utilities/Texture.h"
+#include "Handlers/TextureHandler.h"
 
 #include <SDL.h>
 #include <SDL_mixer.h>
@@ -37,7 +38,9 @@ private:
 	CGameObject*	m_pTable			= nullptr;
 	CGameObject*	m_pChair			= nullptr;
 	CGameObject*	m_pSpider			= nullptr;
-	CGameObject*	m_pHeart			= nullptr;
+
+	CTexture*		m_pHeartRed			= nullptr;
+	CTexture*		m_pHeartBlack			= nullptr;
 
 	int				m_VolumeLimiter		= 100;
 
