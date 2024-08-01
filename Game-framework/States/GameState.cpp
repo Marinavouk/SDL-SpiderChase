@@ -57,7 +57,7 @@ bool CGameState::OnEnter(void)
 	((CSpider*)m_pSpider)->SetTarget(m_pPlayer);
 
 	m_pHeart = new CLife(m_pApplication);
-	if (!m_pHeart->Create("lifeSpiderChase.png", { 900.0f, windowSize.y }))
+	if (!m_pHeart->Create("lifeSpiderChase.png", {50.0f, windowSize.y}))
 		return false;
 
 	/*
@@ -81,7 +81,6 @@ bool CGameState::OnEnter(void)
 	m_Obstacles.push_back(m_pTable);
 	m_Obstacles.push_back(m_pChair);
 
-	m_Obstacles.push_back(m_pHeart);
 
 
 	m_Enemies.push_back(m_pSpider);

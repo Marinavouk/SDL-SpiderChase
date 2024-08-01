@@ -8,7 +8,7 @@ bool CLife::Create(const std::string& textureFileName, const SDL_FPoint& positio
 		return false;
 
 	const SDL_FPoint textureSize = m_pTexture->GetSize();
-	const SDL_FPoint newTextureSize = { textureSize.x * 0.7f, textureSize.y * 0.7f };
+	const SDL_FPoint newTextureSize = { textureSize.x * 0.1f, textureSize.y * 0.1f };
 
 	m_pTexture->SetSize(newTextureSize);
 
