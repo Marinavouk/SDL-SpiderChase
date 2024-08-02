@@ -46,20 +46,20 @@ bool CGameState::OnEnter(void)
 	audioHandler.SetMusicVolume(0);
 
 	m_pPlayer = new CPlayer(m_pApplication);
-	if (!m_pPlayer->Create("player.png", {150.0f, 260.0f}))
+	if (!m_pPlayer->Create("player.png", {150.0f, 260.0f}, 5))
 		return false;
 	((CPlayer*)m_pPlayer)->SetAttackCallback(std::bind(&CGameState::OnPlayerAttack, this));
 
 	m_pTable = new CTable(m_pApplication);
-	if (!m_pTable->Create("table.png", {100.0f, windowSize.y} ))
+	if (!m_pTable->Create("table.png", {100.0f, windowSize.y}, 0 ))
 		return false;
 
 	m_pChair = new CChair(m_pApplication);
-	if (!m_pChair->Create("chair.png", {900.0f, windowSize.y}))
+	if (!m_pChair->Create("chair.png", {900.0f, windowSize.y}, 0))
 		return false;
 
 	m_pSpider = new CSpider(m_pApplication);
-	if (!m_pSpider->Create("spider.png", {800.0f, -50.0f}))
+	if (!m_pSpider->Create("spider.png", {800.0f, -50.0f}, 1))
 		return false;
 	((CSpider*)m_pSpider)->SetTarget(m_pPlayer);
 
