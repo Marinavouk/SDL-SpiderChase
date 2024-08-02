@@ -296,12 +296,16 @@ void CPlayer::HandleEnemyCollision(const GameObjectList& enemies, const float de
 		{
 			hasCollided = true;
 
+			CPlayer::m_Health -= 1;
+
 			break;
 		}
 
 		if (ResolveEnemyYCollision(enemy->GetCollider(), moveAmount))
 		{
 			hasCollided = true;
+
+			CPlayer::m_Health -= 1;
 
 			break;
 		}
