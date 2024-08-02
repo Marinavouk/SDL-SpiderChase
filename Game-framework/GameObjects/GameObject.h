@@ -20,7 +20,7 @@ public:
 			 CGameObject(CApplication* application) : m_pApplication(application)	{}
 	virtual ~CGameObject(void)														{}
 
-	virtual bool	Create(const std::string& textureFileName, const SDL_FPoint& position);
+	virtual bool	Create(const std::string& textureFileName, const SDL_FPoint& position, const uint32_t maxHealth);
 	virtual void	Destroy(void);
 	virtual void	Render(void);
 	virtual void	RenderDebug(void);
