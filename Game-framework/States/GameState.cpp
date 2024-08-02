@@ -48,6 +48,7 @@ bool CGameState::OnEnter(void)
 	m_pPlayer = new CPlayer(m_pApplication);
 	if (!m_pPlayer->Create("player.png", {150.0f, 260.0f}))
 		return false;
+	((CPlayer*)m_pPlayer)->SetAttackCallback(std::bind(&CGameState::OnPlayerAttach, this));
 
 	m_pTable = new CTable(m_pApplication);
 	if (!m_pTable->Create("table.png", {100.0f, windowSize.y} ))
@@ -222,4 +223,13 @@ void CGameState::RenderDebug(void)
 	*/
 
 	m_pPlayer->RenderDebug();
+}
+
+void CGameState::OnPlayerAttach(void)
+{
+#if defined(_DEBUG) 
+	std::cout << "Player is now attach and a fireball should now spawn" << std::endl;
+#endif
+
+	// TODO: spawn a fireball by selecting a free (unused) fireball in the fireball pool and place it in the active-fireballs-vector
 }

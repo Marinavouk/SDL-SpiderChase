@@ -1,4 +1,3 @@
-
 #include "Spider.h"
 
 #include "Application.h"

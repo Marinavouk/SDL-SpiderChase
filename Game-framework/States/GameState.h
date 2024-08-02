@@ -16,11 +16,15 @@ public:
 	 CGameState(CApplication* application) : CState(application)	{}
 	~CGameState(void)												{}
 
-	virtual bool OnEnter(void) override;
-	virtual void OnExit(void) override;
-	virtual void Update(const float deltaTime) override;
-	virtual void Render(void) override;
-	virtual void RenderDebug(void) override;
+	virtual bool	OnEnter(void) override;
+	virtual void	OnExit(void) override;
+	virtual void	Update(const float deltaTime) override;
+	virtual void	Render(void) override;
+	virtual void	RenderDebug(void) override;
+
+private:
+
+	void			OnPlayerAttach(void);
 
 private:
 

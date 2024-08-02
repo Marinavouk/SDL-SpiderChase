@@ -590,6 +590,9 @@ void CPlayer::ActivateJumpingAnimation(void)
 
 void CPlayer::OnAttackAnimationEnd(void)
 {
+	if (m_pAttackCallback)
+		m_pAttackCallback();
+
 	if (m_IsJumping)
 		m_pCurrentAnimator = m_pAnimatorJumping;
 

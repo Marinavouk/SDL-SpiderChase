@@ -4,7 +4,10 @@
 #include "Utilities\Animator.h"
 
 #include <SDL.h>
+#include <functional>
 #include <vector>
+
+typedef std::function<void()> AttackCB;
 
 class CPlayer final : public CGameObject
 {
@@ -23,6 +26,10 @@ public:
 	virtual void	HandleObstacleCollision(const GameObjectList& obstacles, const float deltaTime) override;
 	virtual void	HandleEnemyCollision(const GameObjectList& enemies, const float deltaTime) override;
 
+public:
+
+	void			SetAttackCallback(AttackCB attackCallback) {m_pAttackCallback = attackCallback;}
+
 private:
 
 	bool			ResolveObstacleXCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount);
@@ -37,7 +44,6 @@ private:
 	void			ActivateJumpingAnimation(void);
 	void			OnAttackAnimationEnd(void);
 
-
 private:
 
 	enum EState
@@ -48,6 +54,8 @@ private:
 	};
 
 private:
+
+	AttackCB	m_pAttackCallback				= nullptr;
 
 	CAnimator*	m_pAnimatorIdle					= nullptr;
 	CAnimator*	m_pAnimatorWalking				= nullptr;
@@ -99,6 +107,5 @@ private:
 	bool		m_IsAttacking					= false;
 	bool		m_DamageCooldown				= false;
 	bool		m_Show							= true;
-
 
 };
