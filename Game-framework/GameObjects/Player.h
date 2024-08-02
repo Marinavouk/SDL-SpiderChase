@@ -14,7 +14,7 @@ public:
 	 CPlayer(CApplication* application) : CGameObject(application)	{}
 	~CPlayer(void)													{}
 
-	virtual bool	Create(const std::string& textureFileName, const SDL_FPoint& position) override;
+	virtual bool	Create(const std::string& textureFileName, const SDL_FPoint& position, const uint32_t maxHealth) override;
 	virtual void	Destroy(void) override;
 	virtual void	Render(void) override;
 	virtual void	RenderDebug(void) override;

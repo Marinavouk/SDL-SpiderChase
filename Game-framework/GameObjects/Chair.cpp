@@ -2,9 +2,9 @@
 
 #include "Application.h"
 
-bool CChair::Create(const std::string& textureFileName, const SDL_FPoint& position)
+bool CChair::Create(const std::string& textureFileName, const SDL_FPoint& position, const uint32_t maxHealth)
 {
-	if (!CGameObject::Create(textureFileName, position))
+	if (!CGameObject::Create(textureFileName, position, maxHealth))
 		return false;
 
 	const SDL_FPoint textureSize	= m_pTexture->GetSize();

@@ -13,6 +13,6 @@ public:
 	 CTable(CApplication* application) : CGameObject(application)	{}
 	~CTable(void)													{}
 
-	virtual bool Create(const std::string& textureFileName, const SDL_FPoint& position) override;
+	virtual bool Create(const std::string& textureFileName, const SDL_FPoint& position, const uint32_t maxHealth) override;
 
 };

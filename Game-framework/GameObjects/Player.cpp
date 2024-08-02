@@ -5,9 +5,9 @@
 
 #include <SDL.h>
 
-bool CPlayer::Create(const std::string& textureFileName, const SDL_FPoint& position)
+bool CPlayer::Create(const std::string& textureFileName, const SDL_FPoint& position, const uint32_t maxHealth)
 {
-	if (!CGameObject::Create(textureFileName, position))
+	if (!CGameObject::Create(textureFileName, position, maxHealth))
 		return false;
 
 	const SDL_FPoint frameSize = {64.0f, 128.0f};
@@ -42,6 +42,7 @@ bool CPlayer::Create(const std::string& textureFileName, const SDL_FPoint& posit
 
 	return true;
 }
+
 
 void CPlayer::Destroy(void)
 {

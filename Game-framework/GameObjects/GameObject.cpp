@@ -2,7 +2,7 @@
 
 #include "Application.h"
 
-bool CGameObject::Create(const std::string& textureFileName, const SDL_FPoint& position)
+bool CGameObject::Create(const std::string& textureFileName, const SDL_FPoint& position, const uint32_t maxHealth)
 {
 	m_pTexture = m_pApplication->GetTextureHandler().CreateTexture(textureFileName);
 

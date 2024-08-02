@@ -20,7 +20,7 @@ public:
 			 CGameObject(CApplication* application) : m_pApplication(application)	{}
 	virtual ~CGameObject(void)														{}
 
-	virtual bool	Create(const std::string& textureFileName, const SDL_FPoint& position);
+	virtual bool	Create(const std::string& textureFileName, const SDL_FPoint& position, const uint32_t maxHealth);
 	virtual void	Destroy(void);
 	virtual void	Render(void);
 	virtual void	RenderDebug(void);
@@ -42,10 +42,15 @@ public:
 
 	SDL_FRect&		GetRectangle(void) const						{return (SDL_FRect&)m_Rectangle;}
 	SDL_FRect&		GetCollider(void) const							{return (SDL_FRect&)m_Collider;}
-	int				GetHealth(void) const							{ return m_Health; }
+	int				GetCurrentHealth(void) const					{ return m_CurrentHealth; }
+	int				GetMaxHealth(void) const						{ return m_MaxHealth; }
 
 
-	int				m_Health = 3;
+
+	int				m_CurrentHealth = 3;
+
+	uint32_t		m_MaxHealth = {};
+
 
 protected:
 

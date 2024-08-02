@@ -15,7 +15,7 @@ public:
 	 CSpider(CApplication* application) : CGameObject(application)	{}
 	~CSpider(void)													{}
 
-	virtual bool	Create(const std::string& textureFileName, const SDL_FPoint& position) override;
+	virtual bool	Create(const std::string& textureFileName, const SDL_FPoint& position, const uint32_t maxHealth) override;
 	virtual void	Destroy(void);
 	virtual void	Render(void) override;
 	virtual void	RenderDebug(void) override;

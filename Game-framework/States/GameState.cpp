@@ -40,19 +40,19 @@ bool CGameState::OnEnter(void)
 	audioHandler.SetMusicVolume(0);
 
 	m_pPlayer = new CPlayer(m_pApplication);
-	if (!m_pPlayer->Create("player.png", {150.0f, 260.0f}))
+	if (!m_pPlayer->Create("player.png", {150.0f, 260.0f}, 5))
 		return false;
 
 	m_pTable = new CTable(m_pApplication);
-	if (!m_pTable->Create("table.png", {100.0f, windowSize.y} ))
+	if (!m_pTable->Create("table.png", {100.0f, windowSize.y}, 0))
 		return false;
 
 	m_pChair = new CChair(m_pApplication);
-	if (!m_pChair->Create("chair.png", {900.0f, windowSize.y}))
+	if (!m_pChair->Create("chair.png", {900.0f, windowSize.y}, 0))
 		return false;
 
 	m_pSpider = new CSpider(m_pApplication);
-	if (!m_pSpider->Create("spider.png", {800.0f, -50.0f}))
+	if (!m_pSpider->Create("spider.png", {800.0f, -50.0f}, 1))
 		return false;
 	((CSpider*)m_pSpider)->SetTarget(m_pPlayer);
 
@@ -182,7 +182,7 @@ void CGameState::Render(void)
 	
 	for (int i = 0; i < 5; i++)
 	{
-		if (i < m_pPlayer->GetHealth()) 
+		if (i < m_pPlayer->GetCurrentHealth()) 
 			m_pHeartRed->Render({ 50.0f + (i * 35.0f), 50.0f });
 		else
 			m_pHeartBlack->Render({ 50.0f + (i * 35.0f), 50.0f });
