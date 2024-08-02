@@ -4,7 +4,7 @@
 #include <functional>
 #include <string>
 
-typedef std::function<void()> AnimantionEndedCB;
+typedef std::function<void()> AnimationEndedCB;
 
 class CAnimator
 {
@@ -32,7 +32,7 @@ public:
 
 public:
 
-	void		SetAnimationEndCallback(AnimantionEndedCB animationEndCallback)	{m_pAnimationEndCallback = animationEndCallback;}
+	void		SetAnimationEndCallback(AnimationEndedCB animationEndCallback)	{m_pAnimationEndCallback = animationEndCallback;}
 
 	SDL_Rect&	GetClipRectangle(void) const									{return (SDL_Rect&)m_ClipRectangle;}
 
@@ -53,7 +53,7 @@ private:
 
 private:
 
-	AnimantionEndedCB	m_pAnimationEndCallback	= nullptr;
+	AnimationEndedCB	m_pAnimationEndCallback	= nullptr;
 
 	SDL_Rect			m_ClipRectangle			= {0, 0, 0, 0};
 

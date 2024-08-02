@@ -20,7 +20,7 @@ public:
 			 CGameObject(CApplication* application) : m_pApplication(application)	{}
 	virtual ~CGameObject(void)														{}
 
-	virtual bool	Create(const std::string& textureFileName, const SDL_FPoint& position, const uint32_t maxHealth);
+	virtual bool	Create(const std::string& textureFileName, const SDL_FPoint& position);
 	virtual void	Destroy(void);
 	virtual void	Render(void);
 	virtual void	RenderDebug(void);
@@ -30,6 +30,8 @@ public:
 	virtual void	HandleEnemyCollision(const GameObjectList& enemies, const float deltaTime)		{}
 
 public:
+
+	uint32_t		GetHealth(void) const							{return m_Health;}
 
 	SDL_FPoint		GetRectanglePosition(void) const				{return {m_Rectangle.x, m_Rectangle.y};}
 	SDL_FPoint		GetRectangleCenterPosition(void) const			{return {m_Rectangle.x + (m_Rectangle.w * 0.5f), m_Rectangle.y + (m_Rectangle.h * 0.5f)};}
@@ -42,14 +44,6 @@ public:
 
 	SDL_FRect&		GetRectangle(void) const						{return (SDL_FRect&)m_Rectangle;}
 	SDL_FRect&		GetCollider(void) const							{return (SDL_FRect&)m_Collider;}
-	int				GetCurrentHealth(void) const					{ return m_CurrentHealth; }
-	int				GetMaxHealth(void) const						{ return m_MaxHealth; }
-
-
-
-	int				m_CurrentHealth = 3;
-
-	uint32_t		m_MaxHealth = {};
 
 
 protected:
@@ -57,6 +51,8 @@ protected:
 	CApplication*	m_pApplication	= nullptr;
 
 	CTexture*		m_pTexture		= nullptr;
+
+	uint32_t		m_Health		= 3;
 
 	SDL_FRect		m_Rectangle		= {0.0f, 0.0f, 0.0f, 0.0f};
 	SDL_FRect		m_Collider		= {0.0f, 0.0f, 0.0f, 0.0f};

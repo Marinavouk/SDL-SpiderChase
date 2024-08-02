@@ -32,6 +32,12 @@ bool CGameState::OnEnter(void)
 	m_pBackground = textureHandler.CreateTexture("game_background.png");
 	m_pBackground->SetSize(windowSize);
 
+	m_pHeartRed = textureHandler.CreateTexture("red_heart.png");
+	m_pHeartRed->SetSize({40.0f, 40.0f});
+
+	m_pHeartBlack = textureHandler.CreateTexture("black_heart.png");
+	m_pHeartBlack->SetSize({40.0f, 40.0f});
+
 	m_pMusic = audioHandler.CreateMusic("Assets/Audio/game.mp3");
 	if (!m_pMusic)
 		return false;
@@ -40,26 +46,22 @@ bool CGameState::OnEnter(void)
 	audioHandler.SetMusicVolume(0);
 
 	m_pPlayer = new CPlayer(m_pApplication);
-	if (!m_pPlayer->Create("player.png", {150.0f, 260.0f}, 5))
+	if (!m_pPlayer->Create("player.png", {150.0f, 260.0f}))
 		return false;
+	((CPlayer*)m_pPlayer)->SetAttackCallback(std::bind(&CGameState::OnPlayerAttack, this));
 
 	m_pTable = new CTable(m_pApplication);
-	if (!m_pTable->Create("table.png", {100.0f, windowSize.y}, 0))
+	if (!m_pTable->Create("table.png", {100.0f, windowSize.y} ))
 		return false;
 
 	m_pChair = new CChair(m_pApplication);
-	if (!m_pChair->Create("chair.png", {900.0f, windowSize.y}, 0))
+	if (!m_pChair->Create("chair.png", {900.0f, windowSize.y}))
 		return false;
 
 	m_pSpider = new CSpider(m_pApplication);
-	if (!m_pSpider->Create("spider.png", {800.0f, -50.0f}, 1))
+	if (!m_pSpider->Create("spider.png", {800.0f, -50.0f}))
 		return false;
 	((CSpider*)m_pSpider)->SetTarget(m_pPlayer);
-
-	m_pHeartRed = textureHandler.CreateTexture("lifeSpiderChase.png");
-	m_pHeartRed->SetSize({ 50.0f, 50.0f });
-	m_pHeartBlack = textureHandler.CreateTexture("blackHeart.png");
-	m_pHeartBlack->SetSize({ 50.0f, 50.0f });
 
 	/*
 	CRandom& randomNumberGenerator = m_pApplication->GetRandomNumberGenerator();
@@ -81,8 +83,6 @@ bool CGameState::OnEnter(void)
 
 	m_Obstacles.push_back(m_pTable);
 	m_Obstacles.push_back(m_pChair);
-
-
 
 	m_Enemies.push_back(m_pSpider);
 
@@ -113,12 +113,6 @@ void CGameState::OnExit(void)
 	m_Enemies.clear();
 	m_Obstacles.clear();
 
-	textureHandler.DestroyTexture(m_pHeartBlack->GetName());
-	m_pHeartBlack = nullptr;
-
-	textureHandler.DestroyTexture(m_pHeartRed->GetName());
-	m_pHeartRed = nullptr;
-
 	m_pSpider->Destroy();
 	delete m_pSpider;
 	m_pSpider = nullptr;
@@ -139,8 +133,12 @@ void CGameState::OnExit(void)
 	audioHandler.DestroyMusic(m_pMusic);
 	m_pMusic = nullptr;
 
+	textureHandler.DestroyTexture(m_pHeartBlack->GetName());
+	textureHandler.DestroyTexture(m_pHeartRed->GetName());
 	textureHandler.DestroyTexture(m_pBackground->GetName());
-	m_pBackground = nullptr;
+	m_pHeartBlack	= nullptr;
+	m_pHeartRed		= nullptr;
+	m_pBackground	= nullptr;
 }
 
 void CGameState::Update(const float deltaTime)
@@ -179,18 +177,24 @@ void CGameState::Render(void)
 	// Render all the game objects here
 
 	m_pBackground->Render({0.0f, 0.0f});
-	
-	for (int i = 0; i < 5; i++)
+
+	const SDL_FPoint	heartRedSize			= m_pHeartRed->GetSize();
+	const SDL_FPoint	heartBlackSize			= m_pHeartBlack->GetSize();
+	const SDL_FPoint	heartStartOffset		= {5.0f, 5.0f};
+	const float			distanceBetweenHearts	= 5.0f;
+	const uint32_t		playerHealth			= m_pPlayer->GetHealth();
+
+	for (uint32_t i = 0; i < 5; i++)
 	{
-		if (i < m_pPlayer->GetCurrentHealth()) 
-			m_pHeartRed->Render({ 50.0f + (i * 35.0f), 50.0f });
+		if (i < playerHealth) 
+			m_pHeartRed->Render({heartStartOffset.x + ((heartRedSize.x + distanceBetweenHearts) * i), heartStartOffset.y});
+
 		else
-			m_pHeartBlack->Render({ 50.0f + (i * 35.0f), 50.0f });
+			m_pHeartBlack->Render({heartStartOffset.x + ((heartBlackSize.x + distanceBetweenHearts) * i), heartStartOffset.y});
 	}
 	
 	m_pChair->Render();
 	m_pTable->Render();
-
 
 	m_pSpider->Render();
 
@@ -219,4 +223,13 @@ void CGameState::RenderDebug(void)
 	*/
 
 	m_pPlayer->RenderDebug();
+}
+
+void CGameState::OnPlayerAttack(void)
+{
+#if defined(_DEBUG) 
+	std::cout << "Player is now attach and a fireball should now spawn" << std::endl;
+#endif
+
+	// TODO: spawn a fireball by selecting a free (unused) fireball in the fireball pool and place it in the active-fireballs-vector
 }
