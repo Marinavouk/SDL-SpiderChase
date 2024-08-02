@@ -24,7 +24,7 @@ public:
 
 private:
 
-	void			OnPlayerAttach(void);
+	void			OnPlayerAttack(void);
 
 private:
 
