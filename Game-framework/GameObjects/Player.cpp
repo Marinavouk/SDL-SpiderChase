@@ -296,7 +296,7 @@ void CPlayer::HandleEnemyCollision(const GameObjectList& enemies, const float de
 		{
 			hasCollided = true;
 
-			CPlayer::m_Health -= 1;
+			CPlayer::m_CurrentHealth -= 1;
 
 			break;
 		}
@@ -305,7 +305,7 @@ void CPlayer::HandleEnemyCollision(const GameObjectList& enemies, const float de
 		{
 			hasCollided = true;
 
-			CPlayer::m_Health -= 1;
+			CPlayer::m_CurrentHealth -= 1;
 
 			break;
 		}

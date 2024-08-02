@@ -31,7 +31,7 @@ public:
 
 public:
 
-	uint32_t		GetHealth(void) const							{return m_Health;}
+	uint32_t		GetHealth(void) const							{return m_CurrentHealth;}
 
 	SDL_FPoint		GetRectanglePosition(void) const				{return {m_Rectangle.x, m_Rectangle.y};}
 	SDL_FPoint		GetRectangleCenterPosition(void) const			{return {m_Rectangle.x + (m_Rectangle.w * 0.5f), m_Rectangle.y + (m_Rectangle.h * 0.5f)};}
@@ -52,7 +52,7 @@ protected:
 
 	CTexture*		m_pTexture		= nullptr;
 
-	uint32_t		m_Health		= 3;
+	uint32_t		m_CurrentHealth		= 3;
 
 	SDL_FRect		m_Rectangle		= {0.0f, 0.0f, 0.0f, 0.0f};
 	SDL_FRect		m_Collider		= {0.0f, 0.0f, 0.0f, 0.0f};
