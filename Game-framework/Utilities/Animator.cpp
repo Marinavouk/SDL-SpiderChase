@@ -31,24 +31,26 @@ void CAnimator::Update(const float deltaTime)
 
 		if (Forward)
 		{
-			if (m_CurrentFrame > (int32_t)m_EndFrame)
+			if(m_CurrentFrame >= (int32_t)(m_EndFrame))
 			{
-				m_CurrentFrame = (m_Loop ? m_StartFrame : m_EndFrame);
-
-				if (m_pAnimationEndCallback)
+				if(m_pAnimationEndCallback)
 					m_pAnimationEndCallback();
 			}
+
+			if (m_CurrentFrame > (int32_t)m_EndFrame)
+				m_CurrentFrame = (m_Loop ? m_StartFrame : m_EndFrame);
 		}
 
 		else
 		{
-			if (m_CurrentFrame < (int32_t)m_EndFrame)
+			if(m_CurrentFrame <= (int32_t)(m_EndFrame))
 			{
-				m_CurrentFrame = (m_Loop ? m_StartFrame : m_EndFrame);
-
-				if (m_pAnimationEndCallback)
+				if(m_pAnimationEndCallback)
 					m_pAnimationEndCallback();
 			}
+
+			if (m_CurrentFrame < (int32_t)m_EndFrame)
+				m_CurrentFrame = (m_Loop ? m_StartFrame : m_EndFrame);
 		}
 
 		SetClipRectangle();

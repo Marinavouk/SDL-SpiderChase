@@ -86,13 +86,16 @@ bool CGameState::OnEnter(void)
 
 	m_Enemies.push_back(m_pSpider);
 
-	// Create a fireball
-	CGameObject* fireball = new CFireball(m_pApplication);
-	if (!fireball->Create("fire_ball.png", {-500.0f, -500.0f}, 1))
-		return false;
+	for (uint32_t i = 0; i < 5; ++i)
+	{
+		// Create a fireball
+		CGameObject* fireball = new CFireball(m_pApplication);
+		if (!fireball->Create("fire_ball.png", {-500.0f, -500.0f}, 1))
+			return false;
 
-	// Place it in the fireball pool
-	m_FireballPool.push_back(fireball);
+		// Place it in the fireball pool
+		m_FireballPool.push_back(fireball);
+	}
 
 	return true;
 }
@@ -187,9 +190,25 @@ void CGameState::Update(const float deltaTime)
 	// If there's any fireball active (i.e, if the player has shot any fireballs)
 	if (!m_ActiveFireballs.empty())
 	{
-		for (CGameObject* fireball : m_ActiveFireballs)
+		const SDL_FPoint windowSize = m_pApplication->GetWindow().GetSize();
+
+		for (uint32_t i = 0; i < m_ActiveFireballs.size(); ++i)
 		{
+			CGameObject* fireball = m_ActiveFireballs[i];
 			fireball->Update(deltaTime);
+
+			const SDL_FPoint position = fireball->GetColliderPosition();
+
+			// When the current fireball leaves the window's left- or right edge, mark it as inactive/unused again so it can be retrieved later again from m_FireballPool
+			// Also remove the fireball from the m_ActiveFireballs vector so it's not updated/rendered anymore
+			if ((position.x < - fireball->GetColliderSize().x) || (position.x > windowSize.x))
+			{
+				((CFireball*)fireball)->SetIsActive(false);
+
+				m_ActiveFireballs.erase(m_ActiveFireballs.begin() + i);
+
+				break;
+			}
 		}
 	}
 
@@ -283,7 +302,7 @@ void CGameState::OnPlayerAttack(void)
 			// Inactive/unused fireball has been found
 
 			// Spawn the fireball a bit in front of the player
-			fireball->Activate({playerPosition.x + playerSize.x + 30.0f, playerPosition.y + 25.0f});
+			fireball->Activate({playerPosition.x + playerSize.x + 30.0f, playerPosition.y + 20.0f});
 
 			// Place the found inactive/unused fireball in the m_ActiveFireballs vector
 			m_ActiveFireballs.push_back(fireball);
