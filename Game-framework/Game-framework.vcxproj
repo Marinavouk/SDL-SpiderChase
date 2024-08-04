@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="CFireball.cpp" />
     <ClCompile Include="GameObjects\Button.cpp" />
     <ClCompile Include="GameObjects\Chair.cpp" />
     <ClCompile Include="GameObjects\GameObject.cpp" />
@@ -36,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="CFireball.h" />
     <ClInclude Include="GameObjects\Button.h" />
     <ClInclude Include="GameObjects\Chair.h" />
     <ClInclude Include="GameObjects\GameObject.h" />
