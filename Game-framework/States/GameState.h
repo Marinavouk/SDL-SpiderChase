@@ -49,5 +49,7 @@ private:
 
 	GameObjectList	m_Obstacles			= {};
 	GameObjectList	m_Enemies			= {};
+	GameObjectList	m_FireballPool		= {};
+	GameObjectList	m_ActiveFireballs	= {};
 
 };
