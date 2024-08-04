@@ -40,6 +40,8 @@ bool CPlayer::Create(const std::string& textureFileName, const SDL_FPoint& posit
 
 	m_Collider = {m_VerticalCollider.x, m_VerticalCollider.y, m_VerticalCollider.w, m_VerticalCollider.h};
 
+	m_HitStrength = {50.0f, 300.0f};
+
 	return true;
 }
 
@@ -296,7 +298,8 @@ void CPlayer::HandleEnemyCollision(const GameObjectList& enemies, const float de
 		{
 			hasCollided = true;
 
-			m_CurrentHealth -= 1;
+			if (m_CurrentHealth > 0)
+				m_CurrentHealth -= 1;
 
 			break;
 		}
@@ -305,7 +308,8 @@ void CPlayer::HandleEnemyCollision(const GameObjectList& enemies, const float de
 		{
 			hasCollided = true;
 
-			m_CurrentHealth -= 1;
+			if (m_CurrentHealth > 0)
+				m_CurrentHealth -= 1;
 
 			break;
 		}
@@ -427,8 +431,8 @@ bool CPlayer::ResolveEnemyXCollision(const SDL_FRect& collider, const SDL_FPoint
 			m_Rectangle.x += intersection.w;
 
 			m_Velocity.x  = -m_Velocity.x;
-			m_Velocity.x +=  m_HorizontalHitStrength;
-			m_Velocity.y -=  m_VerticalHitStrength;
+			m_Velocity.x +=  m_HitStrength.x;
+			m_Velocity.y -=  m_HitStrength.y;
 
 			hasCollided = true;
 		}
@@ -444,8 +448,8 @@ bool CPlayer::ResolveEnemyXCollision(const SDL_FRect& collider, const SDL_FPoint
 			m_Rectangle.x -= intersection.w;
 
 			m_Velocity.x  = -m_Velocity.x;
-			m_Velocity.x -=	 m_HorizontalHitStrength;
-			m_Velocity.y -=	 m_VerticalHitStrength;
+			m_Velocity.x -=	 m_HitStrength.x;
+			m_Velocity.y -=	 m_HitStrength.y;
 
 			hasCollided = true;
 		}
@@ -455,10 +459,10 @@ bool CPlayer::ResolveEnemyXCollision(const SDL_FRect& collider, const SDL_FPoint
 	{
 		if (QuadVsQuad(m_HorizontalCollider, collider))
 		{
-			const float hitStrength = (m_HorizontalHitStrength * 4.0f);
+			const float hitStrength = (m_HitStrength.x * 4.0f);
 
 			m_Velocity.x += ((m_HorizontalCollider.x < collider.x) ? -hitStrength : hitStrength);
-			m_Velocity.y -= m_VerticalHitStrength;
+			m_Velocity.y -= m_HitStrength.y;
 
 			ActivateDamageCooldown();
 
@@ -479,11 +483,11 @@ bool CPlayer::ResolveEnemyXCollision(const SDL_FRect& collider, const SDL_FPoint
 
 			SyncColliders();
 
-			const float hitStrength = (m_HorizontalHitStrength * 4.0f);
+			const float hitStrength = (m_HitStrength.x * 4.0f);
 
 			m_Velocity.x  = -m_Velocity.x;
 			m_Velocity.x +=  ((m_Velocity.x < 0.0f) ? -hitStrength : hitStrength);
-			m_Velocity.y -=  m_VerticalHitStrength;
+			m_Velocity.y -=  m_HitStrength.y;
 
 			hasCollided = true;
 		}
@@ -505,7 +509,7 @@ bool CPlayer::ResolveEnemyYCollision(const SDL_FRect& collider, const SDL_FPoint
 		{
 			m_Rectangle.y += intersection.h;
 
-			const float hitStrength = (m_HorizontalHitStrength * 2.0f);
+			const float hitStrength = (m_HitStrength.x * 2.0f);
 
 			m_Velocity.x  = -m_Velocity.x;
 			m_Velocity.x +=  ((m_Velocity.x < 0.0f) ? -hitStrength : hitStrength);
@@ -523,11 +527,11 @@ bool CPlayer::ResolveEnemyYCollision(const SDL_FRect& collider, const SDL_FPoint
 		{
 			m_Rectangle.y -= intersection.h;
 
-			const float hitStrength = (m_HorizontalHitStrength * 2.0f);
+			const float hitStrength = (m_HitStrength.x * 2.0f);
 
 			m_Velocity.x  = -m_Velocity.x;
 			m_Velocity.x += ((m_Velocity.x < 0.0f) ? -hitStrength : hitStrength);
-			m_Velocity.y -= m_VerticalHitStrength;
+			m_Velocity.y -= m_HitStrength.y;
 
 			hasCollided = true;
 		}

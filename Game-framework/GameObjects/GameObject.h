@@ -31,6 +31,7 @@ public:
 
 public:
 
+	uint32_t		GetMaxHealth(void) const						{return m_MaxHealth;}
 	uint32_t		GetHealth(void) const							{return m_CurrentHealth;}
 
 	SDL_FPoint		GetRectanglePosition(void) const				{return {m_Rectangle.x, m_Rectangle.y};}
@@ -45,14 +46,14 @@ public:
 	SDL_FRect&		GetRectangle(void) const						{return (SDL_FRect&)m_Rectangle;}
 	SDL_FRect&		GetCollider(void) const							{return (SDL_FRect&)m_Collider;}
 
-
 protected:
 
 	CApplication*	m_pApplication	= nullptr;
 
 	CTexture*		m_pTexture		= nullptr;
 
-	uint32_t		m_CurrentHealth		= 3;
+	uint32_t		m_MaxHealth		= 0;
+	uint32_t		m_CurrentHealth	= 0;
 
 	SDL_FRect		m_Rectangle		= {0.0f, 0.0f, 0.0f, 0.0f};
 	SDL_FRect		m_Collider		= {0.0f, 0.0f, 0.0f, 0.0f};

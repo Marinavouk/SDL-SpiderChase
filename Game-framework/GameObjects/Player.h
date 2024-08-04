@@ -73,12 +73,6 @@ private:
 	float		m_MaxFallVelocity				= 600.0f;
 	float		m_JumpStrength					= 660.0f;
 
-	// How much (in pixels) the player should be moved out of the spider it's colliding with
-	float		m_HorizontalHitStrength			= 50.0f;
-
-	// How high (in pixels) the player should jump when colliding with a spider
-	float		m_VerticalHitStrength			= 300.0f;
-
 	float		m_Gravity						= 1500.0f;
 	float		m_Scale							= 2.0f;
 
@@ -98,6 +92,9 @@ private:
 	SDL_FPoint	m_Velocity						= {0.0f, 0.0f};
 	SDL_FPoint	m_HorizontalColliderOffset		= {0.0f, 0.0f};
 	SDL_FPoint	m_VerticalColliderOffset		= {0.0f, 0.0f};
+
+	// How much (in pixels) the player should be moved out of- and how much to jump when colliding with a spider
+	SDL_FPoint	m_HitStrength					= {0.0f, 0.0f};
 
 	SDL_FRect	m_HorizontalCollider			= {0.0f, 0.0f, 0.0f, 0.0f};
 	SDL_FRect	m_VerticalCollider				= {0.0f, 0.0f, 0.0f, 0.0f};
