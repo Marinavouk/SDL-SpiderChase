@@ -109,9 +109,10 @@ void CGameState::OnExit(void)
 	CTextureHandler&	textureHandler	= m_pApplication->GetTextureHandler();
 	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
 
-	for (CGameObject* fireballs : m_FireballPool)
+	for (CGameObject* fireball : m_FireballPool)
 	{
-		delete fireballs;
+		fireball->Destroy();
+		delete fireball;
 	}
 
 	m_ActiveFireballs.clear();
