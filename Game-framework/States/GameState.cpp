@@ -229,7 +229,7 @@ void CGameState::RenderDebug(void)
 void CGameState::OnPlayerAttack(void)
 {
 #if defined(_DEBUG) 
-	std::cout << "Player is now attach and a fireball should now spawn" << std::endl;
+	std::cout << "Player is now attacking and a fireball should now spawn" << std::endl;
 #endif
 
 	// TODO: spawn a fireball by selecting a free (unused) fireball in the fireball pool and place it in the active-fireballs-vector

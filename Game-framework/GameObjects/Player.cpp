@@ -4,6 +4,7 @@
 #include "Utilities/CollisionUtilities.h"
 
 #include <SDL.h>
+#include <iostream>
 
 bool CPlayer::Create(const std::string& textureFileName, const SDL_FPoint& position, const uint32_t maxHealth)
 {
@@ -298,9 +299,6 @@ void CPlayer::HandleEnemyCollision(const GameObjectList& enemies, const float de
 		{
 			hasCollided = true;
 
-			if (m_CurrentHealth > 0)
-				m_CurrentHealth -= 1;
-
 			break;
 		}
 
@@ -308,15 +306,30 @@ void CPlayer::HandleEnemyCollision(const GameObjectList& enemies, const float de
 		{
 			hasCollided = true;
 
-			if (m_CurrentHealth > 0)
-				m_CurrentHealth -= 1;
-
 			break;
 		}
 	}
 
 	if (hasCollided)
-		ActivateDamageCooldown();
+	{
+		if (m_CurrentHealth > 0)
+		{
+			m_CurrentHealth--;
+
+			if (m_CurrentHealth == 0)
+			{
+			#if defined(_DEBUG) 
+				std::cout << "The player's health is now zero and the player should die" << std::endl;
+			#endif
+
+				// TODO: activate the player's death animation here
+
+			}
+
+			else
+				ActivateDamageCooldown();
+		}
+	}
 }
 
 bool CPlayer::ResolveObstacleXCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount)
@@ -464,8 +477,6 @@ bool CPlayer::ResolveEnemyXCollision(const SDL_FRect& collider, const SDL_FPoint
 			m_Velocity.x += ((m_HorizontalCollider.x < collider.x) ? -hitStrength : hitStrength);
 			m_Velocity.y -= m_HitStrength.y;
 
-			ActivateDamageCooldown();
-
 			hasCollided = true;
 		}
 	}
@@ -584,15 +595,6 @@ void CPlayer::ActivateRunningAnimation(void)
 	if (m_pCurrentAnimator != m_pAnimatorRunning)
 	{
 		m_pCurrentAnimator = m_pAnimatorRunning;
-		m_pCurrentAnimator->Reset();
-	}
-}
-
-void CPlayer::ActivateJumpingAnimation(void)
-{
-	if (m_pCurrentAnimator != m_pAnimatorJumping)
-	{
-		m_pCurrentAnimator = m_pAnimatorJumping;
 		m_pCurrentAnimator->Reset();
 	}
 }

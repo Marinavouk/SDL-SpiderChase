@@ -41,7 +41,6 @@ private:
 	void			ActivateIdleAnimation(void);
 	void			ActivateWalkingAnimation(void);
 	void			ActivateRunningAnimation(void);
-	void			ActivateJumpingAnimation(void);
 	void			OnAttackAnimationEnd(void);
 
 private:
