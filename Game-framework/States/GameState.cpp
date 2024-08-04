@@ -6,6 +6,7 @@
 #include "GameObjects/Spider.h"
 #include "GameObjects/Table.h"
 #include "GameObjects/Player.h"
+#include "Fireball.h"
 #include "Handlers/AudioHandler.h"
 #include "Utilities/Random.h"
 
@@ -62,6 +63,7 @@ bool CGameState::OnEnter(void)
 	if (!m_pSpider->Create("spider.png", {800.0f, -50.0f}, 1))
 		return false;
 	((CSpider*)m_pSpider)->SetTarget(m_pPlayer);
+
 
 	/*
 	CRandom& randomNumberGenerator = m_pApplication->GetRandomNumberGenerator();

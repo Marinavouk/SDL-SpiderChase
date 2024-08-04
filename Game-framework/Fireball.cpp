@@ -1,4 +1,4 @@
-#include "CFireball.h"
+#include "Fireball.h"
 
 void CFireball::Update(const float deltaTime)
 {
