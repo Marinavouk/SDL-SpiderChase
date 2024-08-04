@@ -182,9 +182,10 @@ void CGameState::Render(void)
 	const SDL_FPoint	heartBlackSize			= m_pHeartBlack->GetSize();
 	const SDL_FPoint	heartStartOffset		= {5.0f, 5.0f};
 	const float			distanceBetweenHearts	= 5.0f;
-	const uint32_t		playerHealth			= m_pPlayer->GetHealth();
+	const uint32_t		playerMaxHealth			= m_pPlayer->GetMaxHealth();
+	const uint32_t		playerHealth			= m_pPlayer->GetCurrentHealth();
 
-	for (uint32_t i = 0; i < 5; i++)
+	for (uint32_t i = 0; i < playerMaxHealth; i++)
 	{
 		if (i < playerHealth) 
 			m_pHeartRed->Render({heartStartOffset.x + ((heartRedSize.x + distanceBetweenHearts) * i), heartStartOffset.y});
@@ -228,7 +229,7 @@ void CGameState::RenderDebug(void)
 void CGameState::OnPlayerAttack(void)
 {
 #if defined(_DEBUG) 
-	std::cout << "Player is now attach and a fireball should now spawn" << std::endl;
+	std::cout << "Player is now attacking and a fireball should now spawn" << std::endl;
 #endif
 
 	// TODO: spawn a fireball by selecting a free (unused) fireball in the fireball pool and place it in the active-fireballs-vector

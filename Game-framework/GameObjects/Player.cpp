@@ -4,6 +4,7 @@
 #include "Utilities/CollisionUtilities.h"
 
 #include <SDL.h>
+#include <iostream>
 
 bool CPlayer::Create(const std::string& textureFileName, const SDL_FPoint& position, const uint32_t maxHealth)
 {
@@ -39,6 +40,8 @@ bool CPlayer::Create(const std::string& textureFileName, const SDL_FPoint& posit
 	m_VerticalCollider		= {m_Rectangle.x + m_VerticalColliderOffset.x,		m_Rectangle.y + m_VerticalColliderOffset.y,		10.0f * m_Scale, 64.0f * m_Scale};
 
 	m_Collider = {m_VerticalCollider.x, m_VerticalCollider.y, m_VerticalCollider.w, m_VerticalCollider.h};
+
+	m_HitStrength = {50.0f, 300.0f};
 
 	return true;
 }
@@ -296,8 +299,6 @@ void CPlayer::HandleEnemyCollision(const GameObjectList& enemies, const float de
 		{
 			hasCollided = true;
 
-			m_CurrentHealth -= 1;
-
 			break;
 		}
 
@@ -305,14 +306,30 @@ void CPlayer::HandleEnemyCollision(const GameObjectList& enemies, const float de
 		{
 			hasCollided = true;
 
-			m_CurrentHealth -= 1;
-
 			break;
 		}
 	}
 
 	if (hasCollided)
-		ActivateDamageCooldown();
+	{
+		if (m_CurrentHealth > 0)
+		{
+			m_CurrentHealth--;
+
+			if (m_CurrentHealth == 0)
+			{
+			#if defined(_DEBUG) 
+				std::cout << "The player's health is now zero and the player should die" << std::endl;
+			#endif
+
+				// TODO: activate the player's death animation here
+
+			}
+
+			else
+				ActivateDamageCooldown();
+		}
+	}
 }
 
 bool CPlayer::ResolveObstacleXCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount)
@@ -427,8 +444,8 @@ bool CPlayer::ResolveEnemyXCollision(const SDL_FRect& collider, const SDL_FPoint
 			m_Rectangle.x += intersection.w;
 
 			m_Velocity.x  = -m_Velocity.x;
-			m_Velocity.x +=  m_HorizontalHitStrength;
-			m_Velocity.y -=  m_VerticalHitStrength;
+			m_Velocity.x +=  m_HitStrength.x;
+			m_Velocity.y -=  m_HitStrength.y;
 
 			hasCollided = true;
 		}
@@ -444,8 +461,8 @@ bool CPlayer::ResolveEnemyXCollision(const SDL_FRect& collider, const SDL_FPoint
 			m_Rectangle.x -= intersection.w;
 
 			m_Velocity.x  = -m_Velocity.x;
-			m_Velocity.x -=	 m_HorizontalHitStrength;
-			m_Velocity.y -=	 m_VerticalHitStrength;
+			m_Velocity.x -=	 m_HitStrength.x;
+			m_Velocity.y -=	 m_HitStrength.y;
 
 			hasCollided = true;
 		}
@@ -455,12 +472,10 @@ bool CPlayer::ResolveEnemyXCollision(const SDL_FRect& collider, const SDL_FPoint
 	{
 		if (QuadVsQuad(m_HorizontalCollider, collider))
 		{
-			const float hitStrength = (m_HorizontalHitStrength * 4.0f);
+			const float hitStrength = (m_HitStrength.x * 4.0f);
 
 			m_Velocity.x += ((m_HorizontalCollider.x < collider.x) ? -hitStrength : hitStrength);
-			m_Velocity.y -= m_VerticalHitStrength;
-
-			ActivateDamageCooldown();
+			m_Velocity.y -= m_HitStrength.y;
 
 			hasCollided = true;
 		}
@@ -479,11 +494,11 @@ bool CPlayer::ResolveEnemyXCollision(const SDL_FRect& collider, const SDL_FPoint
 
 			SyncColliders();
 
-			const float hitStrength = (m_HorizontalHitStrength * 4.0f);
+			const float hitStrength = (m_HitStrength.x * 4.0f);
 
 			m_Velocity.x  = -m_Velocity.x;
 			m_Velocity.x +=  ((m_Velocity.x < 0.0f) ? -hitStrength : hitStrength);
-			m_Velocity.y -=  m_VerticalHitStrength;
+			m_Velocity.y -=  m_HitStrength.y;
 
 			hasCollided = true;
 		}
@@ -505,7 +520,7 @@ bool CPlayer::ResolveEnemyYCollision(const SDL_FRect& collider, const SDL_FPoint
 		{
 			m_Rectangle.y += intersection.h;
 
-			const float hitStrength = (m_HorizontalHitStrength * 2.0f);
+			const float hitStrength = (m_HitStrength.x * 2.0f);
 
 			m_Velocity.x  = -m_Velocity.x;
 			m_Velocity.x +=  ((m_Velocity.x < 0.0f) ? -hitStrength : hitStrength);
@@ -523,11 +538,11 @@ bool CPlayer::ResolveEnemyYCollision(const SDL_FRect& collider, const SDL_FPoint
 		{
 			m_Rectangle.y -= intersection.h;
 
-			const float hitStrength = (m_HorizontalHitStrength * 2.0f);
+			const float hitStrength = (m_HitStrength.x * 2.0f);
 
 			m_Velocity.x  = -m_Velocity.x;
 			m_Velocity.x += ((m_Velocity.x < 0.0f) ? -hitStrength : hitStrength);
-			m_Velocity.y -= m_VerticalHitStrength;
+			m_Velocity.y -= m_HitStrength.y;
 
 			hasCollided = true;
 		}
@@ -580,15 +595,6 @@ void CPlayer::ActivateRunningAnimation(void)
 	if (m_pCurrentAnimator != m_pAnimatorRunning)
 	{
 		m_pCurrentAnimator = m_pAnimatorRunning;
-		m_pCurrentAnimator->Reset();
-	}
-}
-
-void CPlayer::ActivateJumpingAnimation(void)
-{
-	if (m_pCurrentAnimator != m_pAnimatorJumping)
-	{
-		m_pCurrentAnimator = m_pAnimatorJumping;
 		m_pCurrentAnimator->Reset();
 	}
 }

@@ -14,6 +14,7 @@ bool CGameObject::Create(const std::string& textureFileName, const SDL_FPoint& p
 
 	m_Collider = m_Rectangle;
 
+	m_MaxHealth		= maxHealth;
 	m_CurrentHealth = maxHealth;
 
 	return true;
