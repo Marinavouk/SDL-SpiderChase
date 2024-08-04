@@ -58,18 +58,13 @@ bool CGameState::OnEnter(void)
 	if (!m_pChair->Create("chair.png", {900.0f, windowSize.y}, 0))
 		return false;
 
+	m_Obstacles.push_back(m_pTable);
+	m_Obstacles.push_back(m_pChair);
+
 	m_pSpider = new CSpider(m_pApplication);
 	if (!m_pSpider->Create("spider.png", {800.0f, -50.0f}, 1))
 		return false;
 	((CSpider*)m_pSpider)->SetTarget(m_pPlayer);
-
-	// Create a fireball
-	CGameObject* fireball = new CFireball(m_pApplication);
-	if (!fireball->Create("fire_ball.png", {-500.0f, -500.0f}, 1))
-		return false;
-
-	// Place it in the fireball pool
-	m_FireballPool.push_back(fireball);
 
 	/*
 	CRandom& randomNumberGenerator = m_pApplication->GetRandomNumberGenerator();
@@ -89,10 +84,15 @@ bool CGameState::OnEnter(void)
 	}
 	*/
 
-	m_Obstacles.push_back(m_pTable);
-	m_Obstacles.push_back(m_pChair);
-
 	m_Enemies.push_back(m_pSpider);
+
+	// Create a fireball
+	CGameObject* fireball = new CFireball(m_pApplication);
+	if (!fireball->Create("fire_ball.png", {-500.0f, -500.0f}, 1))
+		return false;
+
+	// Place it in the fireball pool
+	m_FireballPool.push_back(fireball);
 
 	return true;
 }
@@ -184,6 +184,15 @@ void CGameState::Update(const float deltaTime)
 	}
 	*/
 
+	// If there's any fireball active (i.e, if the player has shot any fireballs)
+	if (!m_ActiveFireballs.empty())
+	{
+		for (CGameObject* fireball : m_ActiveFireballs)
+		{
+			fireball->Update(deltaTime);
+		}
+	}
+
 	// Will fade the game music in/out whenever the game switch to/from this state
 	if (transitionRenderer.IsTransitioning())
 		m_pApplication->GetAudioHandler().SetMusicVolume((MIX_MAX_VOLUME - m_VolumeLimiter) - (int)((float)(MIX_MAX_VOLUME - m_VolumeLimiter) * transitionRenderer.GetTransitionValue()));
@@ -224,6 +233,15 @@ void CGameState::Render(void)
 	*/
 
 	m_pPlayer->Render();
+
+	// If there's any fireball active (i.e, if the player has shot any fireballs)
+	if (!m_ActiveFireballs.empty())
+	{
+		for (CGameObject* fireball : m_ActiveFireballs)
+		{
+			fireball->Render();
+		}
+	}
 }
 
 void CGameState::RenderDebug(void)
@@ -249,5 +267,29 @@ void CGameState::OnPlayerAttack(void)
 	std::cout << "Player is now attacking and a fireball should now spawn" << std::endl;
 #endif
 
-	// TODO: spawn a fireball by selecting a free (unused) fireball in the fireball pool and place it in the active-fireballs-vector
+	// This OnPlayerAttack function is called whenever the player is playing its attack animation
+
+	const SDL_FPoint playerPosition = m_pPlayer->GetColliderPosition();
+	const SDL_FPoint playerSize		= m_pPlayer->GetColliderSize();
+
+	// Loop through the fireball pool and try to retrieve an unused fireball that can be spawned on the screen
+	for (CGameObject* gameObject : m_FireballPool)
+	{
+		CFireball* fireball = (CFireball*)gameObject;
+
+		// Is the current fireball inactive/unused?
+		if (!fireball->GetIsActive())
+		{
+			// Inactive/unused fireball has been found
+
+			// Spawn the fireball a bit in front of the player
+			fireball->Activate({playerPosition.x + playerSize.x + 30.0f, playerPosition.y + 25.0f});
+
+			// Place the found inactive/unused fireball in the m_ActiveFireballs vector
+			m_ActiveFireballs.push_back(fireball);
+
+			// Should break out of the for loop now since an inactive/unused fireball has been found
+			break;
+		}
+	}
 }

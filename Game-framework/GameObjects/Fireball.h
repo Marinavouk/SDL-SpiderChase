@@ -10,7 +10,12 @@ public:
 	 CFireball(CApplication* application) : CGameObject(application)	{}
 	~CFireball(void)													{}
 
-	virtual void	Update(const float deltaTime);
+	virtual bool	Create(const std::string& textureFileName, const SDL_FPoint& position, const uint32_t maxHealth) override;
+	virtual void	Update(const float deltaTime) override;
+
+public:
+
+	void			Activate(const SDL_FPoint& spawnPosition);
 
 public:
 
