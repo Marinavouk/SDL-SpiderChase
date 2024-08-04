@@ -2,11 +2,10 @@
 
 #include "Application.h"
 #include "GameObjects/Chair.h"
+#include "GameObjects/Fireball.h"
 #include "GameObjects/Player.h"
 #include "GameObjects/Spider.h"
 #include "GameObjects/Table.h"
-#include "GameObjects/Player.h"
-#include "GameObjects/Fireball.h"
 #include "Handlers/AudioHandler.h"
 #include "Utilities/Random.h"
 
@@ -64,9 +63,13 @@ bool CGameState::OnEnter(void)
 		return false;
 	((CSpider*)m_pSpider)->SetTarget(m_pPlayer);
 
-	m_FireballPool = new CFireball(m_pApplication);
-	if (!m_FireballPool->Create("fire_ball.png", { -500.0f, -500.0f }, 1))
+	// Create a fireball
+	CGameObject* fireball = new CFireball(m_pApplication);
+	if (!fireball->Create("fire_ball.png", {-500.0f, -500.0f}, 1))
 		return false;
+
+	// Place it in the fireball pool
+	m_FireballPool.push_back(fireball);
 
 	/*
 	CRandom& randomNumberGenerator = m_pApplication->GetRandomNumberGenerator();
@@ -105,6 +108,14 @@ void CGameState::OnExit(void)
 	// Easy access to handlers so you don't have to write m_pApplication->Get_X_Handler() multiple times below
 	CTextureHandler&	textureHandler	= m_pApplication->GetTextureHandler();
 	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
+
+	for (CGameObject* fireballs : m_FireballPool)
+	{
+		delete fireballs;
+	}
+
+	m_ActiveFireballs.clear();
+	m_FireballPool.clear();
 
 	/*
 	for (CGameObject* spider : m_Enemies)
