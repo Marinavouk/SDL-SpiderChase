@@ -183,7 +183,7 @@ void CGameState::Render(void)
 	const SDL_FPoint	heartStartOffset		= {5.0f, 5.0f};
 	const float			distanceBetweenHearts	= 5.0f;
 	const uint32_t		playerMaxHealth			= m_pPlayer->GetMaxHealth();
-	const uint32_t		playerHealth			= m_pPlayer->GetHealth();
+	const uint32_t		playerHealth			= m_pPlayer->GetCurrentHealth();
 
 	for (uint32_t i = 0; i < playerMaxHealth; i++)
 	{

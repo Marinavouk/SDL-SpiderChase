@@ -32,7 +32,7 @@ public:
 public:
 
 	uint32_t		GetMaxHealth(void) const						{return m_MaxHealth;}
-	uint32_t		GetHealth(void) const							{return m_CurrentHealth;}
+	uint32_t		GetCurrentHealth(void) const					{return m_CurrentHealth;}
 
 	SDL_FPoint		GetRectanglePosition(void) const				{return {m_Rectangle.x, m_Rectangle.y};}
 	SDL_FPoint		GetRectangleCenterPosition(void) const			{return {m_Rectangle.x + (m_Rectangle.w * 0.5f), m_Rectangle.y + (m_Rectangle.h * 0.5f)};}
