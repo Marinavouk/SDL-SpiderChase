@@ -6,8 +6,9 @@ class CFireball final : public CGameObject
 {
 public:
 
-	 CFireball(void) {}
-	~CFireball(void) {}
+	 CFireball(void)													{}
+	 CFireball(CApplication* application) : CGameObject(application)	{}
+	~CFireball(void)													{}
 
 	virtual void	Update(const float deltaTime);
 
