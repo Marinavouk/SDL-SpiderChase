@@ -194,16 +194,14 @@ void CGameState::Update(const float deltaTime)
 
 		for (uint32_t i = 0; i < m_ActiveFireballs.size(); ++i)
 		{
-			CGameObject* fireball = m_ActiveFireballs[i];
+			CFireball* fireball = (CFireball*)m_ActiveFireballs[i];
 			fireball->Update(deltaTime);
+			fireball->HandleObstacleCollision(m_Obstacles, deltaTime);
+			fireball->HandleEnemyCollision(m_Enemies, deltaTime);
 
-			const SDL_FPoint position = fireball->GetColliderPosition();
-
-			// When the current fireball leaves the window's left- or right edge, mark it as inactive/unused again so it can be retrieved later again from m_FireballPool
-			// Also remove the fireball from the m_ActiveFireballs vector so it's not updated/rendered anymore
-			if ((position.x < - fireball->GetColliderSize().x) || (position.x > windowSize.x))
+			if (fireball->GetIsDead())
 			{
-				((CFireball*)fireball)->SetIsActive(false);
+				fireball->SetIsActive(false);
 
 				m_ActiveFireballs.erase(m_ActiveFireballs.begin() + i);
 
@@ -288,9 +286,6 @@ void CGameState::OnPlayerAttack(void)
 
 	// This OnPlayerAttack function is called whenever the player is playing its attack animation
 
-	const SDL_FPoint playerPosition = m_pPlayer->GetColliderPosition();
-	const SDL_FPoint playerSize		= m_pPlayer->GetColliderSize();
-
 	// Loop through the fireball pool and try to retrieve an unused fireball that can be spawned on the screen
 	for (CGameObject* gameObject : m_FireballPool)
 	{
@@ -301,8 +296,13 @@ void CGameState::OnPlayerAttack(void)
 		{
 			// Inactive/unused fireball has been found
 
+			const SDL_FPoint		playerPosition		= m_pPlayer->GetColliderPosition();
+			const SDL_FPoint		playerSize			= m_pPlayer->GetColliderSize();
+			const SDL_RendererFlip	playerDirection		= m_pPlayer->GetDirection();
+			const float				horizontalOffset	= ((playerDirection == SDL_RendererFlip::SDL_FLIP_NONE) ? m_pPlayer->GetColliderSize().x + 30.0f : -30.0f);
+
 			// Spawn the fireball a bit in front of the player
-			fireball->Activate({playerPosition.x + playerSize.x + 30.0f, playerPosition.y + 20.0f});
+			fireball->Activate({playerPosition.x + horizontalOffset, playerPosition.y + 20.0f}, m_pPlayer->GetDirection());
 
 			// Place the found inactive/unused fireball in the m_ActiveFireballs vector
 			m_ActiveFireballs.push_back(fireball);

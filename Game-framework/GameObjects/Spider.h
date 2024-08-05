@@ -54,7 +54,7 @@ private:
 	CAnimator*			m_pCurrentAnimator	= nullptr;
 
 	float				m_Gravity			= 1500.0f;
-	float				m_Scale				= 1.0f;
+	float				m_Scale				= 1.2f;
 	float				m_LifeTime			= 0.0f;
 	float				m_Angle				= 0.0f;
 	float				m_MaxFallVelocity	= 500.0f;

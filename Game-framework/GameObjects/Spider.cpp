@@ -77,7 +77,7 @@ void CSpider::RenderDebug(void)
 		 if (centerPosition.x > targetPosition.x) SDL_SetRenderDrawColor(renderer, 255, 255,	255,	255);
 	else if (centerPosition.x < targetPosition.x) SDL_SetRenderDrawColor(renderer, 255,	0,		0,		255);
 
-	SDL_RenderDrawLineF(renderer, centerPosition.x, centerPosition.y, targetPosition.x, targetPosition.y);
+//	SDL_RenderDrawLineF(renderer, centerPosition.x, centerPosition.y, targetPosition.x, targetPosition.y);
 }
 
 void CSpider::Update(const float deltaTime)
