@@ -42,6 +42,7 @@ private:
 	void			ActivateWalkingAnimation(void);
 	void			ActivateRunningAnimation(void);
 	void			OnAttackAnimationEnd(void);
+	void			ActivateDeathAnimation(void);
 
 private:
 

@@ -51,11 +51,13 @@ bool CPlayer::Create(const std::string& textureFileName, const SDL_FPoint& posit
 
 void CPlayer::Destroy(void)
 {
+	delete m_pAnimatorDead;
 	delete m_pAnimatorAttacking;
 	delete m_pAnimatorJumping;
 	delete m_pAnimatorRunning;
 	delete m_pAnimatorWalking;
 	delete m_pAnimatorIdle;
+	m_pAnimatorDead			= nullptr;
 	m_pAnimatorAttacking	= nullptr;
 	m_pAnimatorJumping		= nullptr;
 	m_pAnimatorRunning		= nullptr;
@@ -325,7 +327,7 @@ void CPlayer::HandleEnemyCollision(const GameObjectList& enemies, const float de
 			#endif
 
 				// TODO: activate the player's death animation here
-
+				ActivateDeathAnimation();
 			}
 
 			else
@@ -627,4 +629,13 @@ void CPlayer::OnAttackAnimationEnd(void)
 	m_pCurrentAnimator->Reset();
 
 	m_IsAttacking = false;
+}
+
+void CPlayer::ActivateDeathAnimation(void)
+{
+	if (m_pCurrentAnimator != m_pAnimatorDead) 
+	{
+		m_pCurrentAnimator = m_pAnimatorDead;
+		m_pCurrentAnimator->Reset();
+	}
 }
