@@ -62,6 +62,7 @@ private:
 	CAnimator*	m_pAnimatorJumping				= nullptr;
 	CAnimator*	m_pAnimatorAttacking			= nullptr;
 	CAnimator*	m_pCurrentAnimator				= nullptr;
+	CAnimator*	m_pAnimatorDead					= nullptr;
 
 	float		m_AccelerationSpeedWalking		= 800.0f;
 	float		m_DeaccelerationSpeedWalking	= 500.0f;

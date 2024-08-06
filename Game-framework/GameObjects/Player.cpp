@@ -18,11 +18,13 @@ bool CPlayer::Create(const std::string& textureFileName, const SDL_FPoint& posit
 	m_pAnimatorRunning		= new CAnimator;
 	m_pAnimatorJumping		= new CAnimator;
 	m_pAnimatorAttacking	= new CAnimator;
+	m_pAnimatorDead			= new CAnimator;
 	m_pAnimatorIdle->Set(		7, 0, 6, 0, frameSize,  7.0f, true,		CAnimator::EDirection::FORWARD);
 	m_pAnimatorWalking->Set(	6, 0, 5, 1, frameSize,  8.0f, true,		CAnimator::EDirection::FORWARD);
 	m_pAnimatorRunning->Set(	8, 0, 7, 2, frameSize, 14.0f, true,		CAnimator::EDirection::FORWARD);
 	m_pAnimatorJumping->Set(	9, 0, 8, 7, frameSize,  8.0f, false,	CAnimator::EDirection::FORWARD);
 	m_pAnimatorAttacking->Set(	8, 0, 7, 5, frameSize, 14.0f, false,	CAnimator::EDirection::FORWARD);
+	m_pAnimatorDead->Set(		6, 0, 5, 9, frameSize,	9.0f, false,	CAnimator::EDirection::FORWARD);
 
 	m_pAnimatorAttacking->SetAnimationEndCallback(std::bind(&CPlayer::OnAttackAnimationEnd, this));
 
