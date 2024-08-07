@@ -63,7 +63,7 @@ bool CGameState::OnEnter(void)
 	m_Obstacles.push_back(m_pChair);
 
 	m_pSpider = new CSpider(m_pApplication);
-	if (!m_pSpider->Create("spider.png", {800.0f, -50.0f}, 1))
+	if (!m_pSpider->Create("spider.png", {900.0f, -50.0f}, 1))
 		return false;
 	((CSpider*)m_pSpider)->SetTarget(m_pPlayer);
 

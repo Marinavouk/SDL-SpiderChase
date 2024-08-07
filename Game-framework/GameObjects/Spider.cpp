@@ -26,11 +26,6 @@ bool CSpider::Create(const std::string& textureFileName, const SDL_FPoint& posit
 
 	m_Collider = {m_Rectangle.x + m_ColliderOffset.x, m_Rectangle.y + m_ColliderOffset.y, 34.0f * m_Scale, 36.0f * m_Scale};
 
-	m_ColliderOffset = {16.0f * m_Scale, 15.0f * m_Scale};
-
-	m_Velocity.x = 130.0f;
-	m_Velocity.y = 100.0f;
-
 	m_StartPosition = {m_Rectangle.x, m_Rectangle.y};
 
 	return true;
@@ -86,7 +81,7 @@ void CSpider::Update(const float deltaTime)
 {
 	if (m_State == EState::MOVING_DOWN_FROM_CEILING)
 	{
-		m_Rectangle.y += m_Velocity.y * deltaTime;
+		m_Rectangle.y += m_ThreadMoveVelocity * deltaTime;
 
 		SyncCollider();
 
@@ -118,12 +113,14 @@ void CSpider::Update(const float deltaTime)
 			{
 				m_Angle = 0.0f;
 
+				m_Velocity.y = 0.0f;
+
 				m_State = EState::FALLING_DOWN;
 			}
 		}
 	}
 
-	else if (m_State == EState::FALLING_DOWN)
+	else
 	{
 		m_Velocity.y = std::min(m_Velocity.y + m_Gravity * deltaTime, m_MaxFallVelocity);
 
@@ -134,16 +131,8 @@ void CSpider::Update(const float deltaTime)
 		CheckWindowBottom();
 	}
 
-	else if (m_State == EState::CHASING_PLAYER)
+	if (m_State == EState::CHASING_PLAYER)
 	{
-		m_Velocity.y = std::min(m_Velocity.y + m_Gravity * deltaTime, m_MaxFallVelocity);
-
-		m_Rectangle.y += m_Velocity.y * deltaTime;
-
-		SyncCollider();
-
-		CheckWindowBottom();
-
 		if (m_pTarget)
 		{	
 			const SDL_FPoint playerPosition = m_pTarget->GetColliderCenterPosition();
@@ -172,17 +161,6 @@ void CSpider::Update(const float deltaTime)
 
 			SyncCollider();
 		}
-	}
-
-	else if (m_State == EState::DEAD)
-	{
-		m_Velocity.y = std::min(m_Velocity.y + m_Gravity * deltaTime, m_MaxFallVelocity);
-
-		m_Rectangle.y += m_Velocity.y * deltaTime;
-
-		SyncCollider();
-
-		CheckWindowBottom();
 	}
 
 	if (m_pCurrentAnimator)

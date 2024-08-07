@@ -48,25 +48,26 @@ private:
 
 private:
 
-	CGameObject*		m_pTarget			= nullptr;
+	CGameObject*		m_pTarget				= nullptr;
 
-	CAnimator*			m_pAnimatorHanging	= nullptr;
-	CAnimator*			m_pAnimatorIdle		= nullptr;
-	CAnimator*			m_pAnimatorWalking	= nullptr;
-	CAnimator*			m_pCurrentAnimator	= nullptr;
+	CAnimator*			m_pAnimatorHanging		= nullptr;
+	CAnimator*			m_pAnimatorIdle			= nullptr;
+	CAnimator*			m_pAnimatorWalking		= nullptr;
+	CAnimator*			m_pCurrentAnimator		= nullptr;
 
-	float				m_Gravity			= 1500.0f;
-	float				m_Scale				= 1.2f;
-	float				m_LifeTime			= 0.0f;
-	float				m_Angle				= 0.0f;
-	float				m_MaxFallVelocity	= 500.0f;
+	float				m_Gravity				= 1500.0f;
+	float				m_Scale					= 1.2f;
+	float				m_LifeTime				= 0.0f;
+	float				m_Angle					= 0.0f;
+	float				m_ThreadMoveVelocity	= 100.0f;
+	float				m_MaxFallVelocity		= 500.0f;
 
-	SDL_FPoint			m_StartPosition		= {0.0f, 0.0f};
-	SDL_FPoint			m_Velocity			= {0.0f, 0.0f};
-	SDL_FPoint			m_ColliderOffset	= {16.0f * m_Scale, 15.0f * m_Scale};
+	SDL_FPoint			m_StartPosition			= {0.0f, 0.0f};
+	SDL_FPoint			m_Velocity				= {130.0f, 0.0f};
+	SDL_FPoint			m_ColliderOffset		= {16.0f * m_Scale, 15.0f * m_Scale};
 
-	SDL_RendererFlip	m_FlipMethod		= SDL_RendererFlip::SDL_FLIP_NONE;
+	SDL_RendererFlip	m_FlipMethod			= SDL_RendererFlip::SDL_FLIP_NONE;
 
-	EState				m_State				= EState::MOVING_DOWN_FROM_CEILING;
+	EState				m_State					= EState::MOVING_DOWN_FROM_CEILING;
 
 };
