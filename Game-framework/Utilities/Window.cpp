@@ -40,6 +40,8 @@ bool CWindow::Create(const std::string& title, const SDL_Point& windowSize)
 
 	m_Size = {(float)windowSize.x, (float)windowSize.y};
 
+	m_Center = {m_Size.x * 0.5f, m_Size.y * 0.5f};
+
 	if (BeginRender())
 		EndRender();
 

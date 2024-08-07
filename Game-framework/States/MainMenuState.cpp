@@ -16,7 +16,8 @@ bool CMainMenuState::OnEnter(void)
 	CFontHandler&		fontHandler		= m_pApplication->GetFontHandler();
 	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
 	CWindow&			window			= m_pApplication->GetWindow();
-	const SDL_FPoint	windowSize		= m_pApplication->GetWindow().GetSize();
+	const SDL_FPoint	windowSize		= window.GetSize();
+	const SDL_FPoint	windowCenter	= window.GetCenter();
 
 	// Set the clear color (the background color that is shown behind the menu background and other objects)
 	// This is completely optional
@@ -35,25 +36,24 @@ bool CMainMenuState::OnEnter(void)
 	m_TextFont		= fontHandler.CreateFont("Assets/Fonts/SpiderDemo-51LlB.ttf",	200); if (!m_TextFont)		return false;
 	m_ButtonFont	= fontHandler.CreateFont("Assets/Fonts/SpookyWebbie-lgvxX.ttf",	 60); if (!m_ButtonFont)	return false;
 
-	const SDL_FPoint	windowSizeHalf					= {windowSize.x * 0.5f, windowSize.y * 0.5f};
-	const SDL_Color		titleTextColor					= {200,	0,		0,		255}; // Dark red
-	const SDL_Color		buttonBackgroundColor			= {100,	100,	100,	150}; // Light gray	<-- Background color when the button is not held
-	const SDL_Color		buttonBackgroundPressedColor	= {100,	100,	100,	200}; // Dark gray	<-- Background color when the button is held
-	const SDL_Color		buttonTextColor					= {255, 255,	255,	255}; // White		<-- Text color when the mouse pointer is outside the button
-	const SDL_Color		buttonTextColorHovered			= {255,	0,		0,		255}; // Red		<-- Text color when the mouse pointer is inside (hovering) the button
-	const SDL_Color		buttonTextColorPressed			= {255,	0,		0,		255}; // Red		<-- Text color when the button is held
+	const SDL_Color titleTextColor					= {200,	0,		0,		255}; // Dark red
+	const SDL_Color buttonBackgroundColor			= {100,	100,	100,	150}; // Light gray	<-- Background color when the button is not held
+	const SDL_Color buttonBackgroundPressedColor	= {100,	100,	100,	200}; // Dark gray	<-- Background color when the button is held
+	const SDL_Color buttonTextColor					= {255, 255,	255,	255}; // White		<-- Text color when the mouse pointer is outside the button
+	const SDL_Color buttonTextColorHovered			= {255,	0,		0,		255}; // Red		<-- Text color when the mouse pointer is inside (hovering) the button
+	const SDL_Color buttonTextColorPressed			= {255,	0,		0,		255}; // Red		<-- Text color when the button is held
 
 	// Buttons can be used as text blocks too, without mouse interaction
 	if (!m_TitleTextBlock.Create(m_pApplication, m_TextFont, "Spider Chase", {200, 0, 0, 255}))
 		return false;
-	m_TitleTextBlock.SetPosition({windowSizeHalf.x, 160.0f});
+	m_TitleTextBlock.SetPosition({windowCenter.x, 160.0f});
 
 	// Invisible background color (alpha = 0) since the text is the only thing that should be visible when rendering the text block
 	m_TitleTextBlock.SetBackgroundColor({0, 0, 0, 0});
 
 	if (!m_PlayButton.Create(m_pApplication, m_ButtonFont, "Play", buttonTextColor))
 		return false;
-	m_PlayButton.SetPosition({windowSizeHalf.x, windowSizeHalf.y + 100.0f});
+	m_PlayButton.SetPosition({windowCenter.x, windowCenter.y + 100.0f});
 	m_PlayButton.SetBackgroundColor(buttonBackgroundColor);
 	m_PlayButton.SetBackgroundPressedColor(buttonBackgroundPressedColor);
 	m_PlayButton.SetTextColorHovered(buttonTextColorHovered);
@@ -61,7 +61,7 @@ bool CMainMenuState::OnEnter(void)
 
 	if (!m_QuitButton.Create(m_pApplication, m_ButtonFont, "Quit", buttonTextColor))
 		return false;
-	m_QuitButton.SetPosition({windowSizeHalf.x, windowSizeHalf.y + 200.0f});
+	m_QuitButton.SetPosition({windowCenter.x, windowCenter.y + 200.0f});
 	m_QuitButton.SetBackgroundColor(buttonBackgroundColor);
 	m_QuitButton.SetBackgroundPressedColor(buttonBackgroundPressedColor);
 	m_QuitButton.SetTextColorHovered(buttonTextColorHovered);
