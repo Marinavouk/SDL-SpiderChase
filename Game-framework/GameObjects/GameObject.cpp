@@ -31,6 +31,15 @@ void CGameObject::Kill(void)
 	m_IsDead = true;
 }
 
+void CGameObject::SetPosition(const SDL_FPoint& position)
+{
+	m_Rectangle.x = position.x;
+	m_Rectangle.y = position.y;
+
+	m_Collider.x = m_Rectangle.x;
+	m_Collider.y = m_Rectangle.y;
+}
+
 void CGameObject::Render(void)
 {
 	m_pTexture->Render({m_Rectangle.x, m_Rectangle.y});

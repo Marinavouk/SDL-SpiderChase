@@ -12,9 +12,17 @@ bool CChair::Create(const std::string& textureFileName, const SDL_FPoint& positi
 
 	m_pTexture->SetSize(newTextureSize);
 
-	m_Rectangle = {position.x, m_pApplication->GetWindow().GetSize().y - newTextureSize.y, newTextureSize.x, newTextureSize.y};
+	m_Rectangle = {position.x, position.y, newTextureSize.x, newTextureSize.y};
 
-	m_Collider = {m_Rectangle.x + 5.0f, m_Rectangle.y + 85.0f, newTextureSize.x - 10.0f, 20.0f};
+	m_Collider = {m_Rectangle.x + m_ColliderOffset.x, m_Rectangle.y + m_ColliderOffset.y, newTextureSize.x - 10.0f, 20.0f};
 
 	return true;
+}
+
+void CChair::SetPosition(const SDL_FPoint& position)
+{
+	CGameObject::SetPosition(position);
+
+	m_Collider.x = m_Rectangle.x + m_ColliderOffset.x;
+	m_Collider.y = m_Rectangle.y + m_ColliderOffset.y;
 }

@@ -52,14 +52,14 @@ bool CGameState::OnEnter(void)
 	((CPlayer*)m_pPlayer)->SetAttackCallback(std::bind(&CGameState::OnPlayerAttack, this));
 
 	m_pTable = new CTable(m_pApplication);
-	if (!m_pTable->Create("table.png", {100.0f, windowSize.y}, 0 ))
+	if (!m_pTable->Create("table.png", {0.0f, 0.0f}, 0 ))
 		return false;
+	m_pTable->SetPosition({100.0f, windowSize.y - m_pTable->GetRectangleSize().y});
 
 	m_pChair = new CChair(m_pApplication);
-	if (!m_pChair->Create("chair.png", {900.0f, windowSize.y}, 0))
+	if (!m_pChair->Create("chair.png", {0.0f, 0.0f}, 0))
 		return false;
-
-	m_pChair->SetPosition({ windowSize.x - (m_pChair->GetColliderSize().x + 100.0f), windowSize.y - m_pChair->GetRectangleSize().y});
+	m_pChair->SetPosition({windowSize.x - (m_pChair->GetColliderSize().x + 100.0f), windowSize.y - m_pChair->GetRectangleSize().y});
 
 	m_Obstacles.push_back(m_pTable);
 	m_Obstacles.push_back(m_pChair);
@@ -168,16 +168,19 @@ void CGameState::Update(const float deltaTime)
 
 		bool spiderCollision = false;
 
-		if (QuadVsQuad(fireball->GetCollider(), m_pSpider->GetCollider()))
+		if (!m_pSpider->GetIsDead())
 		{
-			m_pSpider->Kill();
-			fireball->Kill();
+			if (QuadVsQuad(fireball->GetCollider(), m_pSpider->GetCollider()))
+			{
+				m_pSpider->Kill();
+				fireball->Kill();
 
-			m_ActiveFireballs.erase(m_ActiveFireballs.begin() + i);
+				m_ActiveFireballs.erase(m_ActiveFireballs.begin() + i);
 
-			spiderCollision = true;
+				spiderCollision = true;
 
-			break;
+				break;
+			}
 		}
 
 		if (spiderCollision)

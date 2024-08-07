@@ -23,6 +23,7 @@ public:
 	virtual bool		Create(const std::string& textureFileName, const SDL_FPoint& position, const uint32_t maxHealth);
 	virtual void		Destroy(void);
 	virtual void		Kill(void);
+	virtual void		SetPosition(const SDL_FPoint& position);
 	virtual void		Render(void);
 	virtual void		RenderDebug(void);
 	virtual void		Update(const float deltaTime)													{}
@@ -49,8 +50,6 @@ public:
 	bool				GetIsDead(void) const					{return m_IsDead;}
 
 	SDL_RendererFlip	GetFlipMethod(void) const				{return m_pTexture->GetFlipMethod();}
-
-	void				SetPosition(SDL_FPoint position) { m_Rectangle.x = position.x; m_Rectangle.y = position.y; m_Collider.x = m_Rectangle.x; m_Collider.y = m_Rectangle.y; }
 
 protected:
 
