@@ -13,9 +13,11 @@ bool CSpider::Create(const std::string& textureFileName, const SDL_FPoint& posit
 	m_pAnimatorHanging	= new CAnimator;
 	m_pAnimatorIdle		= new CAnimator;
 	m_pAnimatorWalking	= new CAnimator;
+	m_pAnimatorDying	= new CAnimator;
 	m_pAnimatorHanging->Set(	1,	0, 0, 4, frameSize, 0.0f, false,	CAnimator::EDirection::FORWARD);
 	m_pAnimatorIdle->Set(		10, 0, 9, 0, frameSize, 7.0f, true,		CAnimator::EDirection::FORWARD);
 	m_pAnimatorWalking->Set(	10, 0, 9, 3, frameSize, 7.0f, true,		CAnimator::EDirection::FORWARD);
+	m_pAnimatorDying->Set(		4, 0, 4, 5,	 frameSize, 7.0f, false,	CAnimator::EDirection::FORWARD);
 
 	m_pCurrentAnimator = m_pAnimatorHanging;
 
@@ -33,6 +35,7 @@ bool CSpider::Create(const std::string& textureFileName, const SDL_FPoint& posit
 
 void CSpider::Destroy(void)
 {
+	delete m_pAnimatorDying;
 	delete m_pAnimatorWalking;
 	delete m_pAnimatorIdle;
 	delete m_pAnimatorHanging;
@@ -61,6 +64,18 @@ void CSpider::Render(void)
 	m_pTexture->SetAngle(-m_Angle);
 
 	CGameObject::Render();
+}
+
+void CSpider::Kill(void)
+{
+	CGameObject::Kill();
+
+	m_pCurrentAnimator = m_pAnimatorDying;
+	m_pCurrentAnimator->Reset();
+
+	m_Velocity = { 0.0f, 0.0f };
+
+	m_State = EState::DEAD;
 }
 
 void CSpider::Update(const float deltaTime)

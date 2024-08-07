@@ -17,6 +17,7 @@ public:
 
 	virtual bool	Create(const std::string& textureFileName, const SDL_FPoint& position, const uint32_t maxHealth) override;
 	virtual void	Destroy(void);
+	virtual void	Kill(void) override;
 	virtual void	Render(void) override;
 	virtual void	Update(const float deltaTime) override;
 	virtual void	HandleObstacleCollision(const GameObjectList& obstacles, const float deltaTime) override;
@@ -53,6 +54,7 @@ private:
 	CAnimator*			m_pAnimatorIdle			= nullptr;
 	CAnimator*			m_pAnimatorWalking		= nullptr;
 	CAnimator*			m_pCurrentAnimator		= nullptr;
+	CAnimator*			m_pAnimatorDying		= nullptr;
 
 	float				m_Gravity				= 1500.0f;
 	float				m_Scale					= 1.2f;
