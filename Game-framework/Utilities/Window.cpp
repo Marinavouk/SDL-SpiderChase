@@ -2,9 +2,31 @@
 
 #include <iostream>
 
-bool CWindow::Create(const std::string& title, const SDL_Point& windowSize)
+bool CWindow::Create(const std::string& title, const bool fullscreen)
 {
-	m_pWindow = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowSize.x, windowSize.y, SDL_WINDOW_SHOWN);
+	SDL_Point windowSize = {1280, 720};
+
+	SDL_DisplayMode displayMode;
+	if(SDL_GetCurrentDisplayMode(0, &displayMode) == 0)
+	{
+		windowSize.x = (int32_t)((float)displayMode.w * 0.85f);
+		windowSize.y = (int32_t)((float)displayMode.h * 0.85f);
+	}
+
+	else
+	{
+	#if defined(_DEBUG)
+		std::cout << "Error: failed to get display mode: " << SDL_GetError() << std::endl;
+		std::cout << "Reverting to default window size 1280x720" << std::endl;
+	#endif
+	}
+
+	Uint32 flags = SDL_WINDOW_SHOWN;
+
+	if (fullscreen)
+		flags |= SDL_WINDOW_FULLSCREEN;
+
+	m_pWindow = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowSize.x, windowSize.y, flags);
 	if (!m_pWindow)
 	{
 	#if defined(_DEBUG)

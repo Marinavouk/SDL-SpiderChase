@@ -10,7 +10,7 @@ public:
 	 CWindow(void) {}
 	~CWindow(void) {}
 
-	bool			Create(const std::string& title, const SDL_Point& windowSize);
+	bool			Create(const std::string& title, const bool fullscreen);
 	void			Destroy(void);
 
 	bool			BeginRender(void);
