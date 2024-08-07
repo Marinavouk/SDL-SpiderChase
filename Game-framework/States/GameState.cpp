@@ -164,7 +164,6 @@ void CGameState::Update(const float deltaTime)
 			break;
 		}
 
-		/*
 		bool spiderCollision = false;
 
 		if (QuadVsQuad(fireball->GetCollider(), m_pSpider->GetCollider()))
@@ -181,7 +180,6 @@ void CGameState::Update(const float deltaTime)
 
 		if (spiderCollision)
 			break;
-		*/
 	}
 
 	const CTransitionRenderer& transitionRenderer = m_pApplication->GetTransitionRenderer();
