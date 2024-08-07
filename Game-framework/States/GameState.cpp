@@ -89,11 +89,11 @@ void CGameState::OnExit(void)
 	std::cout << "Exiting game state" << std::endl;
 #endif
 
-	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures, unload/stop game music etc)
-
 	// Easy access to handlers so you don't have to write m_pApplication->Get_X_Handler() multiple times below
 	CTextureHandler&	textureHandler	= m_pApplication->GetTextureHandler();
 	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
+
+	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures, unload/stop game music etc)
 
 	for (CGameObject* fireball : m_FireballPool)
 	{
@@ -137,13 +137,11 @@ void CGameState::OnExit(void)
 
 void CGameState::Update(const float deltaTime)
 {
-	// Update all the needed game objects here
-
-	const CTransitionRenderer& transitionRenderer = m_pApplication->GetTransitionRenderer();
-
 	// If the escape key on the keyboard is pressed, switch to the main menu
 	if (m_pApplication->GetInputHandler().KeyPressed(SDL_SCANCODE_ESCAPE))
 		m_pApplication->SetState(CApplication::EState::QUIT);
+
+	// Update all the needed game objects here
 
 	m_pPlayer->HandleInput(deltaTime);
 	m_pPlayer->Update(deltaTime);
@@ -184,6 +182,8 @@ void CGameState::Update(const float deltaTime)
 			break;
 	}
 
+	const CTransitionRenderer& transitionRenderer = m_pApplication->GetTransitionRenderer();
+
 	// Will fade the game music in/out whenever the game switch to/from this state
 	if (transitionRenderer.IsTransitioning())
 		m_pApplication->GetAudioHandler().SetMusicVolume((MIX_MAX_VOLUME - m_VolumeLimiter) - (int)((float)(MIX_MAX_VOLUME - m_VolumeLimiter) * transitionRenderer.GetTransitionValue()));
@@ -216,22 +216,11 @@ void CGameState::Render(void)
 
 	m_pSpider->Render();
 
-	/*
-	for (CGameObject* spider : m_Enemies)
-	{
-		spider->Render();
-	}
-	*/
-
 	m_pPlayer->Render();
 
-	// If there's any fireball active (i.e, if the player has shot any fireballs)
-	if (!m_ActiveFireballs.empty())
+	for (CGameObject* fireball : m_ActiveFireballs)
 	{
-		for (CGameObject* fireball : m_ActiveFireballs)
-		{
-			fireball->Render();
-		}
+		fireball->Render();
 	}
 }
 
@@ -239,17 +228,13 @@ void CGameState::RenderDebug(void)
 {
 	m_pChair->RenderDebug();
 	m_pTable->RenderDebug();
-
 	m_pSpider->RenderDebug();
-
-	/*
-	for (CGameObject* spider : m_Enemies)
-	{
-		spider->RenderDebug();
-	}
-	*/
-
 	m_pPlayer->RenderDebug();
+
+	for (CGameObject* fireball : m_ActiveFireballs)
+	{
+		fireball->RenderDebug();
+	}
 }
 
 void CGameState::OnPlayerAttack(void)
