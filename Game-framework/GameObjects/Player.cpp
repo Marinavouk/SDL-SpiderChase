@@ -18,13 +18,13 @@ bool CPlayer::Create(const std::string& textureFileName, const SDL_FPoint& posit
 	m_pAnimatorRunning		= new CAnimator;
 	m_pAnimatorJumping		= new CAnimator;
 	m_pAnimatorAttacking	= new CAnimator;
-	m_pAnimatorDead			= new CAnimator;
+	m_pAnimatorDying		= new CAnimator;
 	m_pAnimatorIdle->Set(		7, 0, 6, 0, frameSize,  7.0f, true,		CAnimator::EDirection::FORWARD);
 	m_pAnimatorWalking->Set(	6, 0, 5, 1, frameSize,  8.0f, true,		CAnimator::EDirection::FORWARD);
 	m_pAnimatorRunning->Set(	8, 0, 7, 2, frameSize, 14.0f, true,		CAnimator::EDirection::FORWARD);
 	m_pAnimatorJumping->Set(	9, 0, 8, 7, frameSize,  8.0f, false,	CAnimator::EDirection::FORWARD);
 	m_pAnimatorAttacking->Set(	8, 0, 7, 5, frameSize, 14.0f, false,	CAnimator::EDirection::FORWARD);
-	m_pAnimatorDead->Set(		6, 0, 5, 9, frameSize,	9.0f, false,	CAnimator::EDirection::FORWARD);
+	m_pAnimatorDying->Set(		6, 0, 5, 9, frameSize,	8.0f, false,	CAnimator::EDirection::FORWARD);
 
 	m_pAnimatorAttacking->SetAnimationEndCallback(std::bind(&CPlayer::OnAttackAnimationEnd, this));
 
@@ -48,16 +48,15 @@ bool CPlayer::Create(const std::string& textureFileName, const SDL_FPoint& posit
 	return true;
 }
 
-
 void CPlayer::Destroy(void)
 {
-	delete m_pAnimatorDead;
+	delete m_pAnimatorDying;
 	delete m_pAnimatorAttacking;
 	delete m_pAnimatorJumping;
 	delete m_pAnimatorRunning;
 	delete m_pAnimatorWalking;
 	delete m_pAnimatorIdle;
-	m_pAnimatorDead			= nullptr;
+	m_pAnimatorDying		= nullptr;
 	m_pAnimatorAttacking	= nullptr;
 	m_pAnimatorJumping		= nullptr;
 	m_pAnimatorRunning		= nullptr;
@@ -68,10 +67,20 @@ void CPlayer::Destroy(void)
 	CGameObject::Destroy();
 }
 
+void CPlayer::Kill(void)
+{
+	CGameObject::Kill();
+
+	m_pCurrentAnimator = m_pAnimatorDying;
+	m_pCurrentAnimator->Reset();
+
+	m_Velocity = {0.0f, 0.0f};
+
+	m_State = EState::DEAD;
+}
+
 void CPlayer::Update(const float deltaTime)
 {
-	const SDL_FPoint windowSize = m_pApplication->GetWindow().GetSize();
-
 	m_Velocity.y = std::min(m_Velocity.y + m_Gravity * deltaTime, m_MaxFallVelocity);
 
 	m_Rectangle.x += m_Velocity.x * deltaTime;
@@ -79,84 +88,86 @@ void CPlayer::Update(const float deltaTime)
 
 	SyncColliders();
 
-	if (m_HorizontalCollider.x < 0.0f)
+	CheckWindowEdges();
+
+	if (m_State == EState::ALIVE)
 	{
-		m_Rectangle.x = -m_HorizontalColliderOffset.x;
+		const SDL_FPoint windowSize = m_pApplication->GetWindow().GetSize();
 
-		m_Velocity.x = 0.0f;
-	}
-
-	else if (m_HorizontalCollider.x > (windowSize.x - m_HorizontalCollider.w))
-	{
-		const float rightOffset = m_Rectangle.w - (m_HorizontalCollider.w + m_HorizontalColliderOffset.x);
-
-		m_Rectangle.x = windowSize.x - (m_Rectangle.w - rightOffset);
-
-		m_Velocity.x = 0.0f;
-	}
-
-	if (m_Rectangle.y > windowSize.y - m_Rectangle.h)
-	{
-		m_Rectangle.y = windowSize.y - m_Rectangle.h;
-
-		m_Velocity.y = 0.0f;
-
-		if (m_IsJumping && !m_IsAttacking)
+		if (m_Rectangle.y > windowSize.y - m_Rectangle.h)
 		{
-			if ((m_pCurrentAnimator != m_pAnimatorIdle) && (m_HorizontalDirection == EState::IDLE) && (m_VerticalDirection == EState::IDLE))
-				ActivateIdleAnimation();
+			m_Rectangle.y = windowSize.y - m_Rectangle.h;
 
-			else
+			m_Velocity.y = 0.0f;
+
+			if (m_IsJumping && !m_IsAttacking)
 			{
-				if (m_HorizontalDirection != EState::IDLE)
-				{
-					if (m_IsRunning)
-						ActivateRunningAnimation();
+				if ((m_pCurrentAnimator != m_pAnimatorIdle) && (m_HorizontalDirection == EMovementState::IDLE) && (m_VerticalDirection == EMovementState::IDLE))
+					ActivateIdleAnimation();
 
-					else
-						ActivateWalkingAnimation();
+				else
+				{
+					if (m_HorizontalDirection != EMovementState::IDLE)
+					{
+						if (m_IsRunning)
+							ActivateRunningAnimation();
+
+						else
+							ActivateWalkingAnimation();
+					}
 				}
 			}
+
+			m_IsJumping = false;
 		}
 
-		m_IsJumping = false;
+		if (m_DamageCooldown)
+		{
+			m_DamageCooldownTimer -= deltaTime;
+
+			if (m_DamageCooldownTimer <= 0.0f)
+			{
+				m_DamageCooldown = false;
+
+				return;
+			}
+
+			m_BlinkingInterval -= deltaTime;
+
+			if (m_BlinkingInterval <= 0.0f)
+			{
+				m_BlinkingInterval = m_BlinkingIntervalDefault;
+
+				m_Show = !m_Show;
+			}
+		}
+	}
+
+	else if (m_State == EState::DEAD)
+	{
+		const SDL_FPoint windowSize = m_pApplication->GetWindow().GetSize();
+
+		if (m_Rectangle.y > windowSize.y - m_Rectangle.h)
+		{
+			m_Rectangle.y = windowSize.y - m_Rectangle.h;
+
+			m_Velocity.y = 0.0f;
+		}
 	}
 
 	SyncColliders();
 
 	if (m_pCurrentAnimator)
-	{
 		m_pCurrentAnimator->Update(deltaTime);
-
-		m_pTexture->SetTextureCoords(m_pCurrentAnimator->GetClipRectangle());
-	}
-
-	if (m_DamageCooldown)
-	{
-		m_DamageCooldownTimer -= deltaTime;
-
-		if (m_DamageCooldownTimer <= 0.0f)
-		{
-			m_DamageCooldown = false;
-
-			return;
-		}
-
-		m_BlinkingInterval -= deltaTime;
-
-		if (m_BlinkingInterval <= 0.0f)
-		{
-			m_BlinkingInterval = m_BlinkingIntervalDefault;
-
-			m_Show = !m_Show;
-		}
-	}
 }
 
 void CPlayer::Render(void)
 {
 	if (m_DamageCooldown && !m_Show)
 		return;
+
+	if (m_pCurrentAnimator)
+		m_pTexture->SetTextureCoords(m_pCurrentAnimator->GetClipRectangle());
 
 	CGameObject::Render();
 }
@@ -213,7 +224,7 @@ void CPlayer::HandleInput(const float deltaTime)
 
 		m_pTexture->SetFlipMethod(SDL_RendererFlip::SDL_FLIP_HORIZONTAL);
 
-		m_HorizontalDirection = EState::MOVING_LEFT;
+		m_HorizontalDirection = EMovementState::MOVING_LEFT;
 
 		if (!m_IsJumping && !m_IsAttacking)
 		{
@@ -231,7 +242,7 @@ void CPlayer::HandleInput(const float deltaTime)
 
 		m_pTexture->SetFlipMethod(SDL_RendererFlip::SDL_FLIP_NONE);
 
-		m_HorizontalDirection = EState::MOVING_RIGHT;
+		m_HorizontalDirection = EMovementState::MOVING_RIGHT;
 
 		if (!m_IsJumping && !m_IsAttacking)
 		{
@@ -255,23 +266,23 @@ void CPlayer::HandleInput(const float deltaTime)
 
 	// Released keys
 
-	if (inputHandler.KeyReleased(SDL_SCANCODE_LEFT) && (m_HorizontalDirection == EState::MOVING_LEFT))
+	if (inputHandler.KeyReleased(SDL_SCANCODE_LEFT) && (m_HorizontalDirection == EMovementState::MOVING_LEFT))
 	{
-		m_HorizontalDirection = EState::IDLE;
+		m_HorizontalDirection = EMovementState::IDLE;
 
-		if((m_VerticalDirection == EState::IDLE) && !m_IsJumping && !m_IsAttacking)
+		if((m_VerticalDirection == EMovementState::IDLE) && !m_IsJumping && !m_IsAttacking)
 			ActivateIdleAnimation();
 	}
 
-	else if (inputHandler.KeyReleased(SDL_SCANCODE_RIGHT) && (m_HorizontalDirection == EState::MOVING_RIGHT))
+	else if (inputHandler.KeyReleased(SDL_SCANCODE_RIGHT) && (m_HorizontalDirection == EMovementState::MOVING_RIGHT))
 	{
-		m_HorizontalDirection = EState::IDLE;
+		m_HorizontalDirection = EMovementState::IDLE;
 
-		if((m_VerticalDirection == EState::IDLE) && !m_IsJumping && !m_IsAttacking)
+		if((m_VerticalDirection == EMovementState::IDLE) && !m_IsJumping && !m_IsAttacking)
 			ActivateIdleAnimation();
 	}
 
-	if ((m_HorizontalDirection == EState::IDLE) && (m_VerticalDirection == EState::IDLE) && !m_IsJumping && !m_IsAttacking)
+	if ((m_HorizontalDirection == EMovementState::IDLE) && (m_VerticalDirection == EMovementState::IDLE) && !m_IsJumping && !m_IsAttacking)
 		ActivateIdleAnimation();
 }
 
@@ -291,10 +302,7 @@ void CPlayer::HandleObstacleCollision(const GameObjectList& obstacles, const flo
 
 void CPlayer::HandleEnemyCollision(const GameObjectList& enemies, const float deltaTime)
 {
-	if (m_IsDead)
-		return;
-
-	if (m_DamageCooldown)
+	if (m_DamageCooldown || m_IsDead)
 		return;
 
 	const SDL_FPoint	moveAmount	= {m_Velocity.x * deltaTime, m_Velocity.y * deltaTime};
@@ -325,12 +333,8 @@ void CPlayer::HandleEnemyCollision(const GameObjectList& enemies, const float de
 
 			if (m_CurrentHealth == 0)
 			{
-			#if defined(_DEBUG) 
-				std::cout << "The player's health is now zero and the player should die" << std::endl;
-			#endif
-
-				// TODO: activate the player's death animation here
-				ActivateDeathAnimation();
+				if (m_CurrentHealth == 0)
+					Kill();
 			}
 
 			else
@@ -561,6 +565,27 @@ bool CPlayer::ResolveEnemyYCollision(const SDL_FRect& collider, const SDL_FPoint
 	return hasCollided;
 }
 
+void CPlayer::CheckWindowEdges(void)
+{
+	const SDL_FPoint windowSize = m_pApplication->GetWindow().GetSize();
+
+	if (m_HorizontalCollider.x < 0.0f)
+	{
+		m_Rectangle.x = -m_HorizontalColliderOffset.x;
+
+		m_Velocity.x = 0.0f;
+	}
+
+	else if (m_HorizontalCollider.x > (windowSize.x - m_HorizontalCollider.w))
+	{
+		const float rightOffset = m_Rectangle.w - (m_HorizontalCollider.w + m_HorizontalColliderOffset.x);
+
+		m_Rectangle.x = windowSize.x - (m_Rectangle.w - rightOffset);
+
+		m_Velocity.x = 0.0f;
+	}
+}
+
 void CPlayer::SyncColliders(void)
 {
 	m_HorizontalCollider.x	= m_Rectangle.x + m_HorizontalColliderOffset.x;
@@ -616,7 +641,7 @@ void CPlayer::OnAttackAnimationEnd(void)
 
 	else
 	{
-		if (m_HorizontalDirection != EState::IDLE)
+		if (m_HorizontalDirection != EMovementState::IDLE)
 		{
 			if (m_IsRunning)
 				m_pCurrentAnimator = m_pAnimatorRunning;
@@ -632,13 +657,4 @@ void CPlayer::OnAttackAnimationEnd(void)
 	m_pCurrentAnimator->Reset();
 
 	m_IsAttacking = false;
-}
-
-void CPlayer::ActivateDeathAnimation(void)
-{
-	if (m_pCurrentAnimator != m_pAnimatorDead) 
-	{
-		m_pCurrentAnimator = m_pAnimatorDead;
-		m_pCurrentAnimator->Reset();
-	}
 }

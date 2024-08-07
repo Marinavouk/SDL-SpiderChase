@@ -26,6 +26,11 @@ void CGameObject::Destroy(void)
 	m_pTexture = nullptr;
 }
 
+void CGameObject::Kill(void)
+{
+	m_IsDead = true;
+}
+
 void CGameObject::Render(void)
 {
 	m_pTexture->Render({m_Rectangle.x, m_Rectangle.y});

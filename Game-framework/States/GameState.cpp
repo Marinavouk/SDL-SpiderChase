@@ -7,6 +7,7 @@
 #include "GameObjects/Spider.h"
 #include "GameObjects/Table.h"
 #include "Handlers/AudioHandler.h"
+#include "Utilities/CollisionUtilities.h"
 #include "Utilities/Random.h"
 
 #include <iostream>
@@ -42,7 +43,7 @@ bool CGameState::OnEnter(void)
 	if (!m_pMusic)
 		return false;
 
-	audioHandler.PlayMusic(m_pMusic, -1);
+//	audioHandler.PlayMusic(m_pMusic, -1);
 	audioHandler.SetMusicVolume(0);
 
 	m_pPlayer = new CPlayer(m_pApplication);
@@ -65,24 +66,6 @@ bool CGameState::OnEnter(void)
 	if (!m_pSpider->Create("spider.png", {800.0f, -50.0f}, 1))
 		return false;
 	((CSpider*)m_pSpider)->SetTarget(m_pPlayer);
-
-	/*
-	CRandom& randomNumberGenerator = m_pApplication->GetRandomNumberGenerator();
-
-	for (uint32_t i = 0; i < 3; ++i)
-	{
-		const SDL_FPoint position = {randomNumberGenerator.RandomFloat(64.0f, windowSize.x - 128.0f), randomNumberGenerator.RandomFloat(-50.0f, 0.0f)};
-
-		CGameObject* spider = new CSpider(m_pApplication);
-		if (!spider->Create("spider.png", position))
-			return false;
-
-	//	((CSpider*)spider)->SetDirection(randomNumberGenerator.RandomUint(0, 1));
-		((CSpider*)spider)->SetTarget(m_pPlayer);
-
-		m_Enemies.push_back(spider);
-	}
-	*/
 
 	m_Enemies.push_back(m_pSpider);
 
@@ -120,15 +103,6 @@ void CGameState::OnExit(void)
 
 	m_ActiveFireballs.clear();
 	m_FireballPool.clear();
-
-	/*
-	for (CGameObject* spider : m_Enemies)
-	{
-		spider->Destroy();
-		delete spider;
-		spider = nullptr;
-	}
-	*/
 
 	m_Enemies.clear();
 	m_Obstacles.clear();
@@ -179,35 +153,35 @@ void CGameState::Update(const float deltaTime)
 	m_pSpider->Update(deltaTime);
 	m_pSpider->HandleObstacleCollision(m_Obstacles, deltaTime);
 
-	/*
-	for (CGameObject* spider : m_Enemies)
+	for (uint32_t i = 0; i < m_ActiveFireballs.size(); ++i)
 	{
-		spider->Update(deltaTime);
-		spider->HandleObstacleCollision(m_Obstacles, deltaTime);
-	}
-	*/
+		CFireball* fireball = (CFireball*)m_ActiveFireballs[i];
+		fireball->Update(deltaTime);
+		fireball->HandleObstacleCollision(m_Obstacles, deltaTime);
 
-	// If there's any fireball active (i.e, if the player has shot any fireballs)
-	if (!m_ActiveFireballs.empty())
-	{
-		const SDL_FPoint windowSize = m_pApplication->GetWindow().GetSize();
-
-		for (uint32_t i = 0; i < m_ActiveFireballs.size(); ++i)
+		if (fireball->GetIsDead())
 		{
-			CFireball* fireball = (CFireball*)m_ActiveFireballs[i];
-			fireball->Update(deltaTime);
-			fireball->HandleObstacleCollision(m_Obstacles, deltaTime);
-			fireball->HandleEnemyCollision(m_Enemies, deltaTime);
+			m_ActiveFireballs.erase(m_ActiveFireballs.begin() + i);
 
-			if (fireball->GetIsDead())
-			{
-				fireball->SetIsActive(false);
-
-				m_ActiveFireballs.erase(m_ActiveFireballs.begin() + i);
-
-				break;
-			}
+			break;
 		}
+
+		bool spiderCollision = false;
+
+		if (QuadVsQuad(fireball->GetCollider(), m_pSpider->GetCollider()))
+		{
+			m_pSpider->Kill();
+			fireball->Kill();
+
+			m_ActiveFireballs.erase(m_ActiveFireballs.begin() + i);
+
+			spiderCollision = true;
+
+			break;
+		}
+
+		if (spiderCollision)
+			break;
 	}
 
 	// Will fade the game music in/out whenever the game switch to/from this state
@@ -280,10 +254,6 @@ void CGameState::RenderDebug(void)
 
 void CGameState::OnPlayerAttack(void)
 {
-#if defined(_DEBUG) 
-	std::cout << "Player is now attacking and a fireball should now spawn" << std::endl;
-#endif
-
 	// This OnPlayerAttack function is called whenever the player is playing its attack animation
 
 	// Loop through the fireball pool and try to retrieve an unused fireball that can be spawned on the screen
@@ -298,11 +268,11 @@ void CGameState::OnPlayerAttack(void)
 
 			const SDL_FPoint		playerPosition		= m_pPlayer->GetColliderPosition();
 			const SDL_FPoint		playerSize			= m_pPlayer->GetColliderSize();
-			const SDL_RendererFlip	playerDirection		= m_pPlayer->GetDirection();
-			const float				horizontalOffset	= ((playerDirection == SDL_RendererFlip::SDL_FLIP_NONE) ? m_pPlayer->GetColliderSize().x + 30.0f : -30.0f);
+			const SDL_RendererFlip	playerFlipMethod	= m_pPlayer->GetFlipMethod();
+			const float				horizontalOffset	= ((playerFlipMethod == SDL_RendererFlip::SDL_FLIP_NONE) ? m_pPlayer->GetColliderSize().x + 30.0f : -30.0f);
 
 			// Spawn the fireball a bit in front of the player
-			fireball->Activate({playerPosition.x + horizontalOffset, playerPosition.y + 20.0f}, m_pPlayer->GetDirection());
+			fireball->Activate({playerPosition.x + horizontalOffset, playerPosition.y + 20.0f}, playerFlipMethod);
 
 			// Place the found inactive/unused fireball in the m_ActiveFireballs vector
 			m_ActiveFireballs.push_back(fireball);

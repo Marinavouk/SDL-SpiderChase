@@ -19,6 +19,7 @@ public:
 
 	virtual bool	Create(const std::string& textureFileName, const SDL_FPoint& position, const uint32_t maxHealth) override;
 	virtual void	Destroy(void) override;
+	virtual void	Kill(void) override;
 	virtual void	Render(void) override;
 	virtual void	RenderDebug(void) override;
 	virtual void	Update(const float deltaTime) override;
@@ -36,17 +37,23 @@ private:
 	bool			ResolveObstacleYCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount);
 	bool			ResolveEnemyXCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount);
 	bool			ResolveEnemyYCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount);
+	void			CheckWindowEdges(void);
 	void			SyncColliders(void);
 	void			ActivateDamageCooldown(void);
 	void			ActivateIdleAnimation(void);
 	void			ActivateWalkingAnimation(void);
 	void			ActivateRunningAnimation(void);
 	void			OnAttackAnimationEnd(void);
-	void			ActivateDeathAnimation(void);
 
 private:
 
 	enum EState
+	{
+		ALIVE = 0,
+		DEAD
+	};
+
+	enum EMovementState
 	{
 		IDLE = -1,
 		MOVING_LEFT,
@@ -63,7 +70,7 @@ private:
 	CAnimator*	m_pAnimatorJumping				= nullptr;
 	CAnimator*	m_pAnimatorAttacking			= nullptr;
 	CAnimator*	m_pCurrentAnimator				= nullptr;
-	CAnimator*	m_pAnimatorDead					= nullptr;
+	CAnimator*	m_pAnimatorDying				= nullptr;
 
 	float		m_AccelerationSpeedWalking		= 800.0f;
 	float		m_DeaccelerationSpeedWalking	= 500.0f;
@@ -87,8 +94,8 @@ private:
 	float		m_BlinkingIntervalDefault		= 0.005f;
 	float		m_BlinkingInterval				= m_BlinkingIntervalDefault;
 
-	int32_t		m_HorizontalDirection			= EState::IDLE;
-	int32_t		m_VerticalDirection				= EState::IDLE;
+	int32_t		m_HorizontalDirection			= EMovementState::IDLE;
+	int32_t		m_VerticalDirection				= EMovementState::IDLE;
 
 	SDL_FPoint	m_Velocity						= {0.0f, 0.0f};
 	SDL_FPoint	m_HorizontalColliderOffset		= {0.0f, 0.0f};
@@ -100,11 +107,12 @@ private:
 	SDL_FRect	m_HorizontalCollider			= {0.0f, 0.0f, 0.0f, 0.0f};
 	SDL_FRect	m_VerticalCollider				= {0.0f, 0.0f, 0.0f, 0.0f};
 
+	EState		m_State							= EState::ALIVE;
+
 	bool		m_IsRunning						= false;
 	bool		m_IsJumping						= false;
 	bool		m_IsAttacking					= false;
 	bool		m_DamageCooldown				= false;
 	bool		m_Show							= true;
-	bool		m_IsDead						= false;
 
 };
