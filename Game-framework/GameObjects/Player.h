@@ -105,5 +105,6 @@ private:
 	bool		m_IsAttacking					= false;
 	bool		m_DamageCooldown				= false;
 	bool		m_Show							= true;
+	bool		m_IsDead						= false;
 
 };

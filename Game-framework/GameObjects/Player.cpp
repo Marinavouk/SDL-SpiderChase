@@ -291,6 +291,9 @@ void CPlayer::HandleObstacleCollision(const GameObjectList& obstacles, const flo
 
 void CPlayer::HandleEnemyCollision(const GameObjectList& enemies, const float deltaTime)
 {
+	if (m_IsDead)
+		return;
+
 	if (m_DamageCooldown)
 		return;
 
