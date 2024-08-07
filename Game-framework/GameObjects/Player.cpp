@@ -314,6 +314,9 @@ void CPlayer::HandleEnemyCollision(const GameObjectList& enemies, const float de
 
 	for (CGameObject* enemy : enemies)
 	{
+		if (enemy->GetIsDead())
+			continue;
+
 		if (ResolveEnemyXCollision(enemy->GetCollider(), moveAmount))
 		{
 			hasCollided = true;
