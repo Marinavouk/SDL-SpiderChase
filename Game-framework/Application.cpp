@@ -11,7 +11,7 @@ bool CApplication::Create(void)
 	if(!m_LibraryHandler.Create())
 		return false;
 
-	if(!m_Window.Create("Spider Chase", {1280, 720}))
+	if(!m_Window.Create("Spider Chase", {1280, 600}))
 		return false;
 
 	// If you want to change the title of the window while the game is running
