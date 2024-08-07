@@ -59,7 +59,9 @@ void CSpider::Render(void)
 		SDL_RenderDrawLineF(renderer, m_StartPosition.x + (m_Rectangle.w * 0.5f), 0.0f, m_Collider.x + (m_Collider.w * 0.5f), m_Collider.y + (m_Collider.h * 0.5f));
 	}
 
-	m_pTexture->SetTextureCoords(m_pCurrentAnimator->GetClipRectangle());
+	if (m_pCurrentAnimator)
+		m_pTexture->SetTextureCoords(m_pCurrentAnimator->GetClipRectangle());
+
 	m_pTexture->SetFlipMethod(m_FlipMethod);
 	m_pTexture->SetAngle(-m_Angle);
 
@@ -110,8 +112,8 @@ void CSpider::Update(const float deltaTime)
 
 		if (m_pTarget)
 		{
-			// Check if the player is under the spider
-			// If the player is under this spider, switch to the FALLING_DOWN state
+			// Check if the player is under the spider, within a certain threshold
+			// If that's the case, switch to the FALLING_DOWN state
 			if (fabs(m_pTarget->GetColliderPosition().x - m_Collider.x) <= 40.0f)
 			{
 				m_Angle = 0.0f;
@@ -129,20 +131,7 @@ void CSpider::Update(const float deltaTime)
 
 		SyncCollider();
 
-		const SDL_FPoint windowSize = m_pApplication->GetWindow().GetSize();
-
-		if (m_Collider.y > windowSize.y - m_Collider.h)
-		{
-			const float bottomOffset = m_Rectangle.h - (m_Collider.h + m_ColliderOffset.y);
-
-			m_Rectangle.y = windowSize.y - (m_Rectangle.h - bottomOffset);
-
-			SyncCollider();
-
-			m_Velocity.y = 0.0f;
-
-			m_State = EState::CHASING_PLAYER;
-		}
+		CheckWindowBottom();
 	}
 
 	else if (m_State == EState::CHASING_PLAYER)
@@ -153,24 +142,13 @@ void CSpider::Update(const float deltaTime)
 
 		SyncCollider();
 
-		const SDL_FPoint windowSize = m_pApplication->GetWindow().GetSize();
+		CheckWindowBottom();
 
-		if (m_Collider.y > windowSize.y - m_Collider.h)
-		{
-			const float bottomOffset = m_Rectangle.h - (m_Collider.h + m_ColliderOffset.y);
-
-			m_Rectangle.y = windowSize.y - (m_Rectangle.h - bottomOffset);
-
-			SyncCollider();
-
-			m_Velocity.y = 0.0f;
-		}
-
-		const SDL_FPoint playerPosition = m_pTarget->GetColliderCenterPosition();
-		const SDL_FPoint centerPosition = GetColliderCenterPosition();
-	
 		if (m_pTarget)
 		{	
+			const SDL_FPoint playerPosition = m_pTarget->GetColliderCenterPosition();
+			const SDL_FPoint centerPosition = GetColliderCenterPosition();
+
 			if (centerPosition.x > (playerPosition.x + 10.0f))
 			{
 				m_Rectangle.x -= m_Velocity.x * deltaTime;
@@ -194,6 +172,17 @@ void CSpider::Update(const float deltaTime)
 
 			SyncCollider();
 		}
+	}
+
+	else if (m_State == EState::DEAD)
+	{
+		m_Velocity.y = std::min(m_Velocity.y + m_Gravity * deltaTime, m_MaxFallVelocity);
+
+		m_Rectangle.y += m_Velocity.y * deltaTime;
+
+		SyncCollider();
+
+		CheckWindowBottom();
 	}
 
 	if (m_pCurrentAnimator)
@@ -232,6 +221,25 @@ bool CSpider::ResolveObstacleYCollision(const SDL_FRect& collider)
 	}
 
 	return hasCollided;
+}
+
+void CSpider::CheckWindowBottom(void)
+{
+	const SDL_FPoint windowSize = m_pApplication->GetWindow().GetSize();
+
+	if (m_Collider.y > windowSize.y - m_Collider.h)
+	{
+		const float bottomOffset = m_Rectangle.h - (m_Collider.h + m_ColliderOffset.y);
+
+		m_Rectangle.y = windowSize.y - (m_Rectangle.h - bottomOffset);
+
+		SyncCollider();
+
+		m_Velocity.y = 0.0f;
+
+		if (m_State != EState::DEAD)
+			m_State = EState::CHASING_PLAYER;
+	}
 }
 
 void CSpider::SyncCollider(void)

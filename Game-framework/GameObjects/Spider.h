@@ -29,6 +29,7 @@ public:
 private:
 
 	bool			ResolveObstacleYCollision(const SDL_FRect& collider);
+	void			CheckWindowBottom(void);
 	void			SyncCollider(void);
 	void			ActivateHangingAnimation(void);
 	void			ActivateIdleAnimation(void);
@@ -41,7 +42,8 @@ private:
 		MOVING_DOWN_FROM_CEILING = 0,
 		HANGING_IN_THREAD,
 		FALLING_DOWN,
-		CHASING_PLAYER
+		CHASING_PLAYER,
+		DEAD
 	};
 
 private:
