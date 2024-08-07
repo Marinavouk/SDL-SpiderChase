@@ -17,7 +17,7 @@ bool CSpider::Create(const std::string& textureFileName, const SDL_FPoint& posit
 	m_pAnimatorHanging->Set(	1,	0, 0, 4, frameSize, 0.0f, false,	CAnimator::EDirection::FORWARD);
 	m_pAnimatorIdle->Set(		10, 0, 9, 0, frameSize, 7.0f, true,		CAnimator::EDirection::FORWARD);
 	m_pAnimatorWalking->Set(	10, 0, 9, 3, frameSize, 7.0f, true,		CAnimator::EDirection::FORWARD);
-	m_pAnimatorDying->Set(		4, 0, 4, 5,	 frameSize, 7.0f, false,	CAnimator::EDirection::FORWARD);
+	m_pAnimatorDying->Set(		4,  0, 3, 4, frameSize, 7.0f, false,	CAnimator::EDirection::FORWARD);
 
 	m_pCurrentAnimator = m_pAnimatorHanging;
 

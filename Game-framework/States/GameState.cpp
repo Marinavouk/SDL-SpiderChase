@@ -59,6 +59,8 @@ bool CGameState::OnEnter(void)
 	if (!m_pChair->Create("chair.png", {900.0f, windowSize.y}, 0))
 		return false;
 
+	m_pChair->SetPosition({ windowSize.x - (m_pChair->GetColliderSize().x + 100.0f), windowSize.y - m_pChair->GetRectangleSize().y});
+
 	m_Obstacles.push_back(m_pTable);
 	m_Obstacles.push_back(m_pChair);
 

@@ -50,6 +50,8 @@ public:
 
 	SDL_RendererFlip	GetFlipMethod(void) const				{return m_pTexture->GetFlipMethod();}
 
+	void				SetPosition(SDL_FPoint position) { m_Rectangle.x = position.x; m_Rectangle.y = position.y; m_Collider.x = m_Rectangle.x; m_Collider.y = m_Rectangle.y; }
+
 protected:
 
 	CApplication*	m_pApplication	= nullptr;
