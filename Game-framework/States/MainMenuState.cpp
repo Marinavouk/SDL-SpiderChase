@@ -16,7 +16,6 @@ bool CMainMenuState::OnEnter(void)
 	CFontHandler&		fontHandler		= m_pApplication->GetFontHandler();
 	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
 	CWindow&			window			= m_pApplication->GetWindow();
-	const SDL_FPoint	windowSize		= window.GetSize();
 	const SDL_FPoint	windowCenter	= window.GetCenter();
 
 	// Set the clear color (the background color that is shown behind the menu background and other objects)
@@ -26,7 +25,7 @@ bool CMainMenuState::OnEnter(void)
 	// Create objects that should be created/started when this state is entered/started (create textures and buttons, load/start main menu music etc)
 
 	m_pBackground = textureHandler.CreateTexture("menu_background.png");
-	m_pBackground->SetSize(windowSize);
+	m_pBackground->SetSize(window.GetSize());
 	m_pBackground->SetAlphaMod(100);
 
 	m_pSpider = textureHandler.CreateTexture("spider.png");
@@ -118,11 +117,11 @@ void CMainMenuState::OnExit(void)
 
 void CMainMenuState::Update(const float deltaTime)
 {
-	// Update all the needed main menu objects here
-
 	// Easy access to the input handler and the transition renderer, so you don't have to write m_pApplication->Get_X() multiple times below
 	CInputHandler&				inputHandler		= m_pApplication->GetInputHandler();
 	const CTransitionRenderer&	transitionRenderer	= m_pApplication->GetTransitionRenderer();
+
+	// Update all the needed main menu objects here
 
 	m_PlayButton.Update(inputHandler);
 	m_QuitButton.Update(inputHandler);

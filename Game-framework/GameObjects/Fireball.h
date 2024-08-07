@@ -10,10 +10,10 @@ public:
 	 CFireball(CApplication* application) : CGameObject(application)	{}
 	~CFireball(void)													{}
 
+	virtual void	Kill(void) override;
 	virtual void	Render(void) override;
 	virtual void	Update(const float deltaTime) override;
 	virtual void	HandleObstacleCollision(const GameObjectList& obstacles, const float deltaTime) override;
-	virtual void	HandleEnemyCollision(const GameObjectList& enemies, const float deltaTime) override;
 
 public:
 
@@ -36,7 +36,6 @@ private:
 	float				m_Angle			= 0.0f;
 	float				m_LifeTime		= 0.0f;
 
-	bool				m_IsDead		= false;
 	bool				m_IsActive		= false;
 
 };

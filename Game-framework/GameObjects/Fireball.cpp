@@ -3,6 +3,13 @@
 #include "Application.h"
 #include "Utilities/CollisionUtilities.h"
 
+void CFireball::Kill(void)
+{
+	CGameObject::Kill();
+
+	m_IsActive = false;
+}
+
 void CFireball::Render(void)
 {
 	m_pTexture->SetFlipMethod(m_FlipMethod);
@@ -30,7 +37,7 @@ void CFireball::Update(const float deltaTime)
 	const SDL_FPoint windowSize = m_pApplication->GetWindow().GetSize();
 
 	if ((m_Collider.x < -m_Collider.w) || (m_Collider.x > windowSize.x) || (m_Collider.y > (windowSize.y - m_Collider.h)))
-		m_IsDead = true;
+		Kill();
 }
 
 void CFireball::HandleObstacleCollision(const GameObjectList& obstacles, const float deltaTime)
@@ -39,20 +46,7 @@ void CFireball::HandleObstacleCollision(const GameObjectList& obstacles, const f
 	{
 		if (QuadVsQuad(m_Collider, obstacle->GetCollider()))
 		{
-			m_IsDead = true;
-
-			break;
-		}
-	}
-}
-
-void CFireball::HandleEnemyCollision(const GameObjectList& enemies, const float deltaTime)
-{
-	for (CGameObject* enemy : enemies)
-	{
-		if (QuadVsQuad(m_Collider, enemy->GetCollider()))
-		{
-			m_IsDead = true;
+			Kill();
 
 			break;
 		}

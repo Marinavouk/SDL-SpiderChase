@@ -69,7 +69,7 @@ bool CGameState::OnEnter(void)
 
 	m_Enemies.push_back(m_pSpider);
 
-	for (uint32_t i = 0; i < 5; ++i)
+	for (uint32_t i = 0; i < 1; ++i)
 	{
 		// Create a fireball
 		CGameObject* fireball = new CFireball(m_pApplication);
@@ -164,6 +164,7 @@ void CGameState::Update(const float deltaTime)
 			break;
 		}
 
+		/*
 		bool spiderCollision = false;
 
 		if (QuadVsQuad(fireball->GetCollider(), m_pSpider->GetCollider()))
@@ -180,6 +181,7 @@ void CGameState::Update(const float deltaTime)
 
 		if (spiderCollision)
 			break;
+		*/
 	}
 
 	const CTransitionRenderer& transitionRenderer = m_pApplication->GetTransitionRenderer();
