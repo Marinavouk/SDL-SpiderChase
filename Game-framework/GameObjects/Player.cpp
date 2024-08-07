@@ -182,6 +182,9 @@ void CPlayer::RenderDebug(void)
 
 void CPlayer::HandleInput(const float deltaTime)
 {
+	if (m_IsDead)
+		return;
+
 	CInputHandler& inputHandler = m_pApplication->GetInputHandler();
 
 	// Pressed keys
