@@ -215,7 +215,10 @@ void CPlayer::HandleInput(const float deltaTime)
 
 	if (inputHandler.KeyHeld(SDL_SCANCODE_LEFT) && !inputHandler.KeyHeld(SDL_SCANCODE_RIGHT))
 	{
-		m_Velocity.x = std::max(m_Velocity.x - ((m_IsRunning ? m_AccelerationSpeedRunning : m_AccelerationSpeedWalking) * deltaTime), (m_IsRunning ? -m_MaxRunningVelocity : -m_MaxWalkingVelocity));
+		const float acceleration	= (m_IsRunning	? m_AccelerationSpeedRunning	: m_AccelerationSpeedWalking) * deltaTime;
+		const float maxVelocity		= (m_IsRunning	? -m_MaxRunningVelocity			: -m_MaxWalkingVelocity);
+
+		m_Velocity.x = std::max(m_Velocity.x - acceleration, maxVelocity);
 
 		m_pTexture->SetFlipMethod(SDL_RendererFlip::SDL_FLIP_HORIZONTAL);
 
@@ -233,7 +236,10 @@ void CPlayer::HandleInput(const float deltaTime)
 
 	else if (inputHandler.KeyHeld(SDL_SCANCODE_RIGHT) && !inputHandler.KeyHeld(SDL_SCANCODE_LEFT))
 	{
-		m_Velocity.x = std::min(m_Velocity.x + ((m_IsRunning ? m_AccelerationSpeedRunning : m_AccelerationSpeedWalking) * deltaTime), (m_IsRunning ? m_MaxRunningVelocity : m_MaxWalkingVelocity));
+		const float acceleration	= (m_IsRunning	? m_AccelerationSpeedRunning	: m_AccelerationSpeedWalking) * deltaTime;
+		const float maxVelocity		= (m_IsRunning	? m_MaxRunningVelocity			: m_MaxWalkingVelocity);
+
+		m_Velocity.x = std::min(m_Velocity.x + acceleration, maxVelocity);
 
 		m_pTexture->SetFlipMethod(SDL_RendererFlip::SDL_FLIP_NONE);
 
@@ -474,6 +480,7 @@ bool CPlayer::ResolveEnemyXCollision(const SDL_FRect& collider, const SDL_FPoint
 		}
 	}
 
+	// The player is standing still
 	else
 	{
 		if (QuadVsQuad(m_HorizontalCollider, collider))
@@ -490,6 +497,7 @@ bool CPlayer::ResolveEnemyXCollision(const SDL_FRect& collider, const SDL_FPoint
 	if (hasCollided)
 		SyncColliders();
 
+	// If the player is moving down
 	if (moveAmount.y > 0.0f)
 	{
 		SDL_FRect intersection = {0.0f, 0.0f, 0.0f, 0.0f};
@@ -564,6 +572,7 @@ void CPlayer::CheckWindowEdges(void)
 {
 	const SDL_FPoint windowSize = m_pApplication->GetWindow().GetSize();
 
+	// Make sure that the player can't leave the left edge of the window
 	if (m_HorizontalCollider.x < 0.0f)
 	{
 		m_Rectangle.x = -m_HorizontalColliderOffset.x;
@@ -571,6 +580,7 @@ void CPlayer::CheckWindowEdges(void)
 		m_Velocity.x = 0.0f;
 	}
 
+	// Make sure that the player can't leave the right edge of the window
 	else if (m_HorizontalCollider.x > (windowSize.x - m_HorizontalCollider.w))
 	{
 		const float rightOffset = m_Rectangle.w - (m_HorizontalCollider.w + m_HorizontalColliderOffset.x);
@@ -628,6 +638,8 @@ void CPlayer::ActivateRunningAnimation(void)
 
 void CPlayer::OnAttackAnimationEnd(void)
 {
+	// This OnAttackAnimationEnd function is called from the m_pAnimatorAttacking animator whenever the animator is at the last frame in the attack animation
+
 	if (m_pAttackCallback)
 		m_pAttackCallback();
 
