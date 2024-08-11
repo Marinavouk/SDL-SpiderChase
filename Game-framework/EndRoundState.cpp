@@ -102,4 +102,14 @@ void CEndRoundState::Update(const float deltaTime)
 
 void CEndRoundState::Render(void)
 {
+	SDL_Renderer* renderer = m_pApplication->GetWindow().GetRenderer();
+	const SDL_FPoint	mousePosition = m_pApplication->GetInputHandler().GetMousePosition();
+
+	m_pBackground->Render({ 0.0f, 0.0f });
+
+	SDL_SetRenderDrawColor(renderer, 100, 100, 100, 200);
+
+	m_EndGameTextBlock.Render(renderer);
+	m_RestartButton.Render(renderer, &mousePosition);
+	m_QuitButton.Render(renderer, &mousePosition);
 }
