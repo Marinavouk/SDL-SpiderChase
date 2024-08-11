@@ -4,9 +4,6 @@
 #include "GameObjects/Player.h"
 #include "Utilities/Animator.h"
 
-#include <SDL.h>
-#include <vector>
-
 class CSpider final : public CGameObject
 {
 public:

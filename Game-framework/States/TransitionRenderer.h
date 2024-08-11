@@ -1,7 +1,5 @@
 #pragma once
 
-#include <SDL.h>
-
 class CApplication;
 
 class CTransitionRenderer

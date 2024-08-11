@@ -1,9 +1,5 @@
 #pragma once
 
-#include <algorithm>
-#include <string>
-#include <vector>
-
 /**
 * Retrieves the filename in a filepath (file extension included) and returns the result as a new std::string
 */

@@ -1,6 +1,5 @@
+#include "Pch.h"
 #include "Window.h"
-
-#include <iostream>
 
 bool CWindow::Create(const std::string& title, const bool fullscreen)
 {

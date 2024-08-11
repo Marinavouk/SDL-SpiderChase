@@ -1,9 +1,7 @@
+#include "Pch.h"
 #include "TextureHandler.h"
 
 #include "Utilities/StringUtilities.h"
-
-#include <SDL_image.h>
-#include <iostream>
 
 bool CTextureHandler::Create(SDL_Renderer* renderer, const std::string& basePath)
 {

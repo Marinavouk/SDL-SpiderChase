@@ -1,3 +1,4 @@
+#include "Pch.h"
 #include "Animator.h"
 
 void CAnimator::Set(const uint32_t numFrames, const uint32_t startFrame, const uint32_t endFrame, const uint32_t row, const SDL_FPoint& frameSize, const float speed, const bool loop, const EDirection direction)

@@ -1,10 +1,8 @@
+#include "Pch.h"
 #include "Player.h"
 
 #include "Application.h"
 #include "Utilities/CollisionUtilities.h"
-
-#include <SDL.h>
-#include <iostream>
 
 bool CPlayer::Create(const std::string& textureFileName, const SDL_FPoint& position, const uint32_t maxHealth)
 {

@@ -1,9 +1,5 @@
 #pragma once
 
-#include <SDL.h>
-#include <functional>
-#include <string>
-
 typedef std::function<void()> AnimationEndedCB;
 
 class CAnimator

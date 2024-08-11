@@ -3,10 +3,6 @@
 #include "GameObject.h"
 #include "Utilities\Animator.h"
 
-#include <SDL.h>
-#include <functional>
-#include <vector>
-
 typedef std::function<void()> Callback;
 
 class CPlayer final : public CGameObject

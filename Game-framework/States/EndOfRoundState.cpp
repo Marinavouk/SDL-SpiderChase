@@ -1,9 +1,8 @@
+#include "Pch.h"
 #include "EndOfRoundState.h"
 
 #include "Application.h"
 #include "Handlers/AudioHandler.h"
-
-#include <iostream>
 
 bool CEndOfRoundState::OnEnter(void)
 {

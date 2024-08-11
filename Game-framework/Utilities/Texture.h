@@ -1,8 +1,5 @@
 #pragma once
 
-#include <SDL.h>
-#include <string>
-
 class CTexture
 {
 	friend class CTextureHandler;

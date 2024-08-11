@@ -1,3 +1,4 @@
+#include "Pch.h"
 #include "InputHandler.h"
 
 void CInputHandler::Update(void)

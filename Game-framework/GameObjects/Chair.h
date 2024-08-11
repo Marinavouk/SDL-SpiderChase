@@ -2,9 +2,6 @@
 
 #include "GameObjects/GameObject.h"
 
-#include <SDL.h>
-#include <vector>
-
 class CChair final : public CGameObject
 {
 public:

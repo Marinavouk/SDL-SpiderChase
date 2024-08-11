@@ -5,10 +5,6 @@
 #include "Handlers/TextureHandler.h"
 #include "GameObjects/Button.h"
 
-#include <SDL.h>
-#include <SDL_ttf.h>
-#include <SDL_mixer.h>
-
 class CEndOfRoundState final : public CState
 {
 public:

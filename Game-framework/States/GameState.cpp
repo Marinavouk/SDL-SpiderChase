@@ -1,3 +1,4 @@
+#include "Pch.h"
 #include "GameState.h"
 
 #include "Application.h"
@@ -9,8 +10,6 @@
 #include "Handlers/AudioHandler.h"
 #include "Utilities/CollisionUtilities.h"
 #include "Utilities/Random.h"
-
-#include <iostream>
 
 bool CGameState::OnEnter(void)
 {

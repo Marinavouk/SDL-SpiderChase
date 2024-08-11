@@ -1,9 +1,7 @@
+#include "Pch.h"
 #include "TransitionRenderer.h"
 
 #include "Application.h"
-
-// Used for std::clamp
-#include <algorithm>
 
 CTransitionRenderer::CTransitionRenderer(void)
 {

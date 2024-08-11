@@ -1,9 +1,7 @@
+#include "Pch.h"
 #include "Button.h"
 
 #include "Application.h"
-
-#include <iostream>
-#include <vector>
 
 bool CButton::Create(CApplication* application, TTF_Font* font, const std::string& text, const SDL_Color& textColor)
 {

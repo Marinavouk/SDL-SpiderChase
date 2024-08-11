@@ -1,6 +1,5 @@
+#include "Pch.h"
 #include "AudioHandler.h"
-
-#include <iostream>
 
 Mix_Chunk* CAudioHandler::CreateSound(const std::string& fileName)
 {

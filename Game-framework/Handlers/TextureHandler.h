@@ -2,10 +2,6 @@
 
 #include "Utilities/Texture.h"
 
-#include <SDL.h>
-#include <map>
-#include <string>
-
 class CTextureHandler
 {
 public:

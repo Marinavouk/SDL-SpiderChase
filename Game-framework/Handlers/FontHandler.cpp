@@ -1,6 +1,5 @@
+#include "Pch.h"
 #include "FontHandler.h"
-
-#include <iostream>
 
 TTF_Font* CFontHandler::CreateFont(const std::string& fileName, const int32_t textSize)
 {

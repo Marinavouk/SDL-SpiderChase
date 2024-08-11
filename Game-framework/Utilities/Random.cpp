@@ -1,6 +1,5 @@
+#include "Pch.h"
 #include "Random.h"
-
-#include <limits>
 
 void CRandom::Seed(void)
 {

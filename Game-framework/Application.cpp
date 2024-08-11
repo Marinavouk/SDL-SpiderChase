@@ -1,3 +1,4 @@
+#include "Pch.h"
 #include "Application.h"
 
 // The different states for the game

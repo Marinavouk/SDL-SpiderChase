@@ -1,9 +1,8 @@
+#include "Pch.h"
 #include "MainMenuState.h"
 
 #include "Application.h"
 #include "Handlers/AudioHandler.h"
-
-#include <iostream>
 
 bool CMainMenuState::OnEnter(void)
 {

@@ -1,3 +1,4 @@
+#include "Pch.h"
 #include "GameObject.h"
 
 #include "Application.h"

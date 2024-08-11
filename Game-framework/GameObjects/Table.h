@@ -2,9 +2,6 @@
 
 #include "GameObject.h"
 
-#include <SDL.h>
-#include <vector>
-
 class CTable final : public CGameObject
 {
 public:

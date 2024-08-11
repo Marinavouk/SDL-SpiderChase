@@ -1,7 +1,5 @@
+#include "Pch.h"
 #include "Timer.h"
-
-#include <SDL.h>
-#include <utility>
 
 void CTimer::Update(void)
 {

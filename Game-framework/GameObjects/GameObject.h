@@ -2,10 +2,6 @@
 
 #include "Utilities/Texture.h"
 
-#include <SDL.h>
-#include <string>
-#include <vector>
-
 class CApplication;
 
 class CGameObject

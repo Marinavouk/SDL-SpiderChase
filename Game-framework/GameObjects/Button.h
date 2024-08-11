@@ -2,10 +2,6 @@
 
 #include "Utilities/Texture.h"
 
-#include <SDL.h> 
-#include <SDL_ttf.h>
-#include <string>
-
 class CApplication;
 class CInputHandler;
 

@@ -1,10 +1,8 @@
+#include "Pch.h"
 #include "Texture.h"
 
 #include "Handlers/TextureHandler.h"
 #include "StringUtilities.h"
-
-#include <SDL_image.h>
-#include <iostream>
 
 bool CTexture::Create(SDL_Renderer* renderer, const std::string& filePath)
 {

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <random>
-
 // Random number generator
 class CRandom
 {

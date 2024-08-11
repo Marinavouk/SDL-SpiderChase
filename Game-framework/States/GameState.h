@@ -5,9 +5,6 @@
 #include "Utilities/Texture.h"
 #include "Handlers/TextureHandler.h"
 
-#include <SDL.h>
-#include <SDL_mixer.h>
-
 class CGameState final : public CState
 {
 public:
