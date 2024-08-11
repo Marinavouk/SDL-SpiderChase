@@ -28,7 +28,7 @@ bool CPlayer::Create(const std::string& textureFileName, const SDL_FPoint& posit
 
 	m_pAnimatorAttacking->SetAnimationEndCallback(std::bind(&CPlayer::OnAttackAnimationEnd, this));
 
-	m_pCurrentAnimator = m_pAnimatorIdle;
+	ActivateAnimator(m_pAnimatorIdle);
 
 	m_pTexture->SetSize({frameSize.x * m_Scale, frameSize.y * m_Scale});
 	m_pTexture->SetTextureCoords(m_pCurrentAnimator->GetClipRectangle());
@@ -89,7 +89,25 @@ void CPlayer::Update(const float deltaTime)
 
 	SyncColliders();
 
-	CheckWindowEdges();
+	const SDL_FPoint windowSize = m_pApplication->GetWindow().GetSize();
+
+	// Make sure that the player can't leave the left edge of the window
+	if (m_HorizontalCollider.x < 0.0f)
+	{
+		m_Rectangle.x = -m_HorizontalColliderOffset.x;
+
+		m_Velocity.x = 0.0f;
+	}
+
+	// Make sure that the player can't leave the right edge of the window
+	else if (m_HorizontalCollider.x > (windowSize.x - m_HorizontalCollider.w))
+	{
+		const float rightOffset = m_Rectangle.w - (m_HorizontalCollider.w + m_HorizontalColliderOffset.x);
+
+		m_Rectangle.x = windowSize.x - (m_Rectangle.w - rightOffset);
+
+		m_Velocity.x = 0.0f;
+	}
 
 	if (m_State == EState::ALIVE)
 	{
@@ -104,17 +122,17 @@ void CPlayer::Update(const float deltaTime)
 			if (m_IsJumping && !m_IsAttacking)
 			{
 				if ((m_pCurrentAnimator != m_pAnimatorIdle) && (m_HorizontalDirection == EMovementState::IDLE) && (m_VerticalDirection == EMovementState::IDLE))
-					ActivateAnimation(m_pAnimatorIdle);
+					ActivateAnimator(m_pAnimatorIdle);
 
 				else
 				{
 					if (m_HorizontalDirection != EMovementState::IDLE)
 					{
 						if (m_IsRunning)
-							ActivateAnimation(m_pAnimatorRunning);
+							ActivateAnimator(m_pAnimatorRunning);
 
 						else
-							ActivateAnimation(m_pAnimatorWalking);
+							ActivateAnimator(m_pAnimatorWalking);
 					}
 				}
 			}
@@ -236,10 +254,10 @@ void CPlayer::HandleInput(const float deltaTime)
 		if (!m_IsJumping && !m_IsAttacking)
 		{
 			if (m_IsRunning)
-				ActivateAnimation(m_pAnimatorRunning);
+				ActivateAnimator(m_pAnimatorRunning);
 
 			else
-				ActivateAnimation(m_pAnimatorWalking);
+				ActivateAnimator(m_pAnimatorWalking);
 		}
 	}
 
@@ -257,10 +275,10 @@ void CPlayer::HandleInput(const float deltaTime)
 		if (!m_IsJumping && !m_IsAttacking)
 		{
 			if (m_IsRunning)
-				ActivateAnimation(m_pAnimatorRunning);
+				ActivateAnimator(m_pAnimatorRunning);
 
 			else
-				ActivateAnimation(m_pAnimatorWalking);
+				ActivateAnimator(m_pAnimatorWalking);
 		}
 	}
 
@@ -281,7 +299,7 @@ void CPlayer::HandleInput(const float deltaTime)
 		m_HorizontalDirection = EMovementState::IDLE;
 
 		if((m_VerticalDirection == EMovementState::IDLE) && !m_IsJumping && !m_IsAttacking)
-			ActivateAnimation(m_pAnimatorIdle);
+			ActivateAnimator(m_pAnimatorIdle);
 	}
 
 	else if (inputHandler.KeyReleased(SDL_SCANCODE_RIGHT) && (m_HorizontalDirection == EMovementState::MOVING_RIGHT))
@@ -289,11 +307,11 @@ void CPlayer::HandleInput(const float deltaTime)
 		m_HorizontalDirection = EMovementState::IDLE;
 
 		if((m_VerticalDirection == EMovementState::IDLE) && !m_IsJumping && !m_IsAttacking)
-			ActivateAnimation(m_pAnimatorIdle);
+			ActivateAnimator(m_pAnimatorIdle);
 	}
 
 	if ((m_HorizontalDirection == EMovementState::IDLE) && (m_VerticalDirection == EMovementState::IDLE) && !m_IsJumping && !m_IsAttacking)
-		ActivateAnimation(m_pAnimatorIdle);
+		ActivateAnimator(m_pAnimatorIdle);
 }
 
 void CPlayer::HandleObstacleCollision(const GameObjectList& obstacles, const float deltaTime)
@@ -351,7 +369,12 @@ void CPlayer::HandleEnemyCollision(const GameObjectList& enemies, const float de
 			}
 
 			else
-				ActivateDamageCooldown();
+			{
+				m_DamageCooldownTimer	= m_DamageCooldownTimerDefault;
+				m_BlinkingInterval		= m_BlinkingIntervalDefault;
+				m_DamageCooldown		= true;
+				m_Show					= true;
+			}
 		}
 	}
 }
@@ -580,29 +603,6 @@ bool CPlayer::ResolveEnemyYCollision(const SDL_FRect& collider, const SDL_FPoint
 	return hasCollided;
 }
 
-void CPlayer::CheckWindowEdges(void)
-{
-	const SDL_FPoint windowSize = m_pApplication->GetWindow().GetSize();
-
-	// Make sure that the player can't leave the left edge of the window
-	if (m_HorizontalCollider.x < 0.0f)
-	{
-		m_Rectangle.x = -m_HorizontalColliderOffset.x;
-
-		m_Velocity.x = 0.0f;
-	}
-
-	// Make sure that the player can't leave the right edge of the window
-	else if (m_HorizontalCollider.x > (windowSize.x - m_HorizontalCollider.w))
-	{
-		const float rightOffset = m_Rectangle.w - (m_HorizontalCollider.w + m_HorizontalColliderOffset.x);
-
-		m_Rectangle.x = windowSize.x - (m_Rectangle.w - rightOffset);
-
-		m_Velocity.x = 0.0f;
-	}
-}
-
 void CPlayer::SyncColliders(void)
 {
 	m_HorizontalCollider.x	= m_Rectangle.x + m_HorizontalColliderOffset.x;
@@ -613,15 +613,7 @@ void CPlayer::SyncColliders(void)
 	m_Collider = {m_VerticalCollider.x, m_VerticalCollider.y, m_VerticalCollider.w, m_VerticalCollider.h};
 }
 
-void CPlayer::ActivateDamageCooldown(void)
-{
-	m_DamageCooldownTimer	= m_DamageCooldownTimerDefault;
-	m_BlinkingInterval		= m_BlinkingIntervalDefault;
-	m_DamageCooldown		= true;
-	m_Show					= true;
-}
-
-void CPlayer::ActivateAnimation(CAnimator* animator)
+void CPlayer::ActivateAnimator(CAnimator* animator)
 {
 	if (m_pCurrentAnimator != animator)
 	{

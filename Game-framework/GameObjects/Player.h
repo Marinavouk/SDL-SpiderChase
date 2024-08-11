@@ -38,10 +38,8 @@ private:
 	bool			ResolveObstacleYCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount);
 	bool			ResolveEnemyXCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount);
 	bool			ResolveEnemyYCollision(const SDL_FRect& collider, const SDL_FPoint& moveAmount);
-	void			CheckWindowEdges(void);
 	void			SyncColliders(void);
-	void			ActivateDamageCooldown(void);
-	void			ActivateAnimation(CAnimator* animator);
+	void			ActivateAnimator(CAnimator* animator);
 	void			OnAttackAnimationEnd(void);
 
 private:

@@ -29,11 +29,8 @@ public:
 private:
 
 	bool			ResolveObstacleYCollision(const SDL_FRect& collider);
-	void			CheckWindowBottom(void);
 	void			SyncCollider(void);
-	void			ActivateHangingAnimation(void);
-	void			ActivateIdleAnimation(void);
-	void			ActivateWalkingAnimation(void);
+	void			ActivateAnimator(CAnimator* animator);
 
 private:
 

@@ -19,7 +19,7 @@ bool CSpider::Create(const std::string& textureFileName, const SDL_FPoint& posit
 	m_pAnimatorWalking->Set(	10, 0, 9, 3, frameSize, 7.0f, true,		CAnimator::EDirection::FORWARD);
 	m_pAnimatorDying->Set(		4,  0, 3, 4, frameSize, 7.0f, false,	CAnimator::EDirection::FORWARD);
 
-	m_pCurrentAnimator = m_pAnimatorHanging;
+	ActivateAnimator(m_pAnimatorHanging);
 
 	m_pTexture->SetSize({frameSize.x * m_Scale, frameSize.y * m_Scale});
 	m_pTexture->SetTextureCoords(m_pCurrentAnimator->GetClipRectangle());
@@ -129,7 +129,21 @@ void CSpider::Update(const float deltaTime)
 
 		SyncCollider();
 
-		CheckWindowBottom();
+		const SDL_FPoint windowSize = m_pApplication->GetWindow().GetSize();
+
+		if (m_Collider.y > windowSize.y - m_Collider.h)
+		{
+			const float bottomOffset = m_Rectangle.h - (m_Collider.h + m_ColliderOffset.y);
+
+			m_Rectangle.y = windowSize.y - (m_Rectangle.h - bottomOffset);
+
+			SyncCollider();
+
+			m_Velocity.y = 0.0f;
+
+			if (m_State != EState::DEAD)
+				m_State = EState::CHASING_PLAYER;
+		}
 	}
 
 	if (m_State == EState::CHASING_PLAYER)
@@ -145,7 +159,7 @@ void CSpider::Update(const float deltaTime)
 
 				m_FlipMethod = SDL_RendererFlip::SDL_FLIP_HORIZONTAL;
 
-				ActivateWalkingAnimation();
+				ActivateAnimator(m_pAnimatorWalking);
 			}
 
 			else if (centerPosition.x < (playerPosition.x - 10.0f))
@@ -154,11 +168,11 @@ void CSpider::Update(const float deltaTime)
 
 				m_FlipMethod = SDL_RendererFlip::SDL_FLIP_NONE;
 
-				ActivateWalkingAnimation();
+				ActivateAnimator(m_pAnimatorWalking);
 			}
 
 			else
-				ActivateIdleAnimation();
+				ActivateAnimator(m_pAnimatorIdle);
 
 			SyncCollider();
 		}
@@ -202,54 +216,17 @@ bool CSpider::ResolveObstacleYCollision(const SDL_FRect& collider)
 	return hasCollided;
 }
 
-void CSpider::CheckWindowBottom(void)
-{
-	const SDL_FPoint windowSize = m_pApplication->GetWindow().GetSize();
-
-	if (m_Collider.y > windowSize.y - m_Collider.h)
-	{
-		const float bottomOffset = m_Rectangle.h - (m_Collider.h + m_ColliderOffset.y);
-
-		m_Rectangle.y = windowSize.y - (m_Rectangle.h - bottomOffset);
-
-		SyncCollider();
-
-		m_Velocity.y = 0.0f;
-
-		if (m_State != EState::DEAD)
-			m_State = EState::CHASING_PLAYER;
-	}
-}
-
 void CSpider::SyncCollider(void)
 {
 	m_Collider.x = m_Rectangle.x + m_ColliderOffset.x;
 	m_Collider.y = m_Rectangle.y + m_ColliderOffset.y;
 }
 
-void CSpider::ActivateHangingAnimation(void)
+void CSpider::ActivateAnimator(CAnimator* animator)
 {
-	if (m_pCurrentAnimator != m_pAnimatorHanging)
+	if (m_pCurrentAnimator != animator)
 	{
-		m_pCurrentAnimator = m_pAnimatorHanging;
-		m_pCurrentAnimator->Reset();
-	}
-}
-
-void CSpider::ActivateIdleAnimation(void)
-{
-	if (m_pCurrentAnimator != m_pAnimatorIdle)
-	{
-		m_pCurrentAnimator = m_pAnimatorIdle;
-		m_pCurrentAnimator->Reset();
-	}
-}
-
-void CSpider::ActivateWalkingAnimation(void)
-{
-	if (m_pCurrentAnimator != m_pAnimatorWalking)
-	{
-		m_pCurrentAnimator = m_pAnimatorWalking;
+		m_pCurrentAnimator = animator;
 		m_pCurrentAnimator->Reset();
 	}
 }
