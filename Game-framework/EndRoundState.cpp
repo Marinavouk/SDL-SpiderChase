@@ -86,6 +86,18 @@ void CEndRoundState::OnExit(void)
 
 void CEndRoundState::Update(const float deltaTime)
 {
+	CInputHandler& inputHandler = m_pApplication->GetInputHandler();
+	const CTransitionRenderer& transitionRenderer = m_pApplication->GetTransitionRenderer();
+
+	m_RestartButton.Update(inputHandler);
+	m_QuitButton.Update(inputHandler);
+
+	if (m_RestartButton.IsPressed(inputHandler) || inputHandler.KeyPressed(SDL_SCANCODE_RETURN)) m_pApplication->SetState(CApplication::EState::GAME);
+	else if (m_QuitButton.IsPressed(inputHandler) || inputHandler.KeyPressed(SDL_SCANCODE_ESCAPE)) m_pApplication->SetState(CApplication::EState::QUIT);
+
+	if (transitionRenderer.IsTransitioning())
+		m_pApplication->GetAudioHandler().SetMusicVolume(MIX_MAX_VOLUME - (int)((float)MIX_MAX_VOLUME * transitionRenderer.GetTransitionValue()));
+
 }
 
 void CEndRoundState::Render(void)
