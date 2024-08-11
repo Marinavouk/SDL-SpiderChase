@@ -63,6 +63,25 @@ bool CEndRoundState::OnEnter(void)
 
 void CEndRoundState::OnExit(void)
 {
+	CTextureHandler& textureHandler = m_pApplication->GetTextureHandler();
+	CFontHandler& fontHandler = m_pApplication->GetFontHandler();
+	CAudioHandler& audioHandler = m_pApplication->GetAudioHandler();
+
+	audioHandler.StopMusic();
+	audioHandler.DestroyMusic(m_pMusic);
+	m_pMusic = nullptr;
+
+	m_QuitButton.Destroy(m_pApplication);
+	m_RestartButton.Destroy(m_pApplication);
+	m_EndGameTextBlock.Destroy(m_pApplication);
+
+	fontHandler.DestroyFont(m_ButtonFont);
+	fontHandler.DestroyFont(m_TextFont);
+	m_ButtonFont = nullptr;
+	m_TextFont = nullptr;
+
+	textureHandler.DestroyTexture(m_pBackground->GetName());
+	m_pBackground = nullptr;
 }
 
 void CEndRoundState::Update(const float deltaTime)
