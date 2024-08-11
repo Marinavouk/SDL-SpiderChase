@@ -15,7 +15,7 @@ bool CWindow::Create(const std::string& title, const bool fullscreen)
 	else
 	{
 	#if defined(_DEBUG)
-		std::cout << "Error: failed to get display mode: " << SDL_GetError() << std::endl;
+		std::cout << "Error: failed to retrieve the display mode: " << SDL_GetError() << std::endl;
 		std::cout << "Reverting to default window size 1280x720" << std::endl;
 	#endif
 	}

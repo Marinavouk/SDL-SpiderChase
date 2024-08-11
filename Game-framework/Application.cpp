@@ -34,7 +34,7 @@ bool CApplication::Create(void)
 
 	// If you want to tweak the speed of the state transition, you can set the speed here
 	// The lower the value is set to, the slower the transition effect will be
-	// NOTE. Don't set it to 0.0f or a negative value, the transition will not work
+	// NOTE: if a value lower than 0.1f is specified, the speed will be clamped to 0.1f
 	m_TransitionRenderer.SetSpeed(2.0f); // Default: 2.0f
 
 	/**

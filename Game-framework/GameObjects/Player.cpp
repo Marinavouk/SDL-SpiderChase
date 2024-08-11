@@ -17,12 +17,12 @@ bool CPlayer::Create(const std::string& textureFileName, const SDL_FPoint& posit
 	m_pAnimatorJumping		= new CAnimator;
 	m_pAnimatorAttacking	= new CAnimator;
 	m_pAnimatorDying		= new CAnimator;
-	m_pAnimatorIdle->Set(		7, 0, 6, 0, frameSize,  7.0f, true,		CAnimator::EDirection::FORWARD);
-	m_pAnimatorWalking->Set(	6, 0, 5, 1, frameSize,  8.0f, true,		CAnimator::EDirection::FORWARD);
-	m_pAnimatorRunning->Set(	8, 0, 7, 2, frameSize, 14.0f, true,		CAnimator::EDirection::FORWARD);
-	m_pAnimatorJumping->Set(	9, 0, 8, 7, frameSize,  8.0f, false,	CAnimator::EDirection::FORWARD);
-	m_pAnimatorAttacking->Set(	8, 0, 7, 5, frameSize, 14.0f, false,	CAnimator::EDirection::FORWARD);
-	m_pAnimatorDying->Set(		6, 0, 5, 9, frameSize,	8.0f, false,	CAnimator::EDirection::FORWARD);
+	m_pAnimatorIdle->Set(		m_pTexture, 7, 0, 6, 0, frameSize,  7.0f, true,		CAnimator::EDirection::FORWARD);
+	m_pAnimatorWalking->Set(	m_pTexture, 6, 0, 5, 1, frameSize,  8.0f, true,		CAnimator::EDirection::FORWARD);
+	m_pAnimatorRunning->Set(	m_pTexture, 8, 0, 7, 2, frameSize, 14.0f, true,		CAnimator::EDirection::FORWARD);
+	m_pAnimatorJumping->Set(	m_pTexture, 9, 0, 8, 7, frameSize,  8.0f, false,	CAnimator::EDirection::FORWARD);
+	m_pAnimatorAttacking->Set(	m_pTexture, 8, 0, 7, 5, frameSize, 14.0f, false,	CAnimator::EDirection::FORWARD);
+	m_pAnimatorDying->Set(		m_pTexture, 6, 0, 5, 9, frameSize,	8.0f, false,	CAnimator::EDirection::FORWARD);
 
 	m_pAnimatorAttacking->SetAnimationEndCallback(std::bind(&CPlayer::OnAttackAnimationEnd, this));
 
@@ -182,9 +182,6 @@ void CPlayer::Render(void)
 {
 	if (m_DamageCooldown && !m_Show)
 		return;
-
-	if (m_pCurrentAnimator)
-		m_pTexture->SetTextureCoords(m_pCurrentAnimator->GetClipRectangle());
 
 	CGameObject::Render();
 }
@@ -620,10 +617,9 @@ void CPlayer::ActivateAnimator(CAnimator* animator)
 	}
 }
 
+// This function is called from the m_pAnimatorAttacking animator whenever the animator is at the last frame of the attack animation
 void CPlayer::OnAttackAnimationEnd(void)
 {
-	// This OnAttackAnimationEnd function is called from the m_pAnimatorAttacking animator whenever the animator is at the last frame in the attack animation
-
 	if (m_pAttackingCallback)
 		m_pAttackingCallback();
 

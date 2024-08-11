@@ -23,7 +23,7 @@ public:
 
 	float	GetTransitionValue(void) const		{return m_TransitionValue;}
 
-	void	SetSpeed(const float speed)			{m_FadeSpeed = speed;}
+	void	SetSpeed(const float speed)			{m_FadeSpeed = std::max(speed, 0.1f);}
 
 	bool	IsTransitioning(void) const			{return (m_State != EState::IDLE);}
 

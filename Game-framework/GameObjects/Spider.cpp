@@ -15,10 +15,10 @@ bool CSpider::Create(const std::string& textureFileName, const SDL_FPoint& posit
 	m_pAnimatorIdle		= new CAnimator;
 	m_pAnimatorWalking	= new CAnimator;
 	m_pAnimatorDying	= new CAnimator;
-	m_pAnimatorHanging->Set(	1,	0, 0, 4, frameSize, 0.0f, false,	CAnimator::EDirection::FORWARD);
-	m_pAnimatorIdle->Set(		10, 0, 9, 0, frameSize, 7.0f, true,		CAnimator::EDirection::FORWARD);
-	m_pAnimatorWalking->Set(	10, 0, 9, 3, frameSize, 7.0f, true,		CAnimator::EDirection::FORWARD);
-	m_pAnimatorDying->Set(		4,  0, 3, 4, frameSize, 7.0f, false,	CAnimator::EDirection::FORWARD);
+	m_pAnimatorHanging->Set(	m_pTexture, 1,	0, 0, 4, frameSize, 0.0f, false,	CAnimator::EDirection::FORWARD);
+	m_pAnimatorIdle->Set(		m_pTexture, 10, 0, 9, 0, frameSize, 7.0f, true,		CAnimator::EDirection::FORWARD);
+	m_pAnimatorWalking->Set(	m_pTexture, 10, 0, 9, 3, frameSize, 7.0f, true,		CAnimator::EDirection::FORWARD);
+	m_pAnimatorDying->Set(		m_pTexture, 4,  0, 3, 4, frameSize, 7.0f, false,	CAnimator::EDirection::FORWARD);
 
 	ActivateAnimator(m_pAnimatorHanging);
 
@@ -57,9 +57,6 @@ void CSpider::Render(void)
 		SDL_SetRenderDrawColor(renderer, 150, 150, 150, 200);
 		SDL_RenderDrawLineF(renderer, m_StartPosition.x + (m_Rectangle.w * 0.5f), 0.0f, m_Collider.x + (m_Collider.w * 0.5f), m_Collider.y + (m_Collider.h * 0.5f));
 	}
-
-	if (m_pCurrentAnimator)
-		m_pTexture->SetTextureCoords(m_pCurrentAnimator->GetClipRectangle());
 
 	m_pTexture->SetFlipMethod(m_FlipMethod);
 	m_pTexture->SetAngle(-m_Angle);
