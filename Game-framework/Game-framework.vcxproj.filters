@@ -102,7 +102,9 @@
     <ClCompile Include="GameObjects\Fireball.cpp">
       <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="EndRoundState.cpp" />
+    <ClCompile Include="EndRoundState.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -180,6 +182,8 @@
     <ClInclude Include="GameObjects\Fireball.h">
       <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="EndRoundState.h" />
+    <ClInclude Include="EndRoundState.h">
+      <Filter>Header Files\States</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -19,7 +19,7 @@ bool CEndRoundState::OnEnter(void)
 	m_pBackground->SetSize(window.GetSize());
 	m_pBackground->SetAlphaMod(100);
 
-	m_TextFont = fontHandler.CreateFont("Assets/Fonts/SpiderDemo-51LlB.ttf", 200); if (!m_TextFont)		return false;
+	m_TextFont = fontHandler.CreateFont("Assets/Fonts/SpiderDemo-51LlB.ttf", 140); if (!m_TextFont)		return false;
 	m_ButtonFont = fontHandler.CreateFont("Assets/Fonts/SpookyWebbie-lgvxX.ttf", 60); if (!m_ButtonFont)	return false;
 
 	const SDL_Color endGameTextColor = { 200,	0,		0,		255 }; // Dark red
@@ -29,13 +29,13 @@ bool CEndRoundState::OnEnter(void)
 	const SDL_Color buttonTextColorHovered = { 255,	0,		0,		255 }; // Red		<-- Text color when the mouse pointer is inside (hovering) the button
 	const SDL_Color buttonTextColorPressed = { 255,	0,		0,		255 }; // Red		<-- Text color when the button is held
 
-	if (!m_EndGameTextBlock.Create(m_pApplication, m_TextFont, "You have been eaten!", { 200, 0, 0, 255 }))
+	if (!m_EndGameTextBlock.Create(m_pApplication, m_TextFont, "You have been eaten!", {200, 0, 0, 255}))
 		return false;
 	m_EndGameTextBlock.SetPosition({ windowCenter.x, 160.0f });
 
 	m_EndGameTextBlock.SetBackgroundColor({ 0, 0, 0, 0 });
 
-	if (!m_RestartButton.Create(m_pApplication, m_ButtonFont, "Play", buttonTextColor))
+	if (!m_RestartButton.Create(m_pApplication, m_ButtonFont, "Restart", buttonTextColor))
 		return false;
 	m_RestartButton.SetPosition({ windowCenter.x, windowCenter.y + 100.0f });
 	m_RestartButton.SetBackgroundColor(buttonBackgroundColor);

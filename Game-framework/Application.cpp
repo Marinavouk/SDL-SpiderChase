@@ -4,6 +4,7 @@
 #include "States/GameState.h"
 #include "States/MainMenuState.h"
 #include "States/QuitState.h"
+#include "EndRoundState.h" // again i cannot do it with States/ until you push it
 
 bool CApplication::Create(void)
 {
@@ -42,7 +43,7 @@ bool CApplication::Create(void)
 	m_pStates[EState::MAIN_MENU]	= new CMainMenuState(this);
 	m_pStates[EState::GAME]			= new CGameState(this);
 	m_pStates[EState::QUIT]			= new CQuitState(this);
-	m_pStates[EState::ENDROUND]			= new CQuitState(this);
+	m_pStates[EState::ENDROUND]		= new CEndRoundState(this);
 
 	// Set the start state for the game, in this case the game will start in the MAIN_MENU state
 	m_pCurrentState = m_pStates[EState::GAME];

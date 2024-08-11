@@ -72,6 +72,8 @@ void CPlayer::Kill(void)
 	m_Velocity = {0.0f, 0.0f};
 
 	m_State = EState::DEAD;
+
+	m_pApplication->SetState(CApplication::EState::ENDROUND);
 }
 
 void CPlayer::Update(const float deltaTime)
