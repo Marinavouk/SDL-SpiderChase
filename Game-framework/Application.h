@@ -49,6 +49,8 @@ public:
 
 	// Place getters and setters in their own public field
 
+	CRandom*				GetRandomNumberGenerator(void) const	{return m_pRandomNumberGenerator;}
+
 	CWindow&				GetWindow(void)	const					{return (CWindow&)m_Window;}
 
 	CTextureHandler&		GetTextureHandler(void) const			{return (CTextureHandler&)m_TextureHandler;}
@@ -58,32 +60,31 @@ public:
 
 	CTransitionRenderer&	GetTransitionRenderer(void) const		{return (CTransitionRenderer&)m_TransitionRenderer;}
 
-	CRandom&				GetRandomNumberGenerator(void) const	{return (CRandom&)m_RandomNumberGenerator;}
 
 	// Call this to shutdown the game
 	void					Quit(void)								{m_Running = false;}
 
 private:
 
-	CState*				m_pStates[NUM_STATES]	= {nullptr};
-	CState*				m_pCurrentState			= nullptr;
-	CState*				m_pNextState			= nullptr;
+	CState*				m_pStates[NUM_STATES]		= {nullptr};
+	CState*				m_pCurrentState				= nullptr;
+	CState*				m_pNextState				= nullptr;
 
-	CWindow				m_Window				= {};
+	CRandom*			m_pRandomNumberGenerator	= nullptr;
 
-	CLibraryHandler		m_LibraryHandler		= {};
-	CTextureHandler		m_TextureHandler		= {};
-	CFontHandler		m_FontHandler			= {};
-	CAudioHandler		m_AudioHandler			= {};
-	CInputHandler		m_InputHandler			= {};
+	CWindow				m_Window					= {};
 
-	CTransitionRenderer	m_TransitionRenderer	= {};
+	CLibraryHandler		m_LibraryHandler			= {};
+	CTextureHandler		m_TextureHandler			= {};
+	CFontHandler		m_FontHandler				= {};
+	CAudioHandler		m_AudioHandler				= {};
+	CInputHandler		m_InputHandler				= {};
 
-	CTimer				m_Timer					= {};
+	CTransitionRenderer	m_TransitionRenderer		= {};
 
-	CRandom				m_RandomNumberGenerator	= {};
+	CTimer				m_Timer						= {};
 
-	bool				m_Running				= true;
-	bool				m_DebugRendering		= false;
+	bool				m_Running					= true;
+	bool				m_DebugRendering			= false;
 
 };

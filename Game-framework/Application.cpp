@@ -9,10 +9,13 @@
 bool CApplication::Create(void)
 {
 	// Creates all the libraries for you, for example SDL, SDL_Image etc
-	if(!m_LibraryHandler.Create())
+	if (!m_LibraryHandler.Create())
 		return false;
 
-	if(!m_Window.Create("Spider Chase", false))
+	m_pRandomNumberGenerator = new CRandom;
+	m_pRandomNumberGenerator->Seed();
+
+	if (!m_Window.Create("Spider Chase", false))
 		return false;
 
 	// If you want to change the title of the window while the game is running
@@ -32,8 +35,6 @@ bool CApplication::Create(void)
 	// The lower the value is set to, the slower the transition effect will be
 	// NOTE. Don't set it to 0.0f or a negative value, the transition will not work
 	m_TransitionRenderer.SetSpeed(2.0f); // Default: 2.0f
-
-	m_RandomNumberGenerator.Seed();
 
 	/**
 	* Create the various states for the application.
@@ -70,6 +71,9 @@ void CApplication::Destroy(void)
 	m_TextureHandler.Destroy();
 	m_Window.Destroy();
 	m_LibraryHandler.Destroy();
+
+	delete m_pRandomNumberGenerator;
+	m_pRandomNumberGenerator = nullptr;
 }
 
 void CApplication::Run(void) 
