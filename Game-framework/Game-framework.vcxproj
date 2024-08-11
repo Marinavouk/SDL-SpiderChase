@@ -12,7 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="EndRoundState.cpp" />
     <ClCompile Include="GameObjects\Button.cpp" />
     <ClCompile Include="GameObjects\Fireball.cpp" />
     <ClCompile Include="GameObjects\Chair.cpp" />
@@ -26,6 +25,7 @@
     <ClCompile Include="Handlers\LibraryHandler.cpp" />
     <ClCompile Include="Handlers\TextureHandler.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="States\EndOfRoundState.cpp" />
     <ClCompile Include="States\GameState.cpp" />
     <ClCompile Include="States\MainMenuState.cpp" />
     <ClCompile Include="States\QuitState.cpp" />
@@ -38,7 +38,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
-    <ClInclude Include="EndRoundState.h" />
     <ClInclude Include="GameObjects\Button.h" />
     <ClInclude Include="GameObjects\Fireball.h" />
     <ClInclude Include="GameObjects\Chair.h" />
@@ -51,6 +50,7 @@
     <ClInclude Include="Handlers\InputHandler.h" />
     <ClInclude Include="Handlers\LibraryHandler.h" />
     <ClInclude Include="Handlers\TextureHandler.h" />
+    <ClInclude Include="States\EndOfRoundState.h" />
     <ClInclude Include="States\GameState.h" />
     <ClInclude Include="States\MainMenuState.h" />
     <ClInclude Include="States\QuitState.h" />

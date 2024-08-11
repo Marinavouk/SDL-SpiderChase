@@ -73,7 +73,7 @@ void CPlayer::Kill(void)
 
 	m_State = EState::DEAD;
 
-	m_pApplication->SetState(CApplication::EState::ENDROUND);
+	m_pApplication->SetState(CApplication::EState::END_OF_ROUND);
 }
 
 void CPlayer::Update(const float deltaTime)

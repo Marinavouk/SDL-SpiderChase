@@ -16,7 +16,7 @@ public:
 	 CMainMenuState(CApplication* application) : CState(application)	{}
 	~CMainMenuState(void)												{}
 
-	virtual bool OnEnter(void) override;//why do we need to override here?
+	virtual bool OnEnter(void) override;
 	virtual void OnExit(void) override;
 	virtual void Update(const float deltaTime) override;
 	virtual void Render(void) override;

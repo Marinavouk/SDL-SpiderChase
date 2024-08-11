@@ -22,7 +22,7 @@ bool CMainMenuState::OnEnter(void)
 	// This is completely optional
 	window.SetClearColor({0, 0, 0, 255});
 
-	// Create objects that should be created/started when this state is entered/started (create textures and buttons, load/start main menu music etc)
+	// Create objects that should be created/started when this state is entered/started (create textures and buttons, load/start main-menu music etc)
 
 	m_pBackground = textureHandler.CreateTexture("menu_background.png");
 	m_pBackground->SetSize(window.GetSize());
@@ -46,9 +46,7 @@ bool CMainMenuState::OnEnter(void)
 	if (!m_TitleTextBlock.Create(m_pApplication, m_TextFont, "Spider Chase", {200, 0, 0, 255}))
 		return false;
 	m_TitleTextBlock.SetPosition({windowCenter.x, 160.0f});
-
-	// Invisible background color (alpha = 0) since the text is the only thing that should be visible when rendering the text block
-	m_TitleTextBlock.SetBackgroundColor({0, 0, 0, 0});
+	m_TitleTextBlock.SetBackgroundColor({0, 0, 0, 0}); // Only the text in the text block should be visible, so the background is set to be invisible (alpha = 0)
 
 	if (!m_PlayButton.Create(m_pApplication, m_ButtonFont, "Play", buttonTextColor))
 		return false;
@@ -94,7 +92,7 @@ void CMainMenuState::OnExit(void)
 	CFontHandler&		fontHandler		= m_pApplication->GetFontHandler();
 	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
 
-	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures and buttons, unload/stop main menu music etc)
+	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures and buttons, unload/stop main-menu music etc)
 
 	audioHandler.StopMusic();
 	audioHandler.DestroyMusic(m_pMusic);
@@ -121,7 +119,7 @@ void CMainMenuState::Update(const float deltaTime)
 	CInputHandler&				inputHandler		= m_pApplication->GetInputHandler();
 	const CTransitionRenderer&	transitionRenderer	= m_pApplication->GetTransitionRenderer();
 
-	// Update all the needed main menu objects here
+	// Update the main-menu objects here
 
 	m_PlayButton.Update(inputHandler);
 	m_QuitButton.Update(inputHandler);
@@ -145,14 +143,14 @@ void CMainMenuState::Update(const float deltaTime)
 
 void CMainMenuState::Render(void)
 {
-	// Render all the main menu objects here
-
 	// It's always good practice to create local variables for data that is used in multiple places in a function
 	// In this case the renderer for example is used in multiple places below
 	// By having a local variable like this, m_pApplication->GetWindow()->GetRenderer() isn't called multiple times
 	// This is an optimization and also reduces repetitive code
 	SDL_Renderer*		renderer		= m_pApplication->GetWindow().GetRenderer();
 	const SDL_FPoint	mousePosition	= m_pApplication->GetInputHandler().GetMousePosition();
+
+	// Render the main-menu objects here
 
 	m_pBackground->Render({0.0f, 0.0f});
 
@@ -162,6 +160,7 @@ void CMainMenuState::Render(void)
 	m_pSpider->Render(m_SpiderPosition);
 
 	m_TitleTextBlock.Render(renderer);
+
 	m_PlayButton.Render(renderer, &mousePosition);
 	m_QuitButton.Render(renderer, &mousePosition);
 }

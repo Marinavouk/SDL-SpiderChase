@@ -47,8 +47,9 @@ bool CGameState::OnEnter(void)
 	audioHandler.SetMusicVolume(0);
 
 	m_pPlayer = new CPlayer(m_pApplication);
-	if (!m_pPlayer->Create("player.png", {150.0f, 260.0f}, 5))
+	if (!m_pPlayer->Create("player.png", {0.0f, 0.0f}, 5))
 		return false;
+	m_pPlayer->SetPosition({250.0f, windowSize.y - m_pPlayer->GetRectangleSize().y});
 	((CPlayer*)m_pPlayer)->SetAttackCallback(std::bind(&CGameState::OnPlayerAttack, this));
 
 	m_pTable = new CTable(m_pApplication);
@@ -143,7 +144,7 @@ void CGameState::Update(const float deltaTime)
 	if (m_pApplication->GetInputHandler().KeyPressed(SDL_SCANCODE_ESCAPE))
 		m_pApplication->SetState(CApplication::EState::QUIT);
 
-	// Update all the needed game objects here
+	// Update the game objects here
 
 	m_pPlayer->HandleInput(deltaTime);
 	m_pPlayer->Update(deltaTime);
@@ -196,7 +197,7 @@ void CGameState::Update(const float deltaTime)
 
 void CGameState::Render(void)
 {
-	// Render all the game objects here
+	// Render the game objects here
 
 	m_pBackground->Render({0.0f, 0.0f});
 
