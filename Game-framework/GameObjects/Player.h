@@ -7,7 +7,7 @@
 #include <functional>
 #include <vector>
 
-typedef std::function<void()> AttackCB;
+typedef std::function<void()> Callback;
 
 class CPlayer final : public CGameObject
 {
@@ -29,7 +29,8 @@ public:
 
 public:
 
-	void			SetAttackCallback(AttackCB attackCallback) {m_pAttackCallback = attackCallback;}
+	void			SetAttackingCallback(Callback attackCallback)	{m_pAttackingCallback = attackCallback;}
+	void			SetDyingCallback(Callback dyingCallback)		{m_pDyingCallback = dyingCallback;}
 
 private:
 
@@ -40,9 +41,7 @@ private:
 	void			CheckWindowEdges(void);
 	void			SyncColliders(void);
 	void			ActivateDamageCooldown(void);
-	void			ActivateIdleAnimation(void);
-	void			ActivateWalkingAnimation(void);
-	void			ActivateRunningAnimation(void);
+	void			ActivateAnimation(CAnimator* animator);
 	void			OnAttackAnimationEnd(void);
 
 private:
@@ -62,7 +61,8 @@ private:
 
 private:
 
-	AttackCB	m_pAttackCallback				= nullptr;
+	Callback	m_pAttackingCallback			= nullptr;
+	Callback	m_pDyingCallback				= nullptr;
 
 	CAnimator*	m_pAnimatorIdle					= nullptr;
 	CAnimator*	m_pAnimatorWalking				= nullptr;

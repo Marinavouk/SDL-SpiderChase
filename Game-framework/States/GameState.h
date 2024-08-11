@@ -24,7 +24,8 @@ public:
 
 private:
 
-	void			OnPlayerAttack(void);
+	void			OnPlayerAttacking(void);
+	void			OnPlayerDying(void);
 
 private:
 
@@ -34,22 +35,28 @@ private:
 
 	// Declare the game objects here and then create/destroy them in the OnEnter- and OnExit functions
 
-	CTexture*		m_pBackground		= nullptr;
-	CTexture*		m_pHeartRed			= nullptr;
-	CTexture*		m_pHeartBlack		= nullptr;
+	CTexture*		m_pBackground			= nullptr;
+	CTexture*		m_pHeartRed				= nullptr;
+	CTexture*		m_pHeartBlack			= nullptr;
 
-	Mix_Music*		m_pMusic			= nullptr;
+	Mix_Music*		m_pMusic				= nullptr;
 
-	CGameObject*	m_pPlayer			= nullptr;
-	CGameObject*	m_pTable			= nullptr;
-	CGameObject*	m_pChair			= nullptr;
-	CGameObject*	m_pSpider			= nullptr;
+	CGameObject*	m_pPlayer				= nullptr;
+	CGameObject*	m_pTable				= nullptr;
+	CGameObject*	m_pChair				= nullptr;
+	CGameObject*	m_pSpider				= nullptr;
 
-	int				m_VolumeLimiter		= 100;
+	int32_t			m_VolumeLimiter			= 100;
 
-	GameObjectList	m_Obstacles			= {};
-	GameObjectList	m_Enemies			= {};
-	GameObjectList	m_FireballPool		= {};
-	GameObjectList	m_ActiveFireballs	= {};
+	// When the player has died, the game waits this long before fading out and changing to the end-of-round state
+	float			m_DeathFadeDelayDefault	= 3.0f;
+	float			m_DeathFadeDelay		= m_DeathFadeDelayDefault;
+
+	bool			m_DeathFadeout			= false;
+
+	GameObjectList	m_Obstacles				= {};
+	GameObjectList	m_Enemies				= {};
+	GameObjectList	m_FireballPool			= {};
+	GameObjectList	m_ActiveFireballs		= {};
 
 };

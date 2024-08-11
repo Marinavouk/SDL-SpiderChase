@@ -50,7 +50,9 @@ bool CGameState::OnEnter(void)
 	if (!m_pPlayer->Create("player.png", {0.0f, 0.0f}, 5))
 		return false;
 	m_pPlayer->SetPosition({250.0f, windowSize.y - m_pPlayer->GetRectangleSize().y});
-	((CPlayer*)m_pPlayer)->SetAttackCallback(std::bind(&CGameState::OnPlayerAttack, this));
+	CPlayer* player = (CPlayer*)m_pPlayer;
+	player->SetAttackingCallback(	std::bind(&CGameState::OnPlayerAttacking,	this));
+	player->SetDyingCallback(		std::bind(&CGameState::OnPlayerDying,		this));
 
 	m_pTable = new CTable(m_pApplication);
 	if (!m_pTable->Create("table.png", {0.0f, 0.0f}, 0 ))
@@ -188,6 +190,20 @@ void CGameState::Update(const float deltaTime)
 			break;
 	}
 
+	if (m_DeathFadeout)
+	{
+		m_DeathFadeDelay -= deltaTime;
+
+		if (m_DeathFadeDelay <= 0.0f)
+		{
+			m_DeathFadeDelay = 0.0f;
+
+			m_DeathFadeout = false;
+
+			m_pApplication->SetState(CApplication::EState::END_OF_ROUND);
+		}
+	}
+
 	const CTransitionRenderer& transitionRenderer = m_pApplication->GetTransitionRenderer();
 
 	// Will fade the game music in/out whenever the game switch to/from this state
@@ -243,9 +259,9 @@ void CGameState::RenderDebug(void)
 	}
 }
 
-void CGameState::OnPlayerAttack(void)
+void CGameState::OnPlayerAttacking(void)
 {
-	// This OnPlayerAttack function is called whenever the player is playing its attack animation
+	// This OnPlayerAttacking function is called whenever the player is playing its attack animation
 
 	// Loop through the fireball pool and try to retrieve an unused fireball that can be spawned on the screen
 	for (CGameObject* gameObject : m_FireballPool)
@@ -272,4 +288,12 @@ void CGameState::OnPlayerAttack(void)
 			break;
 		}
 	}
+}
+
+void CGameState::OnPlayerDying(void)
+{
+	// This OnPlayerDying function is called whenever the player is playing its dying animation
+
+	m_DeathFadeDelay	= m_DeathFadeDelayDefault;
+	m_DeathFadeout		= true;
 }

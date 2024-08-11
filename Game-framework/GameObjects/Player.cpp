@@ -45,6 +45,9 @@ bool CPlayer::Create(const std::string& textureFileName, const SDL_FPoint& posit
 
 void CPlayer::Destroy(void)
 {
+	m_pDyingCallback		= nullptr;
+	m_pAttackingCallback	= nullptr;
+
 	delete m_pAnimatorDying;
 	delete m_pAnimatorAttacking;
 	delete m_pAnimatorJumping;
@@ -73,7 +76,8 @@ void CPlayer::Kill(void)
 
 	m_State = EState::DEAD;
 
-	m_pApplication->SetState(CApplication::EState::END_OF_ROUND);
+	if (m_pDyingCallback)
+		m_pDyingCallback();
 }
 
 void CPlayer::Update(const float deltaTime)
@@ -100,17 +104,17 @@ void CPlayer::Update(const float deltaTime)
 			if (m_IsJumping && !m_IsAttacking)
 			{
 				if ((m_pCurrentAnimator != m_pAnimatorIdle) && (m_HorizontalDirection == EMovementState::IDLE) && (m_VerticalDirection == EMovementState::IDLE))
-					ActivateIdleAnimation();
+					ActivateAnimation(m_pAnimatorIdle);
 
 				else
 				{
 					if (m_HorizontalDirection != EMovementState::IDLE)
 					{
 						if (m_IsRunning)
-							ActivateRunningAnimation();
+							ActivateAnimation(m_pAnimatorRunning);
 
 						else
-							ActivateWalkingAnimation();
+							ActivateAnimation(m_pAnimatorWalking);
 					}
 				}
 			}
@@ -232,10 +236,10 @@ void CPlayer::HandleInput(const float deltaTime)
 		if (!m_IsJumping && !m_IsAttacking)
 		{
 			if (m_IsRunning)
-				ActivateRunningAnimation();
+				ActivateAnimation(m_pAnimatorRunning);
 
 			else
-				ActivateWalkingAnimation();
+				ActivateAnimation(m_pAnimatorWalking);
 		}
 	}
 
@@ -253,10 +257,10 @@ void CPlayer::HandleInput(const float deltaTime)
 		if (!m_IsJumping && !m_IsAttacking)
 		{
 			if (m_IsRunning)
-				ActivateRunningAnimation();
+				ActivateAnimation(m_pAnimatorRunning);
 
 			else
-				ActivateWalkingAnimation();
+				ActivateAnimation(m_pAnimatorWalking);
 		}
 	}
 
@@ -277,7 +281,7 @@ void CPlayer::HandleInput(const float deltaTime)
 		m_HorizontalDirection = EMovementState::IDLE;
 
 		if((m_VerticalDirection == EMovementState::IDLE) && !m_IsJumping && !m_IsAttacking)
-			ActivateIdleAnimation();
+			ActivateAnimation(m_pAnimatorIdle);
 	}
 
 	else if (inputHandler.KeyReleased(SDL_SCANCODE_RIGHT) && (m_HorizontalDirection == EMovementState::MOVING_RIGHT))
@@ -285,11 +289,11 @@ void CPlayer::HandleInput(const float deltaTime)
 		m_HorizontalDirection = EMovementState::IDLE;
 
 		if((m_VerticalDirection == EMovementState::IDLE) && !m_IsJumping && !m_IsAttacking)
-			ActivateIdleAnimation();
+			ActivateAnimation(m_pAnimatorIdle);
 	}
 
 	if ((m_HorizontalDirection == EMovementState::IDLE) && (m_VerticalDirection == EMovementState::IDLE) && !m_IsJumping && !m_IsAttacking)
-		ActivateIdleAnimation();
+		ActivateAnimation(m_pAnimatorIdle);
 }
 
 void CPlayer::HandleObstacleCollision(const GameObjectList& obstacles, const float deltaTime)
@@ -617,29 +621,11 @@ void CPlayer::ActivateDamageCooldown(void)
 	m_Show					= true;
 }
 
-void CPlayer::ActivateIdleAnimation(void)
+void CPlayer::ActivateAnimation(CAnimator* animator)
 {
-	if (m_pCurrentAnimator != m_pAnimatorIdle)
+	if (m_pCurrentAnimator != animator)
 	{
-		m_pCurrentAnimator = m_pAnimatorIdle;
-		m_pCurrentAnimator->Reset();
-	}
-}
-
-void CPlayer::ActivateWalkingAnimation(void)
-{
-	if (m_pCurrentAnimator != m_pAnimatorWalking)
-	{
-		m_pCurrentAnimator = m_pAnimatorWalking;
-		m_pCurrentAnimator->Reset();
-	}
-}
-
-void CPlayer::ActivateRunningAnimation(void)
-{
-	if (m_pCurrentAnimator != m_pAnimatorRunning)
-	{
-		m_pCurrentAnimator = m_pAnimatorRunning;
+		m_pCurrentAnimator = animator;
 		m_pCurrentAnimator->Reset();
 	}
 }
@@ -648,8 +634,8 @@ void CPlayer::OnAttackAnimationEnd(void)
 {
 	// This OnAttackAnimationEnd function is called from the m_pAnimatorAttacking animator whenever the animator is at the last frame in the attack animation
 
-	if (m_pAttackCallback)
-		m_pAttackCallback();
+	if (m_pAttackingCallback)
+		m_pAttackingCallback();
 
 	if (m_IsJumping)
 		m_pCurrentAnimator = m_pAnimatorJumping;

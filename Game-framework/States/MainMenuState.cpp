@@ -75,7 +75,7 @@ bool CMainMenuState::OnEnter(void)
 	if (!m_pMusic)
 		return false;
 
-	audioHandler.PlayMusic(m_pMusic, -1);
+//	audioHandler.PlayMusic(m_pMusic, -1);
 	audioHandler.SetMusicVolume(0);
 
 	return true;
