@@ -20,6 +20,7 @@ bool CGameState::OnEnter(void)
 
 	// Easy access to handlers so you don't have to write m_pApplication->Get_X_Handler() multiple times below
 	CTextureHandler&	textureHandler	= m_pApplication->GetTextureHandler();
+	CFontHandler&		fontHandler		= m_pApplication->GetFontHandler();
 	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
 	CWindow&			window			= m_pApplication->GetWindow();
 	const SDL_FPoint	windowSize		= window.GetSize();
@@ -38,6 +39,8 @@ bool CGameState::OnEnter(void)
 
 	m_pHeartBlack = textureHandler.CreateTexture("black_heart.png");
 	m_pHeartBlack->SetSize({40.0f, 40.0f});
+
+	m_TextFont = fontHandler.CreateFont("Assets/Fonts/SpiderDemo-51LlB.ttf", 120); if (!m_TextFont) return false;
 
 	m_pMusic = audioHandler.CreateMusic("Assets/Audio/game.mp3");
 	if (!m_pMusic)
@@ -97,6 +100,7 @@ void CGameState::OnExit(void)
 	// Easy access to handlers so you don't have to write m_pApplication->Get_X_Handler() multiple times below
 	CTextureHandler&	textureHandler	= m_pApplication->GetTextureHandler();
 	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
+	CFontHandler&		fontHandler		= m_pApplication->GetFontHandler();
 
 	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures, unload/stop game music etc)
 
@@ -132,9 +136,11 @@ void CGameState::OnExit(void)
 	audioHandler.DestroyMusic(m_pMusic);
 	m_pMusic = nullptr;
 
+	fontHandler.DestroyFont(m_TextFont);
 	textureHandler.DestroyTexture(m_pHeartBlack->GetName());
 	textureHandler.DestroyTexture(m_pHeartRed->GetName());
 	textureHandler.DestroyTexture(m_pBackground->GetName());
+	m_TextFont		 = nullptr;
 	m_pHeartBlack	= nullptr;
 	m_pHeartRed		= nullptr;
 	m_pBackground	= nullptr;
@@ -250,8 +256,6 @@ void CGameState::Render(void)
 		fireball->Render();
 	}
 
-
-	m_TextFont = fontHandler.CreateFont("Assets/Fonts/SpiderDemo-51LlB.ttf", 120); if (!m_TextFont)	;
 	fontHandler.RenderText(renderer, m_TextFont, "  :  ", { 500.0f, -30.0f }, { 200, 0, 0, 255 });
 }
 
