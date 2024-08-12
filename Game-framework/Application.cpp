@@ -24,7 +24,7 @@ bool CApplication::Create(void)
 
 	// If you want to set the color that the renderer's (the big 'screen texture') is "cleared" to,
 	// you can use this function
-//	m_Window.SetClearColor({ 255, 0, 0, 255 });
+//	m_Window.SetClearColor({255, 0, 0, 255});
 
 //	m_TextureHandler = CTextureHandler(m_Window.GetRenderer(), "Assets/Textures");
 	if (!m_TextureHandler.Create(m_Window.GetRenderer(), "Assets/Textures"))

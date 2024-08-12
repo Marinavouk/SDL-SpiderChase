@@ -42,7 +42,7 @@ bool CMainMenuState::OnEnter(void)
 	const SDL_Color buttonTextColorPressed			= {255,	0,		0,		255}; // Red		<-- Text color when the button is held
 
 	// Buttons can be used as text blocks too, without mouse interaction
-	if (!m_TitleTextBlock.Create(m_pApplication, m_TextFont, "Spider Chase", {200, 0, 0, 255}))
+	if (!m_TitleTextBlock.Create(m_pApplication, m_TextFont, "Spider Chase", titleTextColor))
 		return false;
 	m_TitleTextBlock.SetPosition({windowCenter.x, 160.0f});
 	m_TitleTextBlock.SetBackgroundColor({0, 0, 0, 0}); // Only the text in the text block should be visible, so the background is set to be invisible (alpha = 0)

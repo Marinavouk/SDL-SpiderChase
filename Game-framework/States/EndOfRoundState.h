@@ -1,9 +1,9 @@
 #pragma once
 
+#include "GameObjects/Button.h"
+#include "Handlers/TextureHandler.h"
 #include "States/State.h"
 #include "Utilities/Texture.h"
-#include "Handlers/TextureHandler.h"
-#include "GameObjects/Button.h"
 
 class CEndOfRoundState final : public CState
 {
@@ -28,9 +28,11 @@ private:
 	Mix_Music*	m_pMusic			= nullptr;
 
 	CButton		m_TitleTextBlock	= {};
+	CButton		m_ScoreTextBlock	= {};
 	CButton		m_RestartButton		= {};
 	CButton		m_MainMenuButton	= {};
 	CButton		m_QuitButton		= {};
-	CButton		m_Score				= {};
+
+	bool		m_TimeUp			= false;
 
 };

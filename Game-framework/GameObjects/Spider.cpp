@@ -71,7 +71,7 @@ void CSpider::Kill(void)
 	m_pCurrentAnimator = m_pAnimatorDying;
 	m_pCurrentAnimator->Reset();
 
-	m_Velocity = { 0.0f, 0.0f };
+	m_Velocity = {0.0f, 0.0f};
 
 	m_State = EState::DEAD;
 }
