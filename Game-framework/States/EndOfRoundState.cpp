@@ -20,7 +20,7 @@ bool CEndOfRoundState::OnEnter(void)
 	m_pBackground->SetSize(window.GetSize());
 	m_pBackground->SetAlphaMod(100);
 
-	m_TextFont		= fontHandler.CreateFont("Assets/Fonts/SpiderDemo-51LlB.ttf",	200); if (!m_TextFont)		return false;
+	m_TextFont		= fontHandler.CreateFont("Assets/Fonts/SpiderDemo-51LlB.ttf",	140); if (!m_TextFont)		return false;
 	m_ButtonFont	= fontHandler.CreateFont("Assets/Fonts/SpookyWebbie-lgvxX.ttf",	 60); if (!m_ButtonFont)	return false;
 
 	const SDL_Color endGameTextColor				= {200, 0,		0,		255}; // Dark red
@@ -34,6 +34,11 @@ bool CEndOfRoundState::OnEnter(void)
 		return false;
 	m_TitleTextBlock.SetPosition({windowCenter.x, 160.0f});
 	m_TitleTextBlock.SetBackgroundColor({0, 0, 0, 0});
+
+	if (!m_Score.Create(m_pApplication, m_TextFont, "Score: ", { 200, 0, 0, 255 }))
+		return false;
+	m_Score.SetPosition({ windowCenter.x - 380.0f, windowCenter.y});
+	m_Score.SetBackgroundColor({ 0, 0, 0, 0 });
 
 	if (!m_RestartButton.Create(m_pApplication, m_ButtonFont, "Restart", buttonTextColor))
 		return false;
@@ -84,6 +89,7 @@ void CEndOfRoundState::OnExit(void)
 	m_QuitButton.Destroy(m_pApplication);
 	m_MainMenuButton.Destroy(m_pApplication);
 	m_RestartButton.Destroy(m_pApplication);
+	m_Score.Destroy(m_pApplication);
 	m_TitleTextBlock.Destroy(m_pApplication);
 
 	fontHandler.DestroyFont(m_ButtonFont);
@@ -124,6 +130,7 @@ void CEndOfRoundState::Render(void)
 	m_pBackground->Render({0.0f, 0.0f});
 
 	m_TitleTextBlock.Render(renderer);
+	m_Score.Render(renderer);
 
 	m_RestartButton.Render(renderer, &mousePosition);
 	m_MainMenuButton.Render(renderer, &mousePosition);

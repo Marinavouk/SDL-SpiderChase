@@ -31,5 +31,6 @@ private:
 	CButton		m_RestartButton		= {};
 	CButton		m_MainMenuButton	= {};
 	CButton		m_QuitButton		= {};
+	CButton		m_Score				= {};
 
 };
