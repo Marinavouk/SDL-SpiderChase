@@ -47,6 +47,8 @@ private:
 
 	int32_t			m_VolumeLimiter			= 100;
 
+	uint32_t		m_SpiderCount			= 0;
+
 	float			m_Timer					= 60.0f;
 
 	// When the player has died, the game waits this long before fading out and changing to the end-of-round state

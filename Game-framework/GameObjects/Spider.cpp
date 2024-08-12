@@ -73,9 +73,9 @@ void CSpider::Kill(void)
 
 	m_Velocity = {0.0f, 0.0f};
 
-	m_SpiderCount += 1;
-
 	m_State = EState::DEAD;
+
+	m_IsActive = false;
 }
 
 void CSpider::Update(const float deltaTime)
@@ -194,6 +194,25 @@ void CSpider::HandleObstacleCollision(const GameObjectList& obstacles, const flo
 			break;
 		}
 	}
+}
+
+void CSpider::Activate(const SDL_FPoint& spawnPosition, const SDL_RendererFlip flipMethod)
+{
+	m_Rectangle.x = spawnPosition.x;
+	m_Rectangle.y = spawnPosition.y;
+
+	m_Collider.x = m_Rectangle.x;
+	m_Collider.y = m_Rectangle.y;
+
+	m_StartPosition = spawnPosition;
+
+	m_FlipMethod = flipMethod;
+
+	m_Angle = 0.0f;
+	m_LifeTime = 0.0f;
+
+	m_IsDead = false;
+	m_IsActive = true;
 }
 
 bool CSpider::ResolveObstacleYCollision(const SDL_FRect& collider)

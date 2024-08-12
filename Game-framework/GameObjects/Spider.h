@@ -21,7 +21,7 @@ public:
 
 public:
 
-	void			Activate(const SDL_FPoint& spawnPosition);
+	void			Activate(const SDL_FPoint& spawnPosition, const SDL_RendererFlip flipMethod);
 
 public:
 
@@ -29,8 +29,6 @@ public:
 	void			SetIsActive(const bool isActive) { m_IsActive = isActive; }
 
 	void			SetTarget(CGameObject* target) {m_pTarget = target;}
-
-	int             m_SpiderCount = 0;
 
 private:
 

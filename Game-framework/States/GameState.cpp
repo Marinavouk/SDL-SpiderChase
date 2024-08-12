@@ -187,6 +187,8 @@ void CGameState::Update(const float deltaTime)
 				m_pSpider->Kill();
 				fireball->Kill();
 
+				m_SpiderCount++;
+
 				m_ActiveFireballs.erase(m_ActiveFireballs.begin() + i);
 
 				spiderCollision = true;
