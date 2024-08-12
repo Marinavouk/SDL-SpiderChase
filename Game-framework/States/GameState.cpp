@@ -40,7 +40,9 @@ bool CGameState::OnEnter(void)
 	m_pHeartBlack = textureHandler.CreateTexture("black_heart.png");
 	m_pHeartBlack->SetSize({40.0f, 40.0f});
 
-	m_TextFont = fontHandler.CreateFont("Assets/Fonts/SpiderDemo-51LlB.ttf", 120); if (!m_TextFont) return false;
+	m_pFont = fontHandler.CreateFont("Assets/Fonts/SpookyWebbie-lgvxX.ttf", 60);
+	if (!m_pFont)
+		return false;
 
 	m_pMusic = audioHandler.CreateMusic("Assets/Audio/game.mp3");
 	if (!m_pMusic)
@@ -136,11 +138,12 @@ void CGameState::OnExit(void)
 	audioHandler.DestroyMusic(m_pMusic);
 	m_pMusic = nullptr;
 
-	fontHandler.DestroyFont(m_TextFont);
+	fontHandler.DestroyFont(m_pFont);
+	m_pFont = nullptr;
+
 	textureHandler.DestroyTexture(m_pHeartBlack->GetName());
 	textureHandler.DestroyTexture(m_pHeartRed->GetName());
 	textureHandler.DestroyTexture(m_pBackground->GetName());
-	m_TextFont		 = nullptr;
 	m_pHeartBlack	= nullptr;
 	m_pHeartRed		= nullptr;
 	m_pBackground	= nullptr;
@@ -256,7 +259,7 @@ void CGameState::Render(void)
 		fireball->Render();
 	}
 
-	fontHandler.RenderText(renderer, m_TextFont, "  :  ", { 500.0f, -30.0f }, { 200, 0, 0, 255 });
+	fontHandler.RenderText(renderer, m_pFont, "Time: " + std::to_string((uint32_t)m_Timer), {10.0f, 50.0f}, {200, 0, 0, 255});
 }
 
 void CGameState::RenderDebug(void)

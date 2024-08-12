@@ -36,7 +36,7 @@ private:
 	CTexture*		m_pHeartRed				= nullptr;
 	CTexture*		m_pHeartBlack			= nullptr;
 
-	TTF_Font*		m_TextFont				= nullptr;
+	TTF_Font*		m_pFont					= nullptr;
 
 	Mix_Music*		m_pMusic				= nullptr;
 
@@ -46,6 +46,8 @@ private:
 	CGameObject*	m_pSpider				= nullptr;
 
 	int32_t			m_VolumeLimiter			= 100;
+
+	float			m_Timer					= 60.0f;
 
 	// When the player has died, the game waits this long before fading out and changing to the end-of-round state
 	float			m_DeathFadeDelayDefault	= 3.0f;
