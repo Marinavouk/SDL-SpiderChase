@@ -73,6 +73,8 @@ void CSpider::Kill(void)
 
 	m_Velocity = {0.0f, 0.0f};
 
+	m_SpiderCount += 1;
+
 	m_State = EState::DEAD;
 }
 

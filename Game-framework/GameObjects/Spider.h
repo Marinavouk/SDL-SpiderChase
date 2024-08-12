@@ -21,7 +21,16 @@ public:
 
 public:
 
+	void			Activate(const SDL_FPoint& spawnPosition);
+
+public:
+
+	bool			GetIsActive(void) const { return m_IsActive; }
+	void			SetIsActive(const bool isActive) { m_IsActive = isActive; }
+
 	void			SetTarget(CGameObject* target) {m_pTarget = target;}
+
+	int             m_SpiderCount = 0;
 
 private:
 
@@ -56,6 +65,8 @@ private:
 	float				m_Angle					= 0.0f;
 	float				m_ThreadMoveVelocity	= 100.0f;
 	float				m_MaxFallVelocity		= 500.0f;
+
+	bool				m_IsActive				= false;
 
 	SDL_FPoint			m_StartPosition			= {0.0f, 0.0f};
 	SDL_FPoint			m_Velocity				= {130.0f, 0.0f};

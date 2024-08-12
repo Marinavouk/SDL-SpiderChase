@@ -4,6 +4,7 @@
 #include "Handlers/TextureHandler.h"
 #include "States/State.h"
 #include "Utilities/Texture.h"
+#include "GameObjects/Spider.h"
 
 class CEndOfRoundState final : public CState
 {
