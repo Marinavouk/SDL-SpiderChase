@@ -12,6 +12,7 @@
 #include "Utilities/CollisionUtilities.h"
 #include "Utilities/Random.h"
 
+
 bool CGameState::OnEnter(void)
 {
 #if defined(_DEBUG) 
@@ -215,6 +216,13 @@ void CGameState::Update(const float deltaTime)
 		}
 	}
 
+	m_Timer -= deltaTime;
+
+	if(m_Timer <= 0.0f)
+	{
+		m_pApplication->SetState(CApplication::EState::END_OF_ROUND);
+	}
+
 	const CTransitionRenderer& transitionRenderer = m_pApplication->GetTransitionRenderer();
 
 	// Will fade the game music in/out whenever the game switch to/from this state
@@ -260,7 +268,7 @@ void CGameState::Render(void)
 	{
 		fireball->Render();
 	}
-
+	
 	fontHandler.RenderText(renderer, m_pFont, "Time: " + std::to_string((uint32_t)m_Timer), {10.0f, 50.0f}, {200, 0, 0, 255});
 }
 
