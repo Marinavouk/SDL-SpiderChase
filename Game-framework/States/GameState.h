@@ -45,8 +45,7 @@ private:
 	CGameObject*	m_pChair				= nullptr;
 	CGameObject*	m_pSpider				= nullptr;
 
-	int32_t			m_VolumeLimiter			= 100;
-
+	uint32_t		m_VolumeLimiter			= 100;
 	uint32_t		m_SpiderCount			= 0;
 
 	float			m_Timer					= 60.0f;
