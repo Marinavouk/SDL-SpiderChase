@@ -36,6 +36,8 @@ private:
 	CTexture*		m_pHeartRed				= nullptr;
 	CTexture*		m_pHeartBlack			= nullptr;
 
+	TTF_Font*		m_TextFont				= nullptr;
+
 	Mix_Music*		m_pMusic				= nullptr;
 
 	CGameObject*	m_pPlayer				= nullptr;
