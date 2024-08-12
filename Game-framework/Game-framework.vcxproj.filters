@@ -105,7 +105,9 @@
     <ClCompile Include="States\EndOfRoundState.cpp">
       <Filter>Source Files\States</Filter>
     </ClCompile>
-    <ClCompile Include="Pch.cpp" />
+    <ClCompile Include="Pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -186,6 +188,8 @@
     <ClInclude Include="States\EndOfRoundState.h">
       <Filter>Header Files\States</Filter>
     </ClInclude>
-    <ClInclude Include="Pch.h" />
+    <ClInclude Include="Pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

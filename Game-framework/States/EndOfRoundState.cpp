@@ -23,22 +23,22 @@ bool CEndOfRoundState::OnEnter(void)
 	m_TextFont		= fontHandler.CreateFont("Assets/Fonts/SpiderDemo-51LlB.ttf",	140); if (!m_TextFont)		return false;
 	m_ButtonFont	= fontHandler.CreateFont("Assets/Fonts/SpookyWebbie-lgvxX.ttf",	 60); if (!m_ButtonFont)	return false;
 
-	const SDL_Color endGameTextColor				= {200, 0,		0,		255}; // Dark red
+	const SDL_Color titleTextColor					= {200, 0,		0,		255}; // Dark red
 	const SDL_Color buttonBackgroundColor			= {100, 100,	100,	150}; // Light gray	<-- Background color when the button is not held
 	const SDL_Color buttonBackgroundPressedColor	= {100, 100,	100,	200}; // Dark gray	<-- Background color when the button is held
 	const SDL_Color buttonTextColor					= {255, 255,	255,	255}; // White		<-- Text color when the mouse pointer is outside the button
 	const SDL_Color buttonTextColorHovered			= {255, 0,		0,		255}; // Red		<-- Text color when the mouse pointer is inside (hovering) the button
 	const SDL_Color buttonTextColorPressed			= {255, 0,		0,		255}; // Red		<-- Text color when the button is held
 
-	if (!m_TitleTextBlock.Create(m_pApplication, m_TextFont, "You have been eaten!", {200, 0, 0, 255}))
+	if (!m_TitleTextBlock.Create(m_pApplication, m_TextFont, (m_TimeUp ? "Time's up!" : "You have been eaten!"), titleTextColor))
 		return false;
 	m_TitleTextBlock.SetPosition({windowCenter.x, 160.0f});
 	m_TitleTextBlock.SetBackgroundColor({0, 0, 0, 0});
 
-	if (!m_Score.Create(m_pApplication, m_TextFont, "Score: ", { 200, 0, 0, 255 }))
+	if (!m_ScoreTextBlock.Create(m_pApplication, m_TextFont, "Score: ", titleTextColor))
 		return false;
-	m_Score.SetPosition({ windowCenter.x - 380.0f, windowCenter.y});
-	m_Score.SetBackgroundColor({ 0, 0, 0, 0 });
+	m_ScoreTextBlock.SetPosition({windowCenter.x - 380.0f, windowCenter.y});
+	m_ScoreTextBlock.SetBackgroundColor({0, 0, 0, 0});
 
 	if (!m_RestartButton.Create(m_pApplication, m_ButtonFont, "Restart", buttonTextColor))
 		return false;
@@ -89,13 +89,13 @@ void CEndOfRoundState::OnExit(void)
 	m_QuitButton.Destroy(m_pApplication);
 	m_MainMenuButton.Destroy(m_pApplication);
 	m_RestartButton.Destroy(m_pApplication);
-	m_Score.Destroy(m_pApplication);
+	m_ScoreTextBlock.Destroy(m_pApplication);
 	m_TitleTextBlock.Destroy(m_pApplication);
 
 	fontHandler.DestroyFont(m_ButtonFont);
 	fontHandler.DestroyFont(m_TextFont);
-	m_ButtonFont = nullptr;
-	m_TextFont = nullptr;
+	m_ButtonFont	= nullptr;
+	m_TextFont		= nullptr;
 
 	textureHandler.DestroyTexture(m_pBackground->GetName());
 	m_pBackground = nullptr;
@@ -130,7 +130,7 @@ void CEndOfRoundState::Render(void)
 	m_pBackground->Render({0.0f, 0.0f});
 
 	m_TitleTextBlock.Render(renderer);
-	m_Score.Render(renderer);
+	m_ScoreTextBlock.Render(renderer);
 
 	m_RestartButton.Render(renderer, &mousePosition);
 	m_MainMenuButton.Render(renderer, &mousePosition);
