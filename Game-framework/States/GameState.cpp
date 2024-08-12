@@ -8,6 +8,7 @@
 #include "GameObjects/Spider.h"
 #include "GameObjects/Table.h"
 #include "Handlers/AudioHandler.h"
+#include "Handlers/FontHandler.h"
 #include "Utilities/CollisionUtilities.h"
 #include "Utilities/Random.h"
 
@@ -212,26 +213,31 @@ void CGameState::Update(const float deltaTime)
 
 void CGameState::Render(void)
 {
+	CFontHandler& fontHandler = m_pApplication->GetFontHandler();
+	SDL_Renderer* renderer	  = m_pApplication->GetWindow().GetRenderer();
+	CWindow& window = m_pApplication->GetWindow();
+	const SDL_FPoint	windowSize = window.GetSize();
+
 	// Render the game objects here
 
-	m_pBackground->Render({0.0f, 0.0f});
+	m_pBackground->Render({ 0.0f, 0.0f });
 
-	const SDL_FPoint	heartRedSize			= m_pHeartRed->GetSize();
-	const SDL_FPoint	heartBlackSize			= m_pHeartBlack->GetSize();
-	const SDL_FPoint	heartStartOffset		= {5.0f, 5.0f};
-	const float			distanceBetweenHearts	= 5.0f;
-	const uint32_t		playerMaxHealth			= m_pPlayer->GetMaxHealth();
-	const uint32_t		playerHealth			= m_pPlayer->GetCurrentHealth();
+	const SDL_FPoint	heartRedSize = m_pHeartRed->GetSize();
+	const SDL_FPoint	heartBlackSize = m_pHeartBlack->GetSize();
+	const SDL_FPoint	heartStartOffset = { 5.0f, 5.0f };
+	const float			distanceBetweenHearts = 5.0f;
+	const uint32_t		playerMaxHealth = m_pPlayer->GetMaxHealth();
+	const uint32_t		playerHealth = m_pPlayer->GetCurrentHealth();
 
 	for (uint32_t i = 0; i < playerMaxHealth; i++)
 	{
-		if (i < playerHealth) 
-			m_pHeartRed->Render({heartStartOffset.x + ((heartRedSize.x + distanceBetweenHearts) * i), heartStartOffset.y});
+		if (i < playerHealth)
+			m_pHeartRed->Render({ heartStartOffset.x + ((heartRedSize.x + distanceBetweenHearts) * i), heartStartOffset.y });
 
 		else
-			m_pHeartBlack->Render({heartStartOffset.x + ((heartBlackSize.x + distanceBetweenHearts) * i), heartStartOffset.y});
+			m_pHeartBlack->Render({ heartStartOffset.x + ((heartBlackSize.x + distanceBetweenHearts) * i), heartStartOffset.y });
 	}
-	
+
 	m_pChair->Render();
 	m_pTable->Render();
 
@@ -243,6 +249,10 @@ void CGameState::Render(void)
 	{
 		fireball->Render();
 	}
+
+
+	m_TextFont = fontHandler.CreateFont("Assets/Fonts/SpiderDemo-51LlB.ttf", 120); if (!m_TextFont)	;
+	fontHandler.RenderText(renderer, m_TextFont, "  :  ", { 500.0f, -30.0f }, { 200, 0, 0, 255 });
 }
 
 void CGameState::RenderDebug(void)
