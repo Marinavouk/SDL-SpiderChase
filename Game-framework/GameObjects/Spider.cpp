@@ -196,7 +196,7 @@ void CSpider::HandleObstacleCollision(const GameObjectList& obstacles, const flo
 	}
 }
 
-void CSpider::Activate(const SDL_FPoint& spawnPosition, const SDL_RendererFlip flipMethod)
+void CSpider::Activate(const SDL_FPoint& spawnPosition)
 {
 	m_Rectangle.x = spawnPosition.x;
 	m_Rectangle.y = spawnPosition.y;
@@ -206,13 +206,11 @@ void CSpider::Activate(const SDL_FPoint& spawnPosition, const SDL_RendererFlip f
 
 	m_StartPosition = spawnPosition;
 
-	m_FlipMethod = flipMethod;
+	m_Angle		= 0.0f;
+	m_LifeTime	= 0.0f;
 
-	m_Angle = 0.0f;
-	m_LifeTime = 0.0f;
-
-	m_IsDead = false;
-	m_IsActive = true;
+	m_IsDead	= false;
+	m_IsActive	= true;
 }
 
 bool CSpider::ResolveObstacleYCollision(const SDL_FRect& collider)

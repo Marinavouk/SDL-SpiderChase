@@ -91,6 +91,10 @@ bool CGameState::OnEnter(void)
 		m_FireballPool.push_back(fireball);
 	}
 
+	m_SpiderCount = 0;
+
+	m_Timer = m_TimerDefault;
+
 	return true;
 }
 
@@ -220,6 +224,8 @@ void CGameState::Update(const float deltaTime)
 
 	if(m_Timer <= 0.0f)
 	{
+		m_Timer = 0.0f;
+
 		m_pApplication->SetState(CApplication::EState::END_OF_ROUND);
 	}
 
@@ -239,7 +245,7 @@ void CGameState::Render(void)
 
 	// Render the game objects here
 
-	m_pBackground->Render({ 0.0f, 0.0f });
+	m_pBackground->Render({0.0f, 0.0f});
 
 	const SDL_FPoint	heartRedSize			= m_pHeartRed->GetSize();
 	const SDL_FPoint	heartBlackSize			= m_pHeartBlack->GetSize();
@@ -259,9 +265,7 @@ void CGameState::Render(void)
 
 	m_pChair->Render();
 	m_pTable->Render();
-
 	m_pSpider->Render();
-
 	m_pPlayer->Render();
 
 	for (CGameObject* fireball : m_ActiveFireballs)
@@ -285,10 +289,9 @@ void CGameState::RenderDebug(void)
 	}
 }
 
+// This function is called whenever the player is playing its attack animation
 void CGameState::OnPlayerAttacking(void)
 {
-	// This OnPlayerAttacking function is called whenever the player is playing its attack animation
-
 	// Loop through the fireball pool and try to retrieve an unused fireball that can be spawned on the screen
 	for (CGameObject* gameObject : m_FireballPool)
 	{
@@ -316,10 +319,9 @@ void CGameState::OnPlayerAttacking(void)
 	}
 }
 
+// This function is called whenever the player is playing its dying animation
 void CGameState::OnPlayerDying(void)
 {
-	// This OnPlayerDying function is called whenever the player is playing its dying animation
-
 	m_DeathFadeDelay	= m_DeathFadeDelayDefault;
 	m_DeathFadeout		= true;
 }

@@ -21,14 +21,14 @@ public:
 
 public:
 
-	void			Activate(const SDL_FPoint& spawnPosition, const SDL_RendererFlip flipMethod);
+	void			Activate(const SDL_FPoint& spawnPosition);
 
 public:
 
-	bool			GetIsActive(void) const { return m_IsActive; }
-	void			SetIsActive(const bool isActive) { m_IsActive = isActive; }
+	bool			GetIsActive(void) const				{return m_IsActive;}
+	void			SetIsActive(const bool isActive)	{m_IsActive = isActive;}
 
-	void			SetTarget(CGameObject* target) {m_pTarget = target;}
+	void			SetTarget(CGameObject* target)		{m_pTarget = target;}
 
 private:
 
