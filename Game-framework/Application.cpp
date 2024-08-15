@@ -16,21 +16,22 @@ bool CApplication::Create(void)
 	m_pRandomNumberGenerator = new CRandom;
 	m_pRandomNumberGenerator->Seed();
 
-	if (!m_Window.Create("Spider Chase", false))
+	if (!m_Window.Create("Spider Chase", false, false))
 		return false;
 
 	// If you want to change the title of the window while the game is running
 //	m_Window.SetTitle("This is the window's new title");
 
-	// If you want to set the color that the renderer's (the big 'screen texture') is "cleared" to,
-	// you can use this function
+	// If you want to set the color that the renderer's (the big 'screen texture') is "cleared" to, you can use this function
 //	m_Window.SetClearColor({255, 0, 0, 255});
 
 //	m_TextureHandler = CTextureHandler(m_Window.GetRenderer(), "Assets/Textures");
 	if (!m_TextureHandler.Create(m_Window.GetRenderer(), "Assets/Textures"))
 		return false;
 
-	m_TransitionRenderer = CTransitionRenderer(this, m_Window.GetSize());
+	m_pRenderTarget = m_TextureHandler.CreateEmptyTexture({1280, 720}, SDL_TextureAccess::SDL_TEXTUREACCESS_TARGET, "Render target");
+
+	m_TransitionRenderer = CTransitionRenderer(this, m_pRenderTarget->GetSize());
 
 	// If you want to tweak the speed of the state transition, you can set the speed here
 	// The lower the value is set to, the slower the transition effect will be
@@ -69,6 +70,9 @@ void CApplication::Destroy(void)
 		}
 	}
 
+	m_TextureHandler.DestroyTexture(m_pRenderTarget->GetName());
+	m_pRenderTarget = nullptr;
+
 	m_TextureHandler.Destroy();
 	m_Window.Destroy();
 	m_LibraryHandler.Destroy();
@@ -102,6 +106,27 @@ void CApplication::HandleEvents(void)
 				break;
 			}
 
+			case SDL_EventType::SDL_WINDOWEVENT:
+			{
+				switch (event.window.event)
+				{
+					case SDL_WindowEventID::SDL_WINDOWEVENT_EXPOSED:
+					case SDL_WindowEventID::SDL_WINDOWEVENT_RESIZED:
+					case SDL_WindowEventID::SDL_WINDOWEVENT_SIZE_CHANGED:
+					case SDL_WindowEventID::SDL_WINDOWEVENT_RESTORED:
+					{
+						m_Window.OnResized();
+
+						break;
+					}
+
+					default:
+						break;
+				}
+
+				break;
+			}
+
 			default:
 				break;
 		}
@@ -126,18 +151,34 @@ void CApplication::Update(void)
 
 void CApplication::Render(void)
 {
-	if(m_Window.BeginRender())
+	const SDL_Color clearColor = m_Window.GetClearColor();
+	m_Window.SetRenderTarget(m_pRenderTarget);
+	m_Window.SetClearColor({0, 0, 0, 255});
+	m_Window.ClearBuffer();
+	m_Window.SetClearColor(clearColor);
+
+	if(m_pCurrentState)
+		m_pCurrentState->Render();
+
+	if (m_DebugRendering)
 	{
 		if(m_pCurrentState)
-			m_pCurrentState->Render();
+			m_pCurrentState->RenderDebug();
+	}
 
-		if (m_DebugRendering)
-		{
-			if(m_pCurrentState)
-				m_pCurrentState->RenderDebug();
-		}
+	m_TransitionRenderer.Render();
 
-		m_TransitionRenderer.Render();
+	m_Window.SetRenderTarget(nullptr);
+
+	if(m_Window.BeginRender())
+	{
+		const SDL_FPoint	windowSize				= m_Window.GetSize();
+		const SDL_FPoint	windowCenter			= m_Window.GetCenter();
+		const SDL_FPoint	renderTargetSize		= m_pRenderTarget->GetSize();
+	//	const SDL_FRect		renderTargetRectangle	= {windowCenter.x - (renderTargetSize.x * 0.5f), windowCenter.y - (renderTargetSize.y * 0.5f), renderTargetSize.x, renderTargetSize.y};
+		const SDL_FRect		renderTargetRectangle	= {0.0f, 0.0f, windowSize.x, windowSize.y};
+
+		m_pRenderTarget->Render({0.0f, 0.0f}, &renderTargetRectangle);
 
 		m_Window.EndRender();
 	}
@@ -175,4 +216,11 @@ void CApplication::OnTransitionOpaque(void)
 
 		m_pNextState = nullptr;
 	}
+}
+
+SDL_FPoint CApplication::GetWindowCenter(void) const
+{
+	const SDL_FPoint windowSize = m_pRenderTarget->GetSize();
+
+	return {windowSize.x * 0.5f, windowSize.y * 0.5f};
 }

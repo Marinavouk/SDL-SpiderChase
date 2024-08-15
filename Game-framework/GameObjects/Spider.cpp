@@ -129,7 +129,7 @@ void CSpider::Update(const float deltaTime)
 
 		SyncCollider();
 
-		const SDL_FPoint windowSize = m_pApplication->GetWindow().GetSize();
+		const SDL_FPoint windowSize = m_pApplication->GetWindowSize();
 
 		if (m_Collider.y > windowSize.y - m_Collider.h)
 		{

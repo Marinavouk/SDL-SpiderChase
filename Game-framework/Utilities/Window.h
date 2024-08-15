@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Texture.h"
+
 class CWindow
 {
 public:
@@ -7,7 +9,7 @@ public:
 	 CWindow(void) {}
 	~CWindow(void) {}
 
-	bool			Create(const std::string& title, const bool fullscreen);
+	bool			Create(const std::string& title, const bool fullscreen, const bool resizable);
 	void			Destroy(void);
 
 	bool			BeginRender(void);
@@ -15,7 +17,7 @@ public:
 
 	bool			ClearBuffer();
 
-	void			SetRenderTarget(SDL_Texture* renderTarget);
+	void			SetRenderTarget(CTexture* renderTarget);
 
 	void			OnResized();
 

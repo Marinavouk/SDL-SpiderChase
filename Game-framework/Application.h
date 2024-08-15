@@ -60,6 +60,8 @@ public:
 
 	CTransitionRenderer&	GetTransitionRenderer(void) const		{return (CTransitionRenderer&)m_TransitionRenderer;}
 
+	SDL_FPoint&				GetWindowSize(void) const				{return (SDL_FPoint&)m_pRenderTarget->GetSize();}
+	SDL_FPoint				GetWindowCenter(void) const;
 
 	// Call this to shutdown the game
 	void					Quit(void)								{m_Running = false;}
@@ -69,6 +71,8 @@ private:
 	CState*				m_pStates[NUM_STATES]		= {nullptr};
 	CState*				m_pCurrentState				= nullptr;
 	CState*				m_pNextState				= nullptr;
+
+	CTexture*			m_pRenderTarget				= nullptr;
 
 	CRandom*			m_pRandomNumberGenerator	= nullptr;
 

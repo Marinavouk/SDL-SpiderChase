@@ -87,7 +87,7 @@ void CPlayer::Update(const float deltaTime)
 
 	SyncColliders();
 
-	const SDL_FPoint windowSize = m_pApplication->GetWindow().GetSize();
+	const SDL_FPoint windowSize = m_pApplication->GetWindowSize();
 
 	// Make sure that the player can't leave the left edge of the window
 	if (m_HorizontalCollider.x < 0.0f)
@@ -109,7 +109,7 @@ void CPlayer::Update(const float deltaTime)
 
 	if (m_State == EState::ALIVE)
 	{
-		const SDL_FPoint windowSize = m_pApplication->GetWindow().GetSize();
+		const SDL_FPoint windowSize = m_pApplication->GetWindowSize();
 
 		if (m_Rectangle.y > windowSize.y - m_Rectangle.h)
 		{
@@ -162,7 +162,7 @@ void CPlayer::Update(const float deltaTime)
 
 	else if (m_State == EState::DEAD)
 	{
-		const SDL_FPoint windowSize = m_pApplication->GetWindow().GetSize();
+		const SDL_FPoint windowSize = m_pApplication->GetWindowSize();
 
 		if (m_Rectangle.y > windowSize.y - m_Rectangle.h)
 		{

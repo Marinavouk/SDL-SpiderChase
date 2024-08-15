@@ -14,17 +14,16 @@ bool CMainMenuState::OnEnter(void)
 	CTextureHandler&	textureHandler	= m_pApplication->GetTextureHandler();
 	CFontHandler&		fontHandler		= m_pApplication->GetFontHandler();
 	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
-	CWindow&			window			= m_pApplication->GetWindow();
-	const SDL_FPoint	windowCenter	= window.GetCenter();
+	const SDL_FPoint	windowCenter	= m_pApplication->GetWindowCenter();
 
 	// Set the clear color (the background color that is shown behind the menu background and other objects)
 	// This is completely optional
-	window.SetClearColor({0, 0, 0, 255});
+	m_pApplication->GetWindow().SetClearColor({0, 0, 0, 255});
 
 	// Create objects that should be created/started when this state is entered/started (create textures and buttons, load/start main-menu music etc)
 
 	m_pBackground = textureHandler.CreateTexture("menu_background.png");
-	m_pBackground->SetSize(window.GetSize());
+	m_pBackground->SetSize(m_pApplication->GetWindowSize());
 	m_pBackground->SetAlphaMod(100);
 
 	m_pSpider = textureHandler.CreateTexture("spider.png");

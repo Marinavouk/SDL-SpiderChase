@@ -11,10 +11,11 @@ public:
 
 	bool				Create(SDL_Renderer* renderer, const std::string& fileName);
 	bool				CreateFromSurface(SDL_Renderer* renderer, SDL_Surface* surface, const std::string& name);
+	bool				CreateEmpty(SDL_Renderer* renderer, const SDL_Point& size, const SDL_TextureAccess textureAccess, const std::string& name);
 
 	void				Destroy(void);
 
-	void				Render(const SDL_FPoint& position);
+	void				Render(const SDL_FPoint& position, const SDL_FRect* destinationRectangle = nullptr);
 
 	void				SetTextureCoords(const uint32_t left, const uint32_t right, const uint32_t top, const uint32_t bottom);
 	void				SetTextureCoords(const SDL_Rect& clipRectangle);

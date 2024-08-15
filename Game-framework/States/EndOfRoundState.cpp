@@ -9,15 +9,14 @@ bool CEndOfRoundState::OnEnter(void)
 	CTextureHandler&	textureHandler	= m_pApplication->GetTextureHandler();
 	CFontHandler&		fontHandler		= m_pApplication->GetFontHandler();
 	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
-	CWindow&			window			= m_pApplication->GetWindow();
-	const SDL_FPoint	windowCenter	= window.GetCenter();
+	const SDL_FPoint	windowCenter	= m_pApplication->GetWindowCenter();
 
-	window.SetClearColor({0, 0, 0, 255});
+	m_pApplication->GetWindow().SetClearColor({0, 0, 0, 255});
 
 	// Create objects that should be created/started when this state is entered/started (create textures, load/start the end-of-round music etc)
 
 	m_pBackground = textureHandler.CreateTexture("menu_background.png");
-	m_pBackground->SetSize(window.GetSize());
+	m_pBackground->SetSize(m_pApplication->GetWindowSize());
 	m_pBackground->SetAlphaMod(100);
 
 	m_TextFont		= fontHandler.CreateFont("Assets/Fonts/SpiderDemo-51LlB.ttf",	140); if (!m_TextFont)		return false;

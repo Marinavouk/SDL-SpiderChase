@@ -23,12 +23,11 @@ bool CGameState::OnEnter(void)
 	CTextureHandler&	textureHandler	= m_pApplication->GetTextureHandler();
 	CFontHandler&		fontHandler		= m_pApplication->GetFontHandler();
 	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
-	CWindow&			window			= m_pApplication->GetWindow();
-	const SDL_FPoint	windowSize		= window.GetSize();
+	const SDL_FPoint	windowSize		= m_pApplication->GetWindowSize();
 
 	// Set the clear color (the background color that is shown behind the menu background and other objects)
 	// This is completely optional
-	window.SetClearColor({150, 150, 200, 255});
+	m_pApplication->GetWindow().SetClearColor({150, 150, 200, 255});
 
 	// Create objects that should be created/started when this state is entered/started (create textures, load/start game music etc)
 
@@ -238,10 +237,9 @@ void CGameState::Update(const float deltaTime)
 
 void CGameState::Render(void)
 {
-	CFontHandler&		fontHandler = m_pApplication->GetFontHandler();
-	SDL_Renderer*		renderer	= m_pApplication->GetWindow().GetRenderer();
-	CWindow&			window		= m_pApplication->GetWindow();
-	const SDL_FPoint	windowSize	= window.GetSize();
+	CFontHandler&	fontHandler = m_pApplication->GetFontHandler();
+	SDL_Renderer*	renderer	= m_pApplication->GetWindow().GetRenderer();
+	CWindow&		window		= m_pApplication->GetWindow();
 
 	// Render the game objects here
 

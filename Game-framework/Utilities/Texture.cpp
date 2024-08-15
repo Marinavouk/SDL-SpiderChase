@@ -42,7 +42,7 @@ bool CTexture::CreateFromSurface(SDL_Renderer* renderer, SDL_Surface* surface, c
 	if(!m_pTexture)
 	{
 	#ifdef _DEBUG
-		std::cout << "Error: failed to create texture from surface"  << std::endl;
+		std::cout << "Error: failed to create texture '" << name << "' from surface"  << std::endl;
 		std::cout << SDL_GetError() << std::endl;
 	#endif
 
@@ -62,6 +62,31 @@ bool CTexture::CreateFromSurface(SDL_Renderer* renderer, SDL_Surface* surface, c
 	return true;
 }
 
+bool CTexture::CreateEmpty(SDL_Renderer* renderer, const SDL_Point& size, const SDL_TextureAccess textureAccess, const std::string& name)
+{
+	m_pRenderer = renderer;
+
+	m_pTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, textureAccess, size.x, size.y);
+
+	if(!m_pTexture)
+	{
+	#ifdef _DEBUG
+		std::cout << "Error: failed to create empty texture '" << name << "'" << std::endl;
+		std::cout << SDL_GetError() << std::endl;
+	#endif
+
+		return false;
+	}
+
+	SDL_SetTextureBlendMode(m_pTexture, SDL_BLENDMODE_BLEND);
+
+	m_Size = {(float)size.x, (float)size.y};
+
+	m_Name = name;
+
+	return true;
+}
+
 void CTexture::Destroy(void)
 {
 	delete m_pClipRectangle;
@@ -71,11 +96,11 @@ void CTexture::Destroy(void)
 	m_pTexture = nullptr;
 }
 
-void CTexture::Render(const SDL_FPoint& position)
+void CTexture::Render(const SDL_FPoint& position, const SDL_FRect* destinationRectangle)
 {
 	const SDL_FRect rectangle = {position.x, position.y, m_Size.x, m_Size.y};
 
-	SDL_RenderCopyExF(m_pRenderer, m_pTexture, m_pClipRectangle, &rectangle, m_Angle, nullptr, m_FlipMethod);
+	SDL_RenderCopyExF(m_pRenderer, m_pTexture, m_pClipRectangle, (destinationRectangle ? destinationRectangle : &rectangle), m_Angle, nullptr, m_FlipMethod);
 }
 
 void CTexture::SetTextureCoords(const uint32_t Left, const uint32_t Right, const uint32_t Top, const uint32_t Bottom)

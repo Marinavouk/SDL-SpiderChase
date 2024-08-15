@@ -35,7 +35,7 @@ void CFireball::Update(const float deltaTime)
 	m_Collider.x = m_Rectangle.x;
 	m_Collider.y = m_Rectangle.y;
 
-	const SDL_FPoint windowSize = m_pApplication->GetWindow().GetSize();
+	const SDL_FPoint windowSize = m_pApplication->GetWindowSize();
 
 	if ((m_Collider.x < -m_Collider.w) || (m_Collider.x > windowSize.x) || (m_Collider.y > (windowSize.y - m_Collider.h)))
 		Kill();

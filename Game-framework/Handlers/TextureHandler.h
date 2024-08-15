@@ -14,7 +14,13 @@ public:
 
 	CTexture*		CreateTexture(const std::string& fileName);
 	CTexture*		CreateTextureFromSurface(SDL_Surface* surface, const std::string& name);
+	CTexture*		CreateEmptyTexture(const SDL_Point& size, const SDL_TextureAccess textureAccess, const std::string& name);
+
 	void			DestroyTexture(const std::string& name);
+
+private:
+
+	CTexture*		RetrieveTexture(const std::string& name);
 
 private:
 

@@ -1,7 +1,7 @@
 #include "Pch.h"
 #include "Window.h"
 
-bool CWindow::Create(const std::string& title, const bool fullscreen)
+bool CWindow::Create(const std::string& title, const bool fullscreen, const bool resizable)
 {
 	SDL_Point windowSize = {1280, 720};
 
@@ -22,8 +22,8 @@ bool CWindow::Create(const std::string& title, const bool fullscreen)
 
 	Uint32 flags = SDL_WINDOW_SHOWN;
 
-	if (fullscreen)
-		flags |= SDL_WINDOW_FULLSCREEN;
+	if (fullscreen)	flags |= SDL_WINDOW_FULLSCREEN;
+	if (resizable)	flags |= SDL_WINDOW_RESIZABLE;
 
 	m_pWindow = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowSize.x, windowSize.y, flags);
 	if (!m_pWindow)
@@ -92,9 +92,16 @@ bool CWindow::ClearBuffer()
 	return (SDL_RenderClear(m_pRenderer) == 0);
 }
 
-void CWindow::SetRenderTarget(SDL_Texture* renderTarget)
+void CWindow::SetRenderTarget(CTexture* renderTarget)
 {
-	SDL_SetRenderTarget(m_pRenderer, renderTarget);
+	if (!renderTarget)
+	{
+		SDL_SetRenderTarget(m_pRenderer, nullptr);
+
+		return;
+	}
+
+	SDL_SetRenderTarget(m_pRenderer, renderTarget->GetTexture());
 }
 
 void CWindow::OnResized()
@@ -104,6 +111,8 @@ void CWindow::OnResized()
 	SDL_GetWindowSize(m_pWindow, &windowWidth, &windowHeight);
 
 	m_Size = {(float)windowWidth, (float)windowHeight};
+
+	m_Center = {m_Size.x * 0.5f, m_Size.y * 0.5f};
 }
 
 void CWindow::SetTitle(const std::string& title)
