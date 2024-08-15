@@ -1,13 +1,14 @@
 # SDL-SpiderChase
  SDL Game
 -----------------------------------
-A personal Game for understanding more C++ and how to create games on SDL.
-
+A personal game made for learning- and understanding more of C++, and how to create games using SDL (Simple DirectMedia Layer).
 
 https://github.com/user-attachments/assets/b86a96ff-0cf0-434a-83d2-13c790c64391
 
 ------------------------------------
-Learned and gained a lot of experience from this project. Understood how to use object pooling for the fireballs and for the spiders. Learned how to organize my files and the code so easier to read and interact with it. Animations, colliders, time, UI it was a great challenge for me to get een closer to my goal. Learning each day something new and getting better for what I do.
+
+I learned- and gained a lot of experience from this project. I learned a lot about how to organize my code in a good and logic way, to make it easy to read, understand and maintain. I also learned how to create- and use object-pooling, which is used for reusing game objects in this game. Furthermore, I also learn about animations, colliders, timers and UI.
+It was a great challenge for me and it helped me get closer to my goal, which is to learn something new every day and keep getting better at what I do.
 
 ![image](https://github.com/user-attachments/assets/e4b0db10-e35f-4f96-a669-45bc4124ef3a)
 
