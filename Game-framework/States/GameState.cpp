@@ -159,73 +159,125 @@ void CGameState::Update(const float deltaTime)
 	if (m_pApplication->GetInputHandler().KeyPressed(SDL_SCANCODE_ESCAPE))
 		m_pApplication->SetState(CApplication::EState::QUIT);
 
-	// Update the game objects here
+	// Entering the states
 
-	m_pPlayer->HandleInput(deltaTime);
-	m_pPlayer->Update(deltaTime);
-	m_pPlayer->HandleObstacleCollision(m_Obstacles, deltaTime);
-	m_pPlayer->HandleEnemyCollision(m_Enemies, deltaTime);
-
-	m_pSpider->Update(deltaTime);
-	m_pSpider->HandleObstacleCollision(m_Obstacles, deltaTime);
-
-	for (uint32_t i = 0; i < m_ActiveFireballs.size(); ++i)
+	if (m_State == Estate::IDLE)
 	{
-		CFireball* fireball = (CFireball*)m_ActiveFireballs[i];
-		fireball->Update(deltaTime);
-		fireball->HandleObstacleCollision(m_Obstacles, deltaTime);
-
-		if (fireball->GetIsDead())
-		{
-			m_ActiveFireballs.erase(m_ActiveFireballs.begin() + i);
-
-			break;
-		}
-
-		bool spiderCollision = false;
-
-		if (!m_pSpider->GetIsDead())
-		{
-			if (QuadVsQuad(fireball->GetCollider(), m_pSpider->GetCollider()))
-			{
-				m_pSpider->Kill();
-				fireball->Kill();
-
-				m_SpiderCount++;
-
-				m_ActiveFireballs.erase(m_ActiveFireballs.begin() + i);
-
-				spiderCollision = true;
-
-				break;
-			}
-		}
-
-		if (spiderCollision)
-			break;
+		if (!m_pApplication->GetTransitionRenderer().IsTransitioning())
+			m_State = Estate::COUNT_DOWN;
 	}
 
-	if (m_DeathFadeout)
+	else if (m_State == Estate::COUNT_DOWN)
 	{
-		m_DeathFadeDelay -= deltaTime;
+		std::cout << "m_CountdownTimer: " << (int)m_CountDownTimer << std::endl;
 
-		if (m_DeathFadeDelay <= 0.0f)
+		// Count down the countdown timer
+		m_CountDownTimer -= deltaTime;
+
+		if (m_CountDownTimer <= 0.0f) 
 		{
-			m_DeathFadeDelay = 0.0f;
+			m_CountDownTimer = 0.0f;
 
-			m_DeathFadeout = false;
+			if (!m_pApplication->GetTransitionRenderer().IsTransitioning())
+				m_State = Estate::PRE_START;
+		}
+	}
+
+	else if (m_State == Estate::PRE_START)
+	{
+		std::cout << "m_PreStartTimer: " << (int)m_PreStartTimer << std::endl;
+
+		// Count down the "GO!" timer
+		m_PreStartTimer -= deltaTime;
+
+
+		if (m_PreStartTimer <= 0.0f)
+		{
+			m_PreStartTimer = 0.0f;
+
+			if (!m_pApplication->GetTransitionRenderer().IsTransitioning())
+				m_State = Estate::ROUND_STARTED;
+		}
+	}
+
+	else if (m_State == Estate::ROUND_STARTED)
+	{
+		// The actual round has now started so update the player, the spider, the round-timer etc
+
+		m_Timer -= deltaTime;
+
+		if (m_Timer <= 0.0f)
+		{
+			m_Timer = 0.0f;
 
 			m_pApplication->SetState(CApplication::EState::END_OF_ROUND);
 		}
+
+		// Update the game objects here
+
+		m_pPlayer->HandleInput(deltaTime);
+		m_pPlayer->Update(deltaTime);
+		m_pPlayer->HandleObstacleCollision(m_Obstacles, deltaTime);
+		m_pPlayer->HandleEnemyCollision(m_Enemies, deltaTime);
+
+		m_pSpider->Update(deltaTime);
+		m_pSpider->HandleObstacleCollision(m_Obstacles, deltaTime);
+
+		for (uint32_t i = 0; i < m_ActiveFireballs.size(); ++i)
+		{
+			CFireball* fireball = (CFireball*)m_ActiveFireballs[i];
+			fireball->Update(deltaTime);
+			fireball->HandleObstacleCollision(m_Obstacles, deltaTime);
+
+			if (fireball->GetIsDead())
+			{
+				m_ActiveFireballs.erase(m_ActiveFireballs.begin() + i);
+
+				break;
+			}
+
+			bool spiderCollision = false;
+
+			if (!m_pSpider->GetIsDead())
+			{
+				if (QuadVsQuad(fireball->GetCollider(), m_pSpider->GetCollider()))
+				{
+					m_pSpider->Kill();
+					fireball->Kill();
+
+					m_SpiderCount++;
+
+					m_ActiveFireballs.erase(m_ActiveFireballs.begin() + i);
+
+					spiderCollision = true;
+
+					break;
+				}
+			}
+
+			if (spiderCollision)
+				break;
+		}
+
+		if (m_DeathFadeout)
+		{
+			m_DeathFadeDelay -= deltaTime;
+
+			if (m_DeathFadeDelay <= 0.0f)
+			{
+				m_DeathFadeDelay = 0.0f;
+
+				m_DeathFadeout = false;
+
+				m_pApplication->SetState(CApplication::EState::END_OF_ROUND);
+			}
+		}
+
 	}
 
-	m_Timer -= deltaTime;
-
-	if(m_Timer <= 0.0f)
+	else if (m_State == Estate::ROUND_ENDED)
 	{
-		m_Timer = 0.0f;
 
-		m_pApplication->SetState(CApplication::EState::END_OF_ROUND);
 	}
 
 	const CTransitionRenderer& transitionRenderer = m_pApplication->GetTransitionRenderer();

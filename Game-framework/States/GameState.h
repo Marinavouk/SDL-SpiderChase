@@ -5,8 +5,20 @@
 #include "Utilities/Texture.h"
 #include "Handlers/TextureHandler.h"
 
+
 class CGameState final : public CState
 {
+public:
+
+	enum Estate
+	{
+		IDLE = 0,
+		COUNT_DOWN,
+		PRE_START,
+		ROUND_STARTED,
+		ROUND_ENDED,
+	};
+
 public:
 
 	 CGameState(void)												{}
@@ -31,12 +43,15 @@ private:
 private:
 
 	// Declare the game objects here and then create/destroy them in the OnEnter- and OnExit functions
+	
+	Estate m_State = Estate::IDLE;
 
 	CTexture*		m_pBackground			= nullptr;
 	CTexture*		m_pHeartRed				= nullptr;
 	CTexture*		m_pHeartBlack			= nullptr;
 
 	TTF_Font*		m_pFont					= nullptr;
+
 
 	Mix_Music*		m_pMusic				= nullptr;
 
@@ -51,6 +66,9 @@ private:
 	float			m_TimerDefault			= 60.0f;
 	float			m_Timer					= m_TimerDefault;
 
+	float           m_CountDownTimer		= 3.0f;
+	float           m_PreStartTimer				= 1.0f;
+
 	// When the player has died, the game waits this long before fading out and changing to the end-of-round state
 	float			m_DeathFadeDelayDefault	= 3.0f;
 	float			m_DeathFadeDelay		= m_DeathFadeDelayDefault;
@@ -61,5 +79,4 @@ private:
 	GameObjectList	m_Enemies				= {};
 	GameObjectList	m_FireballPool			= {};
 	GameObjectList	m_ActiveFireballs		= {};
-
 };
