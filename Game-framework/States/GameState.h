@@ -48,7 +48,6 @@ private:
 
 	TTF_Font*		m_pFont					= nullptr;
 
-
 	Mix_Music*		m_pMusic				= nullptr;
 
 	CGameObject*	m_pPlayer				= nullptr;

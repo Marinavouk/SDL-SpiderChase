@@ -287,6 +287,7 @@ void CGameState::Render(void)
 	CFontHandler&	fontHandler = m_pApplication->GetFontHandler();
 	SDL_Renderer*	renderer	= m_pApplication->GetWindow().GetRenderer();
 	CWindow&		window		= m_pApplication->GetWindow();
+	const SDL_FPoint windowCenter = m_pApplication->GetWindowCenter();
 
 	// Render the game objects here
 
@@ -319,6 +320,16 @@ void CGameState::Render(void)
 	}
 	
 	fontHandler.RenderText(renderer, m_pFont, "Time: " + std::to_string((uint32_t)m_Timer), {10.0f, 50.0f}, {200, 0, 0, 255});
+
+	if(m_State == Estate::COUNT_DOWN)
+	{
+		fontHandler.RenderText(renderer, m_pFont, std::to_string((uint32_t)m_CountDownTimer + 1), {windowCenter}, { 200, 0, 0, 255 });
+	}
+
+	if (m_State == Estate::PRE_START)
+	{
+		fontHandler.RenderText(renderer, m_pFont, "Go!", {windowCenter}, {200, 0, 0, 255});
+	}
 }
 
 void CGameState::RenderDebug(void)
