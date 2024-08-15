@@ -12,7 +12,6 @@
 #include "Utilities/CollisionUtilities.h"
 #include "Utilities/Random.h"
 
-
 bool CGameState::OnEnter(void)
 {
 #if defined(_DEBUG) 
@@ -169,8 +168,6 @@ void CGameState::Update(const float deltaTime)
 
 	else if (m_State == Estate::COUNT_DOWN)
 	{
-		std::cout << "m_CountdownTimer: " << (int)m_CountDownTimer << std::endl;
-
 		// Count down the countdown timer
 		m_CountDownTimer -= deltaTime;
 
@@ -178,40 +175,30 @@ void CGameState::Update(const float deltaTime)
 		{
 			m_CountDownTimer = 0.0f;
 
-			if (!m_pApplication->GetTransitionRenderer().IsTransitioning())
-				m_State = Estate::PRE_START;
+			m_State = Estate::PRE_START;
 		}
+
+		std::cout << "m_CountdownTimer: " << (int)m_CountDownTimer << std::endl;
 	}
 
 	else if (m_State == Estate::PRE_START)
 	{
-		std::cout << "m_PreStartTimer: " << (int)m_PreStartTimer << std::endl;
-
 		// Count down the "GO!" timer
 		m_PreStartTimer -= deltaTime;
-
 
 		if (m_PreStartTimer <= 0.0f)
 		{
 			m_PreStartTimer = 0.0f;
 
-			if (!m_pApplication->GetTransitionRenderer().IsTransitioning())
-				m_State = Estate::ROUND_STARTED;
+			m_State = Estate::ROUND_STARTED;
 		}
+
+		std::cout << "m_PreStartTimer: " << (int)m_PreStartTimer << std::endl;
 	}
 
 	else if (m_State == Estate::ROUND_STARTED)
 	{
 		// The actual round has now started so update the player, the spider, the round-timer etc
-
-		m_Timer -= deltaTime;
-
-		if (m_Timer <= 0.0f)
-		{
-			m_Timer = 0.0f;
-
-			m_pApplication->SetState(CApplication::EState::END_OF_ROUND);
-		}
 
 		// Update the game objects here
 
@@ -259,6 +246,20 @@ void CGameState::Update(const float deltaTime)
 				break;
 		}
 
+		m_Timer -= deltaTime;
+
+		if (m_Timer <= 0.0f)
+		{
+			m_Timer = 0.0f;
+
+			m_State = Estate::ROUND_ENDED;
+
+			m_pApplication->SetState(CApplication::EState::END_OF_ROUND);
+		}
+	}
+
+	else if (m_State == Estate::ROUND_ENDED)
+	{
 		if (m_DeathFadeout)
 		{
 			m_DeathFadeDelay -= deltaTime;
@@ -272,12 +273,6 @@ void CGameState::Update(const float deltaTime)
 				m_pApplication->SetState(CApplication::EState::END_OF_ROUND);
 			}
 		}
-
-	}
-
-	else if (m_State == Estate::ROUND_ENDED)
-	{
-
 	}
 
 	const CTransitionRenderer& transitionRenderer = m_pApplication->GetTransitionRenderer();

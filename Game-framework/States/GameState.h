@@ -10,17 +10,6 @@ class CGameState final : public CState
 {
 public:
 
-	enum Estate
-	{
-		IDLE = 0,
-		COUNT_DOWN,
-		PRE_START,
-		ROUND_STARTED,
-		ROUND_ENDED,
-	};
-
-public:
-
 	 CGameState(void)												{}
 	 CGameState(CApplication* application) : CState(application)	{}
 	~CGameState(void)												{}
@@ -38,14 +27,21 @@ private:
 
 private:
 
+	enum Estate
+	{
+		IDLE = 0,
+		COUNT_DOWN,
+		PRE_START,
+		ROUND_STARTED,
+		ROUND_ENDED,
+	};
+
 	typedef std::vector<CGameObject*> GameObjectList;
 
 private:
 
 	// Declare the game objects here and then create/destroy them in the OnEnter- and OnExit functions
 	
-	Estate m_State = Estate::IDLE;
-
 	CTexture*		m_pBackground			= nullptr;
 	CTexture*		m_pHeartRed				= nullptr;
 	CTexture*		m_pHeartBlack			= nullptr;
@@ -63,17 +59,18 @@ private:
 	uint32_t		m_VolumeLimiter			= 100;
 	uint32_t		m_SpiderCount			= 0;
 
+	float           m_CountDownTimer		= 3.0f;
+	float           m_PreStartTimer			= 1.0f;
 	float			m_TimerDefault			= 60.0f;
 	float			m_Timer					= m_TimerDefault;
-
-	float           m_CountDownTimer		= 3.0f;
-	float           m_PreStartTimer				= 1.0f;
 
 	// When the player has died, the game waits this long before fading out and changing to the end-of-round state
 	float			m_DeathFadeDelayDefault	= 3.0f;
 	float			m_DeathFadeDelay		= m_DeathFadeDelayDefault;
 
 	bool			m_DeathFadeout			= false;
+
+	Estate			m_State					= Estate::IDLE;
 
 	GameObjectList	m_Obstacles				= {};
 	GameObjectList	m_Enemies				= {};
