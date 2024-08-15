@@ -24,8 +24,8 @@ private:
 	CTexture*	m_pBackground		= nullptr;
 	CTexture*	m_pSpider			= nullptr;
 
-	TTF_Font*	m_TextFont			= nullptr;
-	TTF_Font*	m_ButtonFont		= nullptr;
+	TTF_Font*	m_pTextFont			= nullptr;
+	TTF_Font*	m_pButtonFont		= nullptr;
 
 	Mix_Music*	m_pMusic			= nullptr;
 

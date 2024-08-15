@@ -1,11 +1,14 @@
 #pragma once
 
+class CApplication;
+
 class CInputHandler
 {
 public:
 
-	 CInputHandler(void) {}
-	~CInputHandler(void) {}
+	 CInputHandler(void)													{}
+	 CInputHandler(CApplication* application) : m_pApplication(application)	{}
+	~CInputHandler(void)													{}
 
 	void		Update(void);
 
@@ -21,15 +24,18 @@ public:
 
 	// Place getters and setters in their own public field
 
-	SDL_FPoint&	GetMousePosition(void) const {return (SDL_FPoint&)m_MousePosition;}
+//	SDL_FPoint&	GetMousePosition(void) const {return (SDL_FPoint&)m_MousePosition;}
+	SDL_FPoint	GetMousePosition(void);
 
 private:
 
-	SDL_FPoint	m_MousePosition								= {0.0f, 0.0f};
+	CApplication*	m_pApplication								= nullptr;
 
-	bool		m_CurrentKeyboardState[SDL_NUM_SCANCODES]	= {false};
-	bool		m_PreviousKeyboardState[SDL_NUM_SCANCODES]	= {false};
-	bool		m_CurrentMouseState[8]						= {false};
-	bool		m_previousMouseState[8]						= {false};
+	SDL_FPoint		m_MousePosition								= {0.0f, 0.0f};
+
+	bool			m_CurrentKeyboardState[SDL_NUM_SCANCODES]	= {false};
+	bool			m_PreviousKeyboardState[SDL_NUM_SCANCODES]	= {false};
+	bool			m_CurrentMouseState[8]						= {false};
+	bool			m_previousMouseState[8]						= {false};
 
 };

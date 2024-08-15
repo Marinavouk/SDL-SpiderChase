@@ -31,6 +31,8 @@ bool CApplication::Create(void)
 
 	m_pRenderTarget = m_TextureHandler.CreateEmptyTexture({1280, 720}, SDL_TextureAccess::SDL_TEXTUREACCESS_TARGET, "Render target");
 
+	m_InputHandler = CInputHandler(this);
+
 	m_TransitionRenderer = CTransitionRenderer(this, m_pRenderTarget->GetSize());
 
 	// If you want to tweak the speed of the state transition, you can set the speed here
@@ -49,7 +51,7 @@ bool CApplication::Create(void)
 	m_pStates[EState::END_OF_ROUND]	= new CEndOfRoundState(this);
 
 	// Set the start state for the game, in this case the game will start in the MAIN_MENU state
-	m_pCurrentState = m_pStates[EState::GAME];
+	m_pCurrentState = m_pStates[EState::MAIN_MENU];
 	if(!m_pCurrentState->OnEnter())
 		return false;
 
@@ -175,7 +177,6 @@ void CApplication::Render(void)
 		const SDL_FPoint	windowSize				= m_Window.GetSize();
 		const SDL_FPoint	windowCenter			= m_Window.GetCenter();
 		const SDL_FPoint	renderTargetSize		= m_pRenderTarget->GetSize();
-	//	const SDL_FRect		renderTargetRectangle	= {windowCenter.x - (renderTargetSize.x * 0.5f), windowCenter.y - (renderTargetSize.y * 0.5f), renderTargetSize.x, renderTargetSize.y};
 		const SDL_FRect		renderTargetRectangle	= {0.0f, 0.0f, windowSize.x, windowSize.y};
 
 		m_pRenderTarget->Render({0.0f, 0.0f}, &renderTargetRectangle);

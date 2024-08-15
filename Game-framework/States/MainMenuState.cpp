@@ -30,8 +30,8 @@ bool CMainMenuState::OnEnter(void)
 	m_pSpider->SetSize({64.0f, 64.0f});
 	m_pSpider->SetTextureCoords(0, 64, 256, 320);
 
-	m_TextFont		= fontHandler.CreateFont("Assets/Fonts/SpiderDemo-51LlB.ttf",	200); if (!m_TextFont)		return false;
-	m_ButtonFont	= fontHandler.CreateFont("Assets/Fonts/SpookyWebbie-lgvxX.ttf",	 60); if (!m_ButtonFont)	return false;
+	m_pTextFont		= fontHandler.CreateFont("Assets/Fonts/SpiderDemo-51LlB.ttf",	200); if (!m_pTextFont)		return false;
+	m_pButtonFont	= fontHandler.CreateFont("Assets/Fonts/SpookyWebbie-lgvxX.ttf",	 60); if (!m_pButtonFont)	return false;
 
 	const SDL_Color titleTextColor					= {200,	0,		0,		255}; // Dark red
 	const SDL_Color buttonBackgroundColor			= {100,	100,	100,	150}; // Light gray	<-- Background color when the button is not held
@@ -41,12 +41,12 @@ bool CMainMenuState::OnEnter(void)
 	const SDL_Color buttonTextColorPressed			= {255,	0,		0,		255}; // Red		<-- Text color when the button is held
 
 	// Buttons can be used as text blocks too, without mouse interaction
-	if (!m_TitleTextBlock.Create(m_pApplication, m_TextFont, "Spider Chase", titleTextColor))
+	if (!m_TitleTextBlock.Create(m_pApplication, m_pTextFont, "Spider Chase", titleTextColor))
 		return false;
 	m_TitleTextBlock.SetPosition({windowCenter.x, 160.0f});
 	m_TitleTextBlock.SetBackgroundColor({0, 0, 0, 0}); // Only the text in the text block should be visible, so the background is set to be invisible (alpha = 0)
 
-	if (!m_PlayButton.Create(m_pApplication, m_ButtonFont, "Play", buttonTextColor))
+	if (!m_PlayButton.Create(m_pApplication, m_pButtonFont, "Play", buttonTextColor))
 		return false;
 	m_PlayButton.SetPosition({windowCenter.x, windowCenter.y + 100.0f});
 	m_PlayButton.SetBackgroundColor(buttonBackgroundColor);
@@ -54,7 +54,7 @@ bool CMainMenuState::OnEnter(void)
 	m_PlayButton.SetTextColorHovered(buttonTextColorHovered);
 	m_PlayButton.SetTextColorPressed(buttonTextColorPressed);
 
-	if (!m_QuitButton.Create(m_pApplication, m_ButtonFont, "Quit", buttonTextColor))
+	if (!m_QuitButton.Create(m_pApplication, m_pButtonFont, "Quit", buttonTextColor))
 		return false;
 	m_QuitButton.SetPosition({windowCenter.x, windowCenter.y + 200.0f});
 	m_QuitButton.SetBackgroundColor(buttonBackgroundColor);
@@ -100,10 +100,10 @@ void CMainMenuState::OnExit(void)
 	m_PlayButton.Destroy(m_pApplication);
 	m_TitleTextBlock.Destroy(m_pApplication);
 
-	fontHandler.DestroyFont(m_ButtonFont);
-	fontHandler.DestroyFont(m_TextFont);
-	m_ButtonFont	= nullptr;
-	m_TextFont		= nullptr;
+	fontHandler.DestroyFont(m_pButtonFont);
+	fontHandler.DestroyFont(m_pTextFont);
+	m_pButtonFont	= nullptr;
+	m_pTextFont		= nullptr;
 
 	textureHandler.DestroyTexture(m_pSpider->GetName());
 	textureHandler.DestroyTexture(m_pBackground->GetName());

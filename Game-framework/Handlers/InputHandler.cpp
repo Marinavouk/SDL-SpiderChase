@@ -1,6 +1,8 @@
 #include "Pch.h"
 #include "InputHandler.h"
 
+#include "Application.h"
+
 void CInputHandler::Update(void)
 {
 	const Uint8* keyboardState = SDL_GetKeyboardState(nullptr);
@@ -52,4 +54,13 @@ bool CInputHandler::MouseButtonHeld(const int32_t mouseButton)
 bool CInputHandler::MouseButtonReleased(const int32_t mouseButton)
 {
 	return (!m_CurrentMouseState[mouseButton] && m_previousMouseState[mouseButton]);
+}
+
+SDL_FPoint CInputHandler::GetMousePosition(void)
+{
+	const SDL_FPoint windowSize			= m_pApplication->GetWindow().GetSize();
+	const SDL_FPoint renderTargetSize	= m_pApplication->GetWindowSize();
+	const SDL_FPoint scaleFactor		= {windowSize.x / renderTargetSize.x, windowSize.y / renderTargetSize.y};
+
+	return {m_MousePosition.x / scaleFactor.x, m_MousePosition.y / scaleFactor.y};
 }
