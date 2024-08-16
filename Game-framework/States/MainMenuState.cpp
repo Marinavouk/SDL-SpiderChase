@@ -62,6 +62,15 @@ bool CMainMenuState::OnEnter(void)
 	m_QuitButton.SetTextColorHovered(buttonTextColorHovered);
 	m_QuitButton.SetTextColorPressed(buttonTextColorPressed);
 
+
+	if (!m_SettingsButton.Create(m_pApplication, m_pButtonFont, "Settings", buttonTextColor))
+		return false;
+	m_SettingsButton.SetPosition({ windowCenter.x, windowCenter.y + 300.0f });
+	m_SettingsButton.SetBackgroundColor(buttonBackgroundColor);
+	m_SettingsButton.SetBackgroundPressedColor(buttonBackgroundPressedColor);
+	m_SettingsButton.SetTextColorHovered(buttonTextColorHovered);
+	m_SettingsButton.SetTextColorPressed(buttonTextColorPressed);
+
 	m_SpiderWebStart	= {150.0f, 220.0f};
 	m_SpiderSize		= {64.0f, 64.0f};
 	m_SpiderPosition	= {m_SpiderWebStart.x - (m_SpiderSize.x * 0.5f), m_SpiderWebStart.y + 200.0f};
@@ -96,6 +105,7 @@ void CMainMenuState::OnExit(void)
 	audioHandler.DestroyMusic(m_pMusic);
 	m_pMusic = nullptr;
 
+	m_SettingsButton.Destroy(m_pApplication);
 	m_QuitButton.Destroy(m_pApplication);
 	m_PlayButton.Destroy(m_pApplication);
 	m_TitleTextBlock.Destroy(m_pApplication);
@@ -121,10 +131,12 @@ void CMainMenuState::Update(const float deltaTime)
 
 	m_PlayButton.Update(inputHandler);
 	m_QuitButton.Update(inputHandler);
+	m_SettingsButton.Update(inputHandler);
 
 	// Switch state whenever any of the buttons- or a specific key on the keyboard is pressed
 		 if (m_PlayButton.IsPressed(inputHandler) || inputHandler.KeyPressed(SDL_SCANCODE_RETURN)) m_pApplication->SetState(CApplication::EState::GAME);
 	else if (m_QuitButton.IsPressed(inputHandler) || inputHandler.KeyPressed(SDL_SCANCODE_ESCAPE)) m_pApplication->SetState(CApplication::EState::QUIT);
+	else if (m_SettingsButton.IsPressed(inputHandler) || inputHandler.KeyPressed(SDL_SCANCODE_ESCAPE)) m_pApplication->SetState(CApplication::EState::SETTINGS);
 
 	m_LifeTime += deltaTime;
 
@@ -161,4 +173,5 @@ void CMainMenuState::Render(void)
 
 	m_PlayButton.Render(renderer, &mousePosition);
 	m_QuitButton.Render(renderer, &mousePosition);
+	m_SettingsButton.Render(renderer, &mousePosition);
 }

@@ -32,6 +32,7 @@ private:
 	CButton		m_TitleTextBlock	= {};
 	CButton		m_PlayButton		= {};
 	CButton		m_QuitButton		= {};
+	CButton		m_SettingsButton	= {};
 
 	SDL_FPoint	m_SpiderWebStart	= {0.0f, 0.0f};  
 	SDL_FPoint	m_SpiderSize		= {0.0f, 0.0f};
