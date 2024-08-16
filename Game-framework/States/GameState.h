@@ -63,7 +63,7 @@ private:
 	float           m_CountdownTimer		= m_CountdownTimerDefault;
 	float           m_PreStartTimerDefault	= 1.0f;
 	float           m_PreStartTimer			= m_PreStartTimerDefault;
-	float			m_TimerDefault			= 30.0f;
+	float			m_TimerDefault			= 60.0f;
 	float			m_Timer					= m_TimerDefault;
 
 	// When the player has died, the game waits this long before fading out and changing to the end-of-round state
