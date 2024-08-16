@@ -19,6 +19,7 @@
     <ClCompile Include="GameObjects\Player.cpp" />
     <ClCompile Include="GameObjects\Spider.cpp" />
     <ClCompile Include="GameObjects\Table.cpp" />
+    <ClCompile Include="Globals.cpp" />
     <ClCompile Include="Handlers\AudioHandler.cpp" />
     <ClCompile Include="Handlers\FontHandler.cpp" />
     <ClCompile Include="Handlers\InputHandler.cpp" />
@@ -29,11 +30,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="SettingsState.cpp" />
     <ClCompile Include="States\EndOfRoundState.cpp" />
     <ClCompile Include="States\GameState.cpp" />
     <ClCompile Include="States\MainMenuState.cpp" />
     <ClCompile Include="States\QuitState.cpp" />
+    <ClCompile Include="States\SettingsState.cpp" />
     <ClCompile Include="States\TransitionRenderer.cpp" />
     <ClCompile Include="Utilities\Animator.cpp" />
     <ClCompile Include="Utilities\Random.cpp" />
@@ -50,17 +51,18 @@
     <ClInclude Include="GameObjects\Player.h" />
     <ClInclude Include="GameObjects\Spider.h" />
     <ClInclude Include="GameObjects\Table.h" />
+    <ClInclude Include="Globals.h" />
     <ClInclude Include="Handlers\AudioHandler.h" />
     <ClInclude Include="Handlers\FontHandler.h" />
     <ClInclude Include="Handlers\InputHandler.h" />
     <ClInclude Include="Handlers\LibraryHandler.h" />
     <ClInclude Include="Handlers\TextureHandler.h" />
     <ClInclude Include="Pch.h" />
-    <ClInclude Include="SettingsState.h" />
     <ClInclude Include="States\EndOfRoundState.h" />
     <ClInclude Include="States\GameState.h" />
     <ClInclude Include="States\MainMenuState.h" />
     <ClInclude Include="States\QuitState.h" />
+    <ClInclude Include="States\SettingsState.h" />
     <ClInclude Include="States\State.h" />
     <ClInclude Include="States\TransitionRenderer.h" />
     <ClInclude Include="Utilities\Animator.h" />

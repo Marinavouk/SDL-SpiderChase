@@ -6,7 +6,7 @@
 #include "States/GameState.h"
 #include "States/MainMenuState.h"
 #include "States/QuitState.h"
-#include "SettingsState.h"
+#include "States/SettingsState.h"
 
 bool CApplication::Create(void)
 {
@@ -47,13 +47,13 @@ bool CApplication::Create(void)
 	*/
 
 	m_pStates[EState::MAIN_MENU]	= new CMainMenuState(this);
+	m_pStates[EState::SETTINGS]		= new CSettingsState(this);
 	m_pStates[EState::GAME]			= new CGameState(this);
 	m_pStates[EState::QUIT]			= new CQuitState(this);
 	m_pStates[EState::END_OF_ROUND]	= new CEndOfRoundState(this);
-	m_pStates[EState::SETTINGS]		= new CSettingsState(this);
 
 	// Set the start state for the game, in this case the game will start in the MAIN_MENU state
-	m_pCurrentState = m_pStates[EState::MAIN_MENU];
+	m_pCurrentState = m_pStates[EState::GAME];
 	if(!m_pCurrentState->OnEnter())
 		return false;
 

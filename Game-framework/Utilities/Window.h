@@ -19,7 +19,11 @@ public:
 
 	void			SetRenderTarget(CTexture* renderTarget);
 
-	void			OnResized();
+	void			OnResized(void);
+
+	void			ToggleFullscreen(void);
+
+	void			ToggleResizable(void);
 
 public:
 
@@ -34,6 +38,9 @@ public:
 	void			SetClearColor(const SDL_Color& color)	{m_ClearColor = color;}
 
 	void			SetTitle(const std::string& title);
+
+	bool			GetFullscreen(void) const;
+	bool			GetResizable(void) const;
 
 private:
 

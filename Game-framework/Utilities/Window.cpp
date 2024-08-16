@@ -66,6 +66,8 @@ bool CWindow::Create(const std::string& title, const bool fullscreen, const bool
 	if (BeginRender())
 		EndRender();
 
+	SDL_WarpMouseInWindow(m_pWindow, windowSize.x / 2, windowSize.y / 2);
+
 	return true;
 }
 void CWindow::Destroy(void)
@@ -87,7 +89,7 @@ void CWindow::EndRender(void)
 	SDL_RenderPresent(m_pRenderer);
 }
 
-bool CWindow::ClearBuffer()
+bool CWindow::ClearBuffer(void)
 {
 	return (SDL_RenderClear(m_pRenderer) == 0);
 }
@@ -104,7 +106,7 @@ void CWindow::SetRenderTarget(CTexture* renderTarget)
 	SDL_SetRenderTarget(m_pRenderer, renderTarget->GetTexture());
 }
 
-void CWindow::OnResized()
+void CWindow::OnResized(void)
 {
 	int32_t windowWidth		= 0;
 	int32_t windowHeight	= 0;
@@ -115,7 +117,27 @@ void CWindow::OnResized()
 	m_Center = {m_Size.x * 0.5f, m_Size.y * 0.5f};
 }
 
+void CWindow::ToggleFullscreen(void)
+{
+	SDL_SetWindowFullscreen(m_pWindow, (GetFullscreen() ? 0 : SDL_WindowFlags::SDL_WINDOW_FULLSCREEN_DESKTOP));
+}
+
+void CWindow::ToggleResizable(void)
+{
+	SDL_SetWindowResizable(m_pWindow, (GetResizable() ? SDL_FALSE : SDL_TRUE));
+}
+
 void CWindow::SetTitle(const std::string& title)
 {
 	SDL_SetWindowTitle(m_pWindow, title.c_str());
+}
+
+bool CWindow::GetFullscreen(void) const
+{
+	return (SDL_GetWindowFlags(m_pWindow) & SDL_WindowFlags::SDL_WINDOW_FULLSCREEN_DESKTOP);
+}
+
+bool CWindow::GetResizable(void) const
+{
+	return (SDL_GetWindowFlags(m_pWindow) & SDL_WindowFlags::SDL_WINDOW_RESIZABLE);
 }

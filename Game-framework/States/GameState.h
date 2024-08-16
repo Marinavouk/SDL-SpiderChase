@@ -5,7 +5,6 @@
 #include "Utilities/Texture.h"
 #include "Handlers/TextureHandler.h"
 
-
 class CGameState final : public CState
 {
 public:
@@ -47,6 +46,7 @@ private:
 	CTexture*		m_pHeartBlack			= nullptr;
 
 	TTF_Font*		m_pFont					= nullptr;
+	TTF_Font*		m_pCountdownFont		= nullptr;
 
 	Mix_Music*		m_pMusic				= nullptr;
 
@@ -58,13 +58,15 @@ private:
 	uint32_t		m_VolumeLimiter			= 100;
 	uint32_t		m_SpiderCount			= 0;
 
-	float           m_CountDownTimer		= 3.0f;
-	float           m_PreStartTimer			= 1.0f;
+	float           m_CountdownTimerDefault	= 3.0f;
+	float           m_CountdownTimer		= m_CountdownTimerDefault;
+	float           m_PreStartTimerDefault	= 1.0f;
+	float           m_PreStartTimer			= m_PreStartTimerDefault;
 	float			m_TimerDefault			= 60.0f;
 	float			m_Timer					= m_TimerDefault;
 
 	// When the player has died, the game waits this long before fading out and changing to the end-of-round state
-	float			m_DeathFadeDelayDefault	= 3.0f;
+	float			m_DeathFadeDelayDefault	= 2.0f;
 	float			m_DeathFadeDelay		= m_DeathFadeDelayDefault;
 
 	bool			m_DeathFadeout			= false;
@@ -75,4 +77,5 @@ private:
 	GameObjectList	m_Enemies				= {};
 	GameObjectList	m_FireballPool			= {};
 	GameObjectList	m_ActiveFireballs		= {};
+
 };

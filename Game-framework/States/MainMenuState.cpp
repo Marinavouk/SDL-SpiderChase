@@ -2,7 +2,7 @@
 #include "MainMenuState.h"
 
 #include "Application.h"
-#include "Handlers/AudioHandler.h"
+//#include "Handlers/AudioHandler.h"
 
 bool CMainMenuState::OnEnter(void)
 {
@@ -54,22 +54,21 @@ bool CMainMenuState::OnEnter(void)
 	m_PlayButton.SetTextColorHovered(buttonTextColorHovered);
 	m_PlayButton.SetTextColorPressed(buttonTextColorPressed);
 
-	if (!m_QuitButton.Create(m_pApplication, m_pButtonFont, "Quit", buttonTextColor))
-		return false;
-	m_QuitButton.SetPosition({windowCenter.x, windowCenter.y + 200.0f});
-	m_QuitButton.SetBackgroundColor(buttonBackgroundColor);
-	m_QuitButton.SetBackgroundPressedColor(buttonBackgroundPressedColor);
-	m_QuitButton.SetTextColorHovered(buttonTextColorHovered);
-	m_QuitButton.SetTextColorPressed(buttonTextColorPressed);
-
-
 	if (!m_SettingsButton.Create(m_pApplication, m_pButtonFont, "Settings", buttonTextColor))
 		return false;
-	m_SettingsButton.SetPosition({ windowCenter.x, windowCenter.y + 300.0f });
+	m_SettingsButton.SetPosition({windowCenter.x, windowCenter.y + 200.0f});
 	m_SettingsButton.SetBackgroundColor(buttonBackgroundColor);
 	m_SettingsButton.SetBackgroundPressedColor(buttonBackgroundPressedColor);
 	m_SettingsButton.SetTextColorHovered(buttonTextColorHovered);
 	m_SettingsButton.SetTextColorPressed(buttonTextColorPressed);
+
+	if (!m_QuitButton.Create(m_pApplication, m_pButtonFont, "Quit", buttonTextColor))
+		return false;
+	m_QuitButton.SetPosition({windowCenter.x, windowCenter.y + 300.0f});
+	m_QuitButton.SetBackgroundColor(buttonBackgroundColor);
+	m_QuitButton.SetBackgroundPressedColor(buttonBackgroundPressedColor);
+	m_QuitButton.SetTextColorHovered(buttonTextColorHovered);
+	m_QuitButton.SetTextColorPressed(buttonTextColorPressed);
 
 	m_SpiderWebStart	= {150.0f, 220.0f};
 	m_SpiderSize		= {64.0f, 64.0f};
@@ -83,7 +82,7 @@ bool CMainMenuState::OnEnter(void)
 		return false;
 
 //	audioHandler.PlayMusic(m_pMusic, -1);
-	audioHandler.SetMusicVolume(0);
+//	audioHandler.SetMusicVolume(0);
 
 	return true;
 }
@@ -101,12 +100,12 @@ void CMainMenuState::OnExit(void)
 
 	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures and buttons, unload/stop main-menu music etc)
 
-	audioHandler.StopMusic();
-	audioHandler.DestroyMusic(m_pMusic);
-	m_pMusic = nullptr;
+//	audioHandler.StopMusic();
+//	audioHandler.DestroyMusic(m_pMusic);
+//	m_pMusic = nullptr;
 
-	m_SettingsButton.Destroy(m_pApplication);
 	m_QuitButton.Destroy(m_pApplication);
+	m_SettingsButton.Destroy(m_pApplication);
 	m_PlayButton.Destroy(m_pApplication);
 	m_TitleTextBlock.Destroy(m_pApplication);
 
@@ -134,9 +133,9 @@ void CMainMenuState::Update(const float deltaTime)
 	m_SettingsButton.Update(inputHandler);
 
 	// Switch state whenever any of the buttons- or a specific key on the keyboard is pressed
-		 if (m_PlayButton.IsPressed(inputHandler) || inputHandler.KeyPressed(SDL_SCANCODE_RETURN)) m_pApplication->SetState(CApplication::EState::GAME);
-	else if (m_QuitButton.IsPressed(inputHandler) || inputHandler.KeyPressed(SDL_SCANCODE_ESCAPE)) m_pApplication->SetState(CApplication::EState::QUIT);
-	else if (m_SettingsButton.IsPressed(inputHandler) || inputHandler.KeyPressed(SDL_SCANCODE_ESCAPE)) m_pApplication->SetState(CApplication::EState::SETTINGS);
+		 if (m_PlayButton.IsPressed(inputHandler))		m_pApplication->SetState(CApplication::EState::GAME);
+	else if (m_SettingsButton.IsPressed(inputHandler))	m_pApplication->SetState(CApplication::EState::SETTINGS);
+	else if (m_QuitButton.IsPressed(inputHandler))		m_pApplication->SetState(CApplication::EState::QUIT);
 
 	m_LifeTime += deltaTime;
 
@@ -147,8 +146,8 @@ void CMainMenuState::Update(const float deltaTime)
 	m_pSpider->SetAngle(-m_SpiderAngle);
 
 	// Will fade the menu music in/out whenever the game switch to/from this state
-	if (transitionRenderer.IsTransitioning())
-		m_pApplication->GetAudioHandler().SetMusicVolume(MIX_MAX_VOLUME - (int)((float)MIX_MAX_VOLUME * transitionRenderer.GetTransitionValue()));
+//	if (transitionRenderer.IsTransitioning())
+//		m_pApplication->GetAudioHandler().SetMusicVolume(MIX_MAX_VOLUME - (int)((float)MIX_MAX_VOLUME * transitionRenderer.GetTransitionValue()));
 }
 
 void CMainMenuState::Render(void)

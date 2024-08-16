@@ -23,10 +23,11 @@ private:
 
 	CTexture*	m_pBackground		= nullptr;
 
-	TTF_Font*	m_TextFont			= nullptr;
-	TTF_Font*	m_ButtonFont		= nullptr;
+	TTF_Font*	m_pTitleTextFont	= nullptr;
+	TTF_Font*	m_pSpiderCountFont	= nullptr;
+	TTF_Font*	m_pButtonFont		= nullptr;
 
-	Mix_Music*	m_pMusic			= nullptr;
+//	Mix_Music*	m_pMusic			= nullptr;
 
 	CButton		m_TitleTextBlock	= {};
 	CButton		m_ScoreTextBlock	= {};

@@ -20,9 +20,9 @@ public:
 	enum EState
 	{
 		MAIN_MENU = 0,
+		SETTINGS,
 		GAME,
 		QUIT,
-		SETTINGS,
 		END_OF_ROUND,
 		NUM_STATES
 	};

@@ -7,7 +7,8 @@
 #include "GameObjects/Player.h"
 #include "GameObjects/Spider.h"
 #include "GameObjects/Table.h"
-#include "Handlers/AudioHandler.h"
+#include "Globals.h"
+//#include "Handlers/AudioHandler.h"
 #include "Handlers/FontHandler.h"
 #include "Utilities/CollisionUtilities.h"
 #include "Utilities/Random.h"
@@ -43,12 +44,16 @@ bool CGameState::OnEnter(void)
 	if (!m_pFont)
 		return false;
 
-	m_pMusic = audioHandler.CreateMusic("Assets/Audio/game.mp3");
-	if (!m_pMusic)
+	m_pCountdownFont = fontHandler.CreateFont("Assets/Fonts/SpookyWebbie-lgvxX.ttf", 150);
+	if (!m_pFont)
 		return false;
 
+//	m_pMusic = audioHandler.CreateMusic("Assets/Audio/game.mp3");
+//	if (!m_pMusic)
+//		return false;
+
 //	audioHandler.PlayMusic(m_pMusic, -1);
-	audioHandler.SetMusicVolume(0);
+//	audioHandler.SetMusicVolume(0);
 
 	m_pPlayer = new CPlayer(m_pApplication);
 	if (!m_pPlayer->Create("player.png", {0.0f, 0.0f}, 5))
@@ -72,7 +77,7 @@ bool CGameState::OnEnter(void)
 	m_Obstacles.push_back(m_pChair);
 
 	m_pSpider = new CSpider(m_pApplication);
-	if (!m_pSpider->Create("spider.png", {900.0f, -50.0f}, 1))
+	if (!m_pSpider->Create("spider.png", {900.0f, -60.0f}, 1))
 		return false;
 	((CSpider*)m_pSpider)->SetTarget(m_pPlayer);
 
@@ -91,7 +96,16 @@ bool CGameState::OnEnter(void)
 
 	m_SpiderCount = 0;
 
-	m_Timer = m_TimerDefault;
+	m_CountdownTimer	= m_CountdownTimerDefault;
+	m_PreStartTimer		= m_PreStartTimerDefault;
+	m_Timer				= m_TimerDefault;
+
+	m_DeathFadeout = false;
+
+	m_State = Estate::IDLE;
+
+	e_SpiderCount				= 0;
+	e_EndOfRoundPlayerKilled	= false;
 
 	return true;
 }
@@ -104,7 +118,7 @@ void CGameState::OnExit(void)
 
 	// Easy access to handlers so you don't have to write m_pApplication->Get_X_Handler() multiple times below
 	CTextureHandler&	textureHandler	= m_pApplication->GetTextureHandler();
-	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
+//	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
 	CFontHandler&		fontHandler		= m_pApplication->GetFontHandler();
 
 	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures, unload/stop game music etc)
@@ -137,12 +151,14 @@ void CGameState::OnExit(void)
 	delete m_pPlayer;
 	m_pPlayer = nullptr;
 
-	audioHandler.StopMusic();
-	audioHandler.DestroyMusic(m_pMusic);
-	m_pMusic = nullptr;
+//	audioHandler.StopMusic();
+//	audioHandler.DestroyMusic(m_pMusic);
+//	m_pMusic = nullptr;
 
+	fontHandler.DestroyFont(m_pCountdownFont);
 	fontHandler.DestroyFont(m_pFont);
-	m_pFont = nullptr;
+	m_pCountdownFont	= nullptr;
+	m_pFont				= nullptr;
 
 	textureHandler.DestroyTexture(m_pHeartBlack->GetName());
 	textureHandler.DestroyTexture(m_pHeartRed->GetName());
@@ -154,12 +170,6 @@ void CGameState::OnExit(void)
 
 void CGameState::Update(const float deltaTime)
 {
-	// If the escape key on the keyboard is pressed, switch to the main menu
-	if (m_pApplication->GetInputHandler().KeyPressed(SDL_SCANCODE_ESCAPE))
-		m_pApplication->SetState(CApplication::EState::QUIT);
-
-	// Entering the states
-
 	if (m_State == Estate::IDLE)
 	{
 		if (!m_pApplication->GetTransitionRenderer().IsTransitioning())
@@ -168,22 +178,22 @@ void CGameState::Update(const float deltaTime)
 
 	else if (m_State == Estate::COUNT_DOWN)
 	{
-		// Count down the countdown timer
-		m_CountDownTimer -= deltaTime;
+		m_pPlayer->Update(deltaTime);
 
-		if (m_CountDownTimer <= 0.0f) 
+		m_CountdownTimer -= deltaTime;
+
+		if (m_CountdownTimer <= 0.0f)
 		{
-			m_CountDownTimer = 0.0f;
+			m_CountdownTimer = 0.0f;
 
 			m_State = Estate::PRE_START;
 		}
-
-		std::cout << "m_CountdownTimer: " << (int)m_CountDownTimer << std::endl;
 	}
 
 	else if (m_State == Estate::PRE_START)
 	{
-		// Count down the "GO!" timer
+		m_pPlayer->Update(deltaTime);
+
 		m_PreStartTimer -= deltaTime;
 
 		if (m_PreStartTimer <= 0.0f)
@@ -192,13 +202,13 @@ void CGameState::Update(const float deltaTime)
 
 			m_State = Estate::ROUND_STARTED;
 		}
-
-		std::cout << "m_PreStartTimer: " << (int)m_PreStartTimer << std::endl;
 	}
 
 	else if (m_State == Estate::ROUND_STARTED)
 	{
-		// The actual round has now started so update the player, the spider, the round-timer etc
+		// If the escape key on the keyboard is pressed, switch to the main menu
+		if (m_pApplication->GetInputHandler().KeyPressed(SDL_SCANCODE_ESCAPE))
+			m_pApplication->SetState(CApplication::EState::QUIT);
 
 		// Update the game objects here
 
@@ -248,11 +258,14 @@ void CGameState::Update(const float deltaTime)
 
 		m_Timer -= deltaTime;
 
-		if (m_Timer <= 0.0f)
+		if(m_Timer <= 0.0f)
 		{
 			m_Timer = 0.0f;
 
 			m_State = Estate::ROUND_ENDED;
+
+			e_SpiderCount				= m_SpiderCount;
+			e_EndOfRoundPlayerKilled	= false;
 
 			m_pApplication->SetState(CApplication::EState::END_OF_ROUND);
 		}
@@ -260,6 +273,12 @@ void CGameState::Update(const float deltaTime)
 
 	else if (m_State == Estate::ROUND_ENDED)
 	{
+		m_pPlayer->Update(deltaTime);
+		m_pPlayer->HandleObstacleCollision(m_Obstacles, deltaTime);
+
+		m_pSpider->Update(deltaTime);
+		m_pSpider->HandleObstacleCollision(m_Obstacles, deltaTime);
+
 		if (m_DeathFadeout)
 		{
 			m_DeathFadeDelay -= deltaTime;
@@ -278,8 +297,8 @@ void CGameState::Update(const float deltaTime)
 	const CTransitionRenderer& transitionRenderer = m_pApplication->GetTransitionRenderer();
 
 	// Will fade the game music in/out whenever the game switch to/from this state
-	if (transitionRenderer.IsTransitioning())
-		m_pApplication->GetAudioHandler().SetMusicVolume((MIX_MAX_VOLUME - m_VolumeLimiter) - (int)((float)(MIX_MAX_VOLUME - m_VolumeLimiter) * transitionRenderer.GetTransitionValue()));
+//	if (transitionRenderer.IsTransitioning())
+//		m_pApplication->GetAudioHandler().SetMusicVolume((MIX_MAX_VOLUME - m_VolumeLimiter) - (int)((float)(MIX_MAX_VOLUME - m_VolumeLimiter) * transitionRenderer.GetTransitionValue()));
 }
 
 void CGameState::Render(void)
@@ -319,16 +338,22 @@ void CGameState::Render(void)
 		fireball->Render();
 	}
 	
-	fontHandler.RenderText(renderer, m_pFont, "Time: " + std::to_string((uint32_t)m_Timer), {10.0f, 50.0f}, {200, 0, 0, 255});
+	fontHandler.RenderText(renderer, m_pFont, "Time: " + std::to_string((uint32_t)ceilf(m_Timer)), {10.0f, 50.0f}, {200, 0, 0, 255});
 
 	if(m_State == Estate::COUNT_DOWN)
 	{
-		fontHandler.RenderText(renderer, m_pFont, std::to_string((uint32_t)m_CountDownTimer + 1), {windowCenter}, { 200, 0, 0, 255 });
+		const std::string	timerString = std::to_string((uint32_t)ceilf(m_CountdownTimer));
+		const SDL_FPoint	textSize	= fontHandler.GetTextSize(m_pCountdownFont, timerString);
+
+		fontHandler.RenderText(renderer, m_pCountdownFont, timerString, {windowCenter.x - (textSize.x * 0.5f), windowCenter.y - (textSize.y * 0.5f)}, {200, 0, 0, 255});
 	}
 
-	if (m_State == Estate::PRE_START)
+	else if (m_State == Estate::PRE_START)
 	{
-		fontHandler.RenderText(renderer, m_pFont, "Go!", {windowCenter}, {200, 0, 0, 255});
+		const std::string	preStartString	= "GO!";
+		const SDL_FPoint	textSize		= fontHandler.GetTextSize(m_pCountdownFont, preStartString);
+
+		fontHandler.RenderText(renderer, m_pCountdownFont, preStartString, {windowCenter.x - (textSize.x * 0.5f), windowCenter.y - (textSize.y * 0.5f)}, {200, 0, 0, 255});
 	}
 }
 
@@ -380,4 +405,9 @@ void CGameState::OnPlayerDying(void)
 {
 	m_DeathFadeDelay	= m_DeathFadeDelayDefault;
 	m_DeathFadeout		= true;
+
+	m_State = Estate::ROUND_ENDED;
+
+	e_SpiderCount				= m_SpiderCount;
+	e_EndOfRoundPlayerKilled	= true;
 }

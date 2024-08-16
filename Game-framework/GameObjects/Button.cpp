@@ -44,6 +44,18 @@ void CButton::Update(CInputHandler& inputHandler)
 
 void CButton::Render(SDL_Renderer* renderer, const SDL_FPoint* mousePosition)
 {
+	if (!m_Enabled)
+	{
+		SDL_SetRenderDrawColor(renderer, m_BackgroundColor.r, m_BackgroundColor.g, m_BackgroundColor.b, m_BackgroundColor.a);
+		SDL_RenderFillRectF(renderer, &m_TextRectangle);
+
+		m_pTexture->SetColorMod(m_TextColorDisabled);
+		m_pTexture->SetSize({m_TextRectangle.w, m_TextRectangle.h});
+		m_pTexture->Render({m_TextRectangle.x, m_TextRectangle.y});
+
+		return;
+	}
+
 	if (m_Held)
 		SDL_SetRenderDrawColor(renderer, m_BackgroundColorPressed.r, m_BackgroundColorPressed.g, m_BackgroundColorPressed.b, m_BackgroundColorPressed.a);
 
@@ -94,6 +106,9 @@ bool CButton::IsPressed(CInputHandler& inputHandler)
 
 bool CButton::PointInside(const SDL_FPoint& point)
 {
+	if (!m_Enabled)
+		return false;
+
 	if (m_Held)
 	{
 		const float		diffW	= ((m_TextRectangle.w * m_ScalePressed) - (m_TextRectangle.w * m_ScaleDefault)) * 0.5f;

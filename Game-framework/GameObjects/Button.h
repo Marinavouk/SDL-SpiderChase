@@ -27,6 +27,8 @@ public:
 	SDL_FPoint&	GetPosition(void) const								{return (SDL_FPoint&)m_Position;}
 	void		SetPosition(const SDL_FPoint& newPosition);
 
+	SDL_FPoint	GetSize(void) const									{return {m_TextRectangle.w, m_TextRectangle.h};}
+
 	void		SetBackgroundColor(const SDL_Color& color)			{m_BackgroundColor = color;}
 	void		SetBackgroundPressedColor(const SDL_Color& color)	{m_BackgroundColorPressed = color;}
 	void		SetTextColor(const SDL_Color& color)				{m_TextColor = color;}
@@ -34,6 +36,9 @@ public:
 	void		SetTextColorPressed(const SDL_Color& color)			{m_TextColorPressed = color;}
 
 	void		SetTriggerButton(const int32_t newTriggerButton)	{m_TriggerButton = newTriggerButton;}
+
+	bool		GetEnabled(void) const								{return m_Enabled;}
+	void		SetEnabled(const bool enabled)						{m_Enabled = enabled;}
 
 private:
 
@@ -52,6 +57,7 @@ private:
 	SDL_Color	m_TextColor					= {255, 255,	255,	255};
 	SDL_Color	m_TextColorHovered			= {255, 255,	255,	255};
 	SDL_Color	m_TextColorPressed			= {255, 255,	255,	255};
+	SDL_Color	m_TextColorDisabled			= {100, 100,	100,	255};
 
 	float		m_ScaleDefault				= 1.0f;
 	float		m_ScalePressed				= 1.1f;
@@ -60,5 +66,6 @@ private:
 	int32_t		m_TriggerButton				= SDL_BUTTON_LEFT;
 
 	bool		m_Held						= false;
+	bool		m_Enabled					= true;
 
 };
