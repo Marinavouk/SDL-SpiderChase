@@ -76,17 +76,30 @@ bool CGameState::OnEnter(void)
 	m_Obstacles.push_back(m_pTable);
 	m_Obstacles.push_back(m_pChair);
 
-	m_pSpider = new CSpider(m_pApplication);
-	if (!m_pSpider->Create("spider.png", {900.0f, -60.0f}, 1))
-		return false;
-	((CSpider*)m_pSpider)->SetTarget(m_pPlayer);
+	for (uint32_t i = 0; i < 10; ++i)
+	{
+		CGameObject* gameObject = new CSpider(m_pApplication);
+		if (!gameObject->Create("spider.png", {-1000.0f, -1000.0f}, 1))
+			return false;
 
-	m_Enemies.push_back(m_pSpider);
+		CSpider* spider = (CSpider*)gameObject;
+		spider->SetDyingCallback(std::bind(&CGameState::OnSpiderDying, this, std::placeholders::_1));
+		spider->SetTarget(m_pPlayer);
+		spider->SetIndex(i);
 
-	for (uint32_t i = 0; i < 1; ++i)
+		m_SpiderPool.push_back(gameObject);
+	}
+
+	for (uint32_t i = 0; i < 5; ++i)
+	{
+		SpawnSpider();
+	}
+
+	for (uint32_t i = 0; i < 10; ++i)
 	{
 		// Create a fireball
 		CGameObject* fireball = new CFireball(m_pApplication);
+
 		if (!fireball->Create("fire_ball.png", {-500.0f, -500.0f}, 1))
 			return false;
 
@@ -102,7 +115,7 @@ bool CGameState::OnEnter(void)
 
 	m_DeathFadeout = false;
 
-	m_State = Estate::IDLE;
+	m_State = Estate::COUNT_DOWN;
 
 	e_SpiderCount				= 0;
 	e_EndOfRoundPlayerKilled	= false;
@@ -129,15 +142,18 @@ void CGameState::OnExit(void)
 		delete fireball;
 	}
 
+	for (CGameObject* spider : m_SpiderPool)
+	{
+		spider->Destroy();
+		delete spider;
+	}
+
 	m_ActiveFireballs.clear();
+	m_ActiveSpiders.clear();
+	m_SpiderPool.clear();
 	m_FireballPool.clear();
 
-	m_Enemies.clear();
 	m_Obstacles.clear();
-
-	m_pSpider->Destroy();
-	delete m_pSpider;
-	m_pSpider = nullptr;
 
 	m_pChair->Destroy();
 	delete m_pChair;
@@ -170,6 +186,10 @@ void CGameState::OnExit(void)
 
 void CGameState::Update(const float deltaTime)
 {
+	// If the escape key on the keyboard is pressed, switch to the main menu
+	if (m_pApplication->GetInputHandler().KeyPressed(SDL_SCANCODE_ESCAPE))
+		m_pApplication->SetState(CApplication::EState::QUIT);
+
 	if (m_State == Estate::IDLE)
 	{
 		if (!m_pApplication->GetTransitionRenderer().IsTransitioning())
@@ -206,19 +226,18 @@ void CGameState::Update(const float deltaTime)
 
 	else if (m_State == Estate::ROUND_STARTED)
 	{
-		// If the escape key on the keyboard is pressed, switch to the main menu
-		if (m_pApplication->GetInputHandler().KeyPressed(SDL_SCANCODE_ESCAPE))
-			m_pApplication->SetState(CApplication::EState::QUIT);
-
 		// Update the game objects here
 
 		m_pPlayer->HandleInput(deltaTime);
 		m_pPlayer->Update(deltaTime);
 		m_pPlayer->HandleObstacleCollision(m_Obstacles, deltaTime);
-		m_pPlayer->HandleEnemyCollision(m_Enemies, deltaTime);
+		m_pPlayer->HandleEnemyCollision(m_ActiveSpiders, deltaTime);
 
-		m_pSpider->Update(deltaTime);
-		m_pSpider->HandleObstacleCollision(m_Obstacles, deltaTime);
+		for (CGameObject* spider : m_ActiveSpiders)
+		{
+			spider->Update(deltaTime);
+			spider->HandleObstacleCollision(m_Obstacles, deltaTime);
+		}
 
 		for (uint32_t i = 0; i < m_ActiveFireballs.size(); ++i)
 		{
@@ -235,11 +254,11 @@ void CGameState::Update(const float deltaTime)
 
 			bool spiderCollision = false;
 
-			if (!m_pSpider->GetIsDead())
+			for (CGameObject* spider : m_ActiveSpiders)
 			{
-				if (QuadVsQuad(fireball->GetCollider(), m_pSpider->GetCollider()))
+				if (!spider->GetIsDead() && QuadVsQuad(fireball->GetCollider(), spider->GetCollider()))
 				{
-					m_pSpider->Kill();
+					spider->Kill();
 					fireball->Kill();
 
 					m_SpiderCount++;
@@ -276,8 +295,11 @@ void CGameState::Update(const float deltaTime)
 		m_pPlayer->Update(deltaTime);
 		m_pPlayer->HandleObstacleCollision(m_Obstacles, deltaTime);
 
-		m_pSpider->Update(deltaTime);
-		m_pSpider->HandleObstacleCollision(m_Obstacles, deltaTime);
+		for (CGameObject* spider : m_ActiveSpiders)
+		{
+			spider->Update(deltaTime);
+			spider->HandleObstacleCollision(m_Obstacles, deltaTime);
+		}
 
 		if (m_DeathFadeout)
 		{
@@ -330,8 +352,12 @@ void CGameState::Render(void)
 
 	m_pChair->Render();
 	m_pTable->Render();
-	m_pSpider->Render();
 	m_pPlayer->Render();
+
+	for (CGameObject* spider : m_ActiveSpiders)
+	{
+		spider->Render();
+	}
 
 	for (CGameObject* fireball : m_ActiveFireballs)
 	{
@@ -361,7 +387,12 @@ void CGameState::RenderDebug(void)
 {
 	m_pChair->RenderDebug();
 	m_pTable->RenderDebug();
-	m_pSpider->RenderDebug();
+
+	for (CGameObject* spider : m_ActiveSpiders)
+	{
+		spider->RenderDebug();
+	}
+
 	m_pPlayer->RenderDebug();
 
 	for (CGameObject* fireball : m_ActiveFireballs)
@@ -370,10 +401,48 @@ void CGameState::RenderDebug(void)
 	}
 }
 
+void CGameState::SpawnSpider(void)
+{
+	CRandom*			RNG					= m_pApplication->GetRandomNumberGenerator();
+	const SDL_FPoint	windowSize			= m_pApplication->GetWindowSize();
+	const float			windowEdgeOffset	= 200.0f;
+
+	bool spiderSpawn = false;
+
+	// Loop through the spider pool and try to retrieve an inactive/unused spider that can be spawned on the screen
+	for (CGameObject* gameObject : m_SpiderPool)
+	{
+		CSpider* spider = (CSpider*)gameObject;
+
+		// Is the current spider inactive/unused?
+		if (!spider->GetIsActive())
+		{
+			// Spawn a spider above outside the upper part of the window, in a random horizontal- and vertical position
+			const SDL_FPoint spawnPosition = {RNG->RandomFloat(windowEdgeOffset, (windowSize.x - spider->GetColliderSize().x) - windowEdgeOffset), RNG->RandomFloat(-windowEdgeOffset, -60.0f)};
+
+			// Select a random length the spider will hang down from the ceiling
+			const float threadLength = RNG->RandomFloat(150.0f, 150.0f);
+			
+			spider->Activate(spawnPosition, threadLength, (uint32_t)m_ActiveSpiders.size());
+
+			// Place the found inactive/unused spider in the m_ActiveSpiders vector
+			m_ActiveSpiders.push_back(spider);
+
+			spiderSpawn = true;
+
+			// Should break out of the for loop now since an inactive/unused spider has been found
+			break;
+		}
+	}
+
+	if (!spiderSpawn)
+		printf("");
+}
+
 // This function is called whenever the player is playing its attack animation
 void CGameState::OnPlayerAttacking(void)
 {
-	// Loop through the fireball pool and try to retrieve an unused fireball that can be spawned on the screen
+	// Loop through the fireball pool and try to retrieve an inactive/unused fireball that can be spawned on the screen
 	for (CGameObject* gameObject : m_FireballPool)
 	{
 		CFireball* fireball = (CFireball*)gameObject;
@@ -410,4 +479,17 @@ void CGameState::OnPlayerDying(void)
 
 	e_SpiderCount				= m_SpiderCount;
 	e_EndOfRoundPlayerKilled	= true;
+}
+
+// This function is called whenever a spider is playing its dying animation
+void CGameState::OnSpiderDying(const uint32_t index)
+{
+	m_ActiveSpiders.erase(m_ActiveSpiders.begin() + index);
+
+	for (uint32_t i = 0; i < m_ActiveSpiders.size(); ++i)
+	{
+		((CSpider*)m_ActiveSpiders[i])->SetIndex(i);
+	}
+
+	SpawnSpider();
 }

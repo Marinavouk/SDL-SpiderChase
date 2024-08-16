@@ -21,8 +21,10 @@ public:
 
 private:
 
+	void			SpawnSpider(void);
 	void			OnPlayerAttacking(void);
 	void			OnPlayerDying(void);
+	void			OnSpiderDying(const uint32_t index);
 
 private:
 
@@ -53,7 +55,6 @@ private:
 	CGameObject*	m_pPlayer				= nullptr;
 	CGameObject*	m_pTable				= nullptr;
 	CGameObject*	m_pChair				= nullptr;
-	CGameObject*	m_pSpider				= nullptr;
 
 	uint32_t		m_VolumeLimiter			= 100;
 	uint32_t		m_SpiderCount			= 0;
@@ -62,7 +63,7 @@ private:
 	float           m_CountdownTimer		= m_CountdownTimerDefault;
 	float           m_PreStartTimerDefault	= 1.0f;
 	float           m_PreStartTimer			= m_PreStartTimerDefault;
-	float			m_TimerDefault			= 60.0f;
+	float			m_TimerDefault			= 30.0f;
 	float			m_Timer					= m_TimerDefault;
 
 	// When the player has died, the game waits this long before fading out and changing to the end-of-round state
@@ -74,8 +75,9 @@ private:
 	Estate			m_State					= Estate::IDLE;
 
 	GameObjectList	m_Obstacles				= {};
-	GameObjectList	m_Enemies				= {};
+	GameObjectList	m_SpiderPool			= {};
 	GameObjectList	m_FireballPool			= {};
+	GameObjectList	m_ActiveSpiders			= {};
 	GameObjectList	m_ActiveFireballs		= {};
 
 };

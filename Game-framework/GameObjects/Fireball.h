@@ -21,8 +21,6 @@ public:
 
 public:
 
-	bool			GetIsDead(void) const				{return m_IsDead;}
-
 	bool			GetIsActive(void) const				{return m_IsActive;}
 	void			SetIsActive(const bool isActive)	{m_IsActive = isActive;}
 

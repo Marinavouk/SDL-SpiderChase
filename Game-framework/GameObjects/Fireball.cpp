@@ -69,6 +69,6 @@ void CFireball::Activate(const SDL_FPoint& spawnPosition, const SDL_RendererFlip
 	m_Angle		= 0.0f;
 	m_LifeTime	= 0.0f;
 
-	m_IsDead	= false;
 	m_IsActive	= true;
+	m_IsDead	= false;
 }

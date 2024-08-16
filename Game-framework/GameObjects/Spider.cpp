@@ -20,6 +20,8 @@ bool CSpider::Create(const std::string& textureFileName, const SDL_FPoint& posit
 	m_pAnimatorWalking->Set(	m_pTexture, 10, 0, 9, 3, frameSize, 7.0f, true,		CAnimator::EDirection::FORWARD);
 	m_pAnimatorDying->Set(		m_pTexture, 4,  0, 3, 4, frameSize, 7.0f, false,	CAnimator::EDirection::FORWARD);
 
+	m_pAnimatorDying->SetAnimationEndCallback(std::bind(&CSpider::OnDyingAnimationEnd, this));
+
 	ActivateAnimator(m_pAnimatorHanging);
 
 	m_pTexture->SetSize({frameSize.x * m_Scale, frameSize.y * m_Scale});
@@ -45,6 +47,8 @@ void CSpider::Destroy(void)
 	m_pAnimatorHanging	= nullptr;
 	m_pCurrentAnimator	= nullptr;
 
+	m_pDyingCallback = nullptr;
+
 	CGameObject::Destroy();
 }
 
@@ -58,6 +62,7 @@ void CSpider::Render(void)
 		SDL_RenderDrawLineF(renderer, m_StartPosition.x + (m_Rectangle.w * 0.5f), 0.0f, m_Collider.x + (m_Collider.w * 0.5f), m_Collider.y + (m_Collider.h * 0.5f));
 	}
 
+	m_pTexture->SetTextureCoords(m_pCurrentAnimator->GetClipRectangle());
 	m_pTexture->SetFlipMethod(m_FlipMethod);
 	m_pTexture->SetAngle(-m_Angle);
 
@@ -68,14 +73,11 @@ void CSpider::Kill(void)
 {
 	CGameObject::Kill();
 
-	m_pCurrentAnimator = m_pAnimatorDying;
-	m_pCurrentAnimator->Reset();
+	ActivateAnimator(m_pAnimatorDying);
 
 	m_Velocity = {0.0f, 0.0f};
 
 	m_State = EState::DEAD;
-
-	m_IsActive = false;
 }
 
 void CSpider::Update(const float deltaTime)
@@ -86,7 +88,7 @@ void CSpider::Update(const float deltaTime)
 
 		SyncCollider();
 
-		if (m_Rectangle.y > 150.0f)
+		if (m_Rectangle.y > m_ThreadLength)
 		{
 			m_LifeTime = 0.0f;
 
@@ -148,7 +150,7 @@ void CSpider::Update(const float deltaTime)
 
 	if (m_State == EState::CHASING_PLAYER)
 	{
-		if (m_pTarget)
+		if (m_pTarget && !m_IsDead)
 		{	
 			const SDL_FPoint playerPosition = m_pTarget->GetColliderCenterPosition();
 			const SDL_FPoint centerPosition = GetColliderCenterPosition();
@@ -196,21 +198,31 @@ void CSpider::HandleObstacleCollision(const GameObjectList& obstacles, const flo
 	}
 }
 
-void CSpider::Activate(const SDL_FPoint& spawnPosition)
+void CSpider::Activate(const SDL_FPoint& spawnPosition, const float threadLength, const uint32_t index)
 {
+	ActivateAnimator(m_pAnimatorHanging);
+
+	m_pTexture->SetTextureCoords(m_pCurrentAnimator->GetClipRectangle());
+
 	m_Rectangle.x = spawnPosition.x;
 	m_Rectangle.y = spawnPosition.y;
 
-	m_Collider.x = m_Rectangle.x;
-	m_Collider.y = m_Rectangle.y;
+	SyncCollider();
 
 	m_StartPosition = spawnPosition;
 
-	m_Angle		= 0.0f;
-	m_LifeTime	= 0.0f;
+	m_Angle			= 0.0f;
+	m_LifeTime		= 0.0f;
+	m_ThreadLength	= threadLength;
 
-	m_IsDead	= false;
+	m_Index = index;
+
 	m_IsActive	= true;
+	m_IsDead	= false;
+
+	m_Velocity.x = m_ChaseVelocity;
+
+	m_State = EState::MOVING_DOWN_FROM_CEILING;
 }
 
 bool CSpider::ResolveObstacleYCollision(const SDL_FRect& collider)
@@ -246,4 +258,15 @@ void CSpider::ActivateAnimator(CAnimator* animator)
 		m_pCurrentAnimator = animator;
 		m_pCurrentAnimator->Reset();
 	}
+}
+
+void CSpider::OnDyingAnimationEnd(void)
+{
+	if (!m_IsActive)
+		return;
+
+	if (m_pDyingCallback)
+		m_pDyingCallback(m_Index);
+
+	m_IsActive = false;
 }

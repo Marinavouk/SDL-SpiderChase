@@ -26,7 +26,6 @@ bool CApplication::Create(void)
 	// If you want to set the color that the renderer's (the big 'screen texture') is "cleared" to, you can use this function
 //	m_Window.SetClearColor({255, 0, 0, 255});
 
-//	m_TextureHandler = CTextureHandler(m_Window.GetRenderer(), "Assets/Textures");
 	if (!m_TextureHandler.Create(m_Window.GetRenderer(), "Assets/Textures"))
 		return false;
 
@@ -53,7 +52,7 @@ bool CApplication::Create(void)
 	m_pStates[EState::END_OF_ROUND]	= new CEndOfRoundState(this);
 
 	// Set the start state for the game, in this case the game will start in the MAIN_MENU state
-	m_pCurrentState = m_pStates[EState::GAME];
+	m_pCurrentState = m_pStates[EState::MAIN_MENU];
 	if(!m_pCurrentState->OnEnter())
 		return false;
 

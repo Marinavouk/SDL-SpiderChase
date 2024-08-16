@@ -3,10 +3,12 @@
 #include "GameObject.h"
 #include "Utilities\Animator.h"
 
-typedef std::function<void()> Callback;
-
 class CPlayer final : public CGameObject
 {
+public:
+
+	typedef std::function<void()> Callback;
+
 public:
 
 	 CPlayer(void)													{}
