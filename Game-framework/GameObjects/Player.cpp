@@ -43,6 +43,9 @@ bool CPlayer::Create(const std::string& textureFileName, const SDL_FPoint& posit
 
 void CPlayer::Destroy(void)
 {
+	m_pDyingCallback		= nullptr;
+	m_pAttackingCallback	= nullptr;
+
 	delete m_pAnimatorDying;
 	delete m_pAnimatorAttacking;
 	delete m_pAnimatorJumping;
@@ -57,9 +60,6 @@ void CPlayer::Destroy(void)
 	m_pAnimatorIdle			= nullptr;
 	m_pCurrentAnimator		= nullptr;
 
-	m_pDyingCallback		= nullptr;
-	m_pAttackingCallback	= nullptr;
-
 	CGameObject::Destroy();
 }
 
@@ -67,8 +67,7 @@ void CPlayer::Kill(void)
 {
 	CGameObject::Kill();
 
-	m_pCurrentAnimator = m_pAnimatorDying;
-	m_pCurrentAnimator->Reset();
+	ActivateAnimator(m_pAnimatorDying);
 
 	m_Velocity = {0.0f, 0.0f};
 

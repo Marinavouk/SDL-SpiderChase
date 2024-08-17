@@ -38,6 +38,8 @@ bool CSpider::Create(const std::string& textureFileName, const SDL_FPoint& posit
 
 void CSpider::Destroy(void)
 {
+	m_pDyingCallback = nullptr;
+
 	delete m_pAnimatorDying;
 	delete m_pAnimatorWalking;
 	delete m_pAnimatorIdle;
@@ -46,8 +48,6 @@ void CSpider::Destroy(void)
 	m_pAnimatorIdle		= nullptr;
 	m_pAnimatorHanging	= nullptr;
 	m_pCurrentAnimator	= nullptr;
-
-	m_pDyingCallback = nullptr;
 
 	CGameObject::Destroy();
 }
