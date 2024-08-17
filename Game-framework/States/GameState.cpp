@@ -405,7 +405,7 @@ void CGameState::SpawnSpider(void)
 {
 	CRandom*			RNG					= m_pApplication->GetRandomNumberGenerator();
 	const SDL_FPoint	windowSize			= m_pApplication->GetWindowSize();
-	const float			windowEdgeOffset	= 200.0f;
+	const float			windowEdgeOffset	= 250.0f;
 
 	bool spiderSpawn = false;
 
@@ -418,10 +418,33 @@ void CGameState::SpawnSpider(void)
 		if (!spider->GetIsActive())
 		{
 			// Spawn a spider above outside the upper part of the window, in a random horizontal- and vertical position
-			const SDL_FPoint spawnPosition = {RNG->RandomFloat(windowEdgeOffset, (windowSize.x - spider->GetColliderSize().x) - windowEdgeOffset), RNG->RandomFloat(-windowEdgeOffset, -60.0f)};
+			SDL_FPoint spawnPosition = {RNG->RandomFloat(windowEdgeOffset, (windowSize.x - spider->GetColliderSize().x) - windowEdgeOffset), RNG->RandomFloat(-windowEdgeOffset, -60)};
+
+			while(true)
+			{
+				bool spiderCollision = false;
+
+				for (CGameObject* otherSpider : m_ActiveSpiders)
+				{
+					const SDL_FRect otherSpiderRectangle	= otherSpider->GetRectangle();
+					const SDL_FRect inactiveSpiderRectangle	= {spawnPosition.x, otherSpiderRectangle.y, spider->GetRectangle().w, spider->GetRectangle().h};
+
+					if (QuadVsQuad(inactiveSpiderRectangle, otherSpiderRectangle))
+					{
+						spiderCollision = true;
+
+						break;
+					}
+				}
+
+				if (!spiderCollision)
+					break;
+
+				spawnPosition.x = RNG->RandomFloat(windowEdgeOffset, (windowSize.x - spider->GetColliderSize().x) - windowEdgeOffset);
+			}
 
 			// Select a random length the spider will hang down from the ceiling
-			const float threadLength = RNG->RandomFloat(150.0f, 150.0f);
+			const float threadLength = RNG->RandomFloat(50.0f, 150.0f);
 			
 			spider->Activate(spawnPosition, threadLength, (uint32_t)m_ActiveSpiders.size());
 
@@ -434,9 +457,6 @@ void CGameState::SpawnSpider(void)
 			break;
 		}
 	}
-
-	if (!spiderSpawn)
-		printf("");
 }
 
 // This function is called whenever the player is playing its attack animation
