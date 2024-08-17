@@ -407,8 +407,6 @@ void CGameState::SpawnSpider(void)
 	const SDL_FPoint	windowSize			= m_pApplication->GetWindowSize();
 	const float			windowEdgeOffset	= 250.0f;
 
-	bool spiderSpawn = false;
-
 	// Loop through the spider pool and try to retrieve an inactive/unused spider that can be spawned on the screen
 	for (CGameObject* gameObject : m_SpiderPool)
 	{
@@ -450,8 +448,6 @@ void CGameState::SpawnSpider(void)
 
 			// Place the found inactive/unused spider in the m_ActiveSpiders vector
 			m_ActiveSpiders.push_back(spider);
-
-			spiderSpawn = true;
 
 			// Should break out of the for loop now since an inactive/unused spider has been found
 			break;
