@@ -51,8 +51,11 @@ bool CApplication::Create(void)
 	m_pStates[EState::QUIT]			= new CQuitState(this);
 	m_pStates[EState::END_OF_ROUND]	= new CEndOfRoundState(this);
 
-	// Set the start state for the game, in this case the game will start in the MAIN_MENU state
-	m_pCurrentState = m_pStates[EState::MAIN_MENU];
+	// Set the start state for the game
+	m_NextState	= EState::MAIN_MENU;
+	m_LastState = m_NextState;
+
+	m_pCurrentState = m_pStates[m_NextState];
 	if(!m_pCurrentState->OnEnter())
 		return false;
 
@@ -104,7 +107,7 @@ void CApplication::HandleEvents(void)
 		{
 			case SDL_QUIT:
 			{
-				m_Running = false;
+				SetState(EState::QUIT);				
 
 				break;
 			}
@@ -186,16 +189,19 @@ void CApplication::Render(void)
 	}
 }
 
-bool CApplication::SetState(const EState newState)
+bool CApplication::SetState(const EState nextState)
 {
 	// Make sure that no state transition is already happening, i.e make sure that m_pNextState is nullptr
 	// If m_pNextState is not nullptr, it means a state transition is occurring
 	if(m_pNextState)
 		return false;
 
-	m_pNextState = m_pStates[newState];
+	m_pNextState = m_pStates[nextState];
 
 	m_TransitionRenderer.StartTransition();
+
+	m_LastState = m_NextState;
+	m_NextState	= nextState;
 
 	return true;
 }

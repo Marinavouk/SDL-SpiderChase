@@ -2,7 +2,7 @@
 #include "MainMenuState.h"
 
 #include "Application.h"
-//#include "Handlers/AudioHandler.h"
+#include "Globals.h"
 
 bool CMainMenuState::OnEnter(void)
 {
@@ -77,12 +77,15 @@ bool CMainMenuState::OnEnter(void)
 	m_LifeTime		= 0.0f;
 	m_SpiderAngle	= 0.0f;
 
-	m_pMusic = audioHandler.CreateMusic("Assets/Audio/menu.mp3");
-	if (!m_pMusic)
-		return false;
+	if (m_pApplication->GetLastState() != CApplication::EState::SETTINGS)
+	{
+		e_pMusic = audioHandler.CreateMusic("Assets/Audio/menu.mp3");
+		if (!e_pMusic)
+			return false;
 
-//	audioHandler.PlayMusic(m_pMusic, -1);
-//	audioHandler.SetMusicVolume(0);
+		audioHandler.PlayMusic(e_pMusic, -1);
+		audioHandler.SetMusicVolume(0);
+	}
 
 	return true;
 }
@@ -96,13 +99,17 @@ void CMainMenuState::OnExit(void)
 	// Easy access to handlers so you don't have to write m_pApplication->Get_X_Handler() multiple times below
 	CTextureHandler&	textureHandler	= m_pApplication->GetTextureHandler();
 	CFontHandler&		fontHandler		= m_pApplication->GetFontHandler();
-	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
 
 	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures and buttons, unload/stop main-menu music etc)
 
-//	audioHandler.StopMusic();
-//	audioHandler.DestroyMusic(m_pMusic);
-//	m_pMusic = nullptr;
+	if (m_pApplication->GetNextState() != CApplication::EState::SETTINGS)
+	{
+		CAudioHandler& audioHandler = m_pApplication->GetAudioHandler();
+
+		audioHandler.StopMusic();
+		audioHandler.DestroyMusic(e_pMusic);
+		e_pMusic = nullptr;
+	}
 
 	m_QuitButton.Destroy(m_pApplication);
 	m_SettingsButton.Destroy(m_pApplication);
@@ -122,7 +129,7 @@ void CMainMenuState::OnExit(void)
 
 void CMainMenuState::Update(const float deltaTime)
 {
-	// Easy access to the input handler and the transition renderer, so you don't have to write m_pApplication->Get_X() multiple times below
+	// Easy access to the input handler and the transition renderer, so you don't have to write m_pApplication->GetX() multiple times below
 	CInputHandler&				inputHandler		= m_pApplication->GetInputHandler();
 	const CTransitionRenderer&	transitionRenderer	= m_pApplication->GetTransitionRenderer();
 
@@ -132,7 +139,7 @@ void CMainMenuState::Update(const float deltaTime)
 	m_QuitButton.Update(inputHandler);
 	m_SettingsButton.Update(inputHandler);
 
-	// Switch state whenever any of the buttons- or a specific key on the keyboard is pressed
+	// Switch state whenever any of the buttons are pressed
 		 if (m_PlayButton.IsPressed(inputHandler))		m_pApplication->SetState(CApplication::EState::GAME);
 	else if (m_SettingsButton.IsPressed(inputHandler))	m_pApplication->SetState(CApplication::EState::SETTINGS);
 	else if (m_QuitButton.IsPressed(inputHandler))		m_pApplication->SetState(CApplication::EState::QUIT);
@@ -145,9 +152,9 @@ void CMainMenuState::Update(const float deltaTime)
 
 	m_pSpider->SetAngle(-m_SpiderAngle);
 
-	// Will fade the menu music in/out whenever the game switch to/from this state
-//	if (transitionRenderer.IsTransitioning())
-//		m_pApplication->GetAudioHandler().SetMusicVolume(MIX_MAX_VOLUME - (int)((float)MIX_MAX_VOLUME * transitionRenderer.GetTransitionValue()));
+	// Will only fade in/out the menu music if the game isn't switching to/from the settings state
+	if (transitionRenderer.IsTransitioning() && (m_pApplication->GetNextState() != CApplication::EState::SETTINGS) && (m_pApplication->GetLastState() != CApplication::EState::SETTINGS))
+		m_pApplication->GetAudioHandler().SetMusicVolume(MIX_MAX_VOLUME - (int)((float)MIX_MAX_VOLUME * transitionRenderer.GetTransitionValue()));
 }
 
 void CMainMenuState::Render(void)

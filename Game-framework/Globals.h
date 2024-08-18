@@ -1,5 +1,7 @@
 #pragma once
 
-extern uint32_t e_SpiderCount;
+extern Mix_Music*	e_pMusic;
 
-extern bool		e_EndOfRoundPlayerKilled;
+extern uint32_t		e_SpiderCount;
+
+extern bool			e_EndOfRoundPlayerKilled;

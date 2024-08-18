@@ -46,7 +46,7 @@ void CButton::Render(SDL_Renderer* renderer, const SDL_FPoint* mousePosition)
 {
 	if (!m_Enabled)
 	{
-		SDL_SetRenderDrawColor(renderer, m_BackgroundColor.r, m_BackgroundColor.g, m_BackgroundColor.b, m_BackgroundColor.a);
+		SDL_SetRenderDrawColor(renderer, m_BackgroundColorDisabled.r, m_BackgroundColorDisabled.g, m_BackgroundColorDisabled.b, m_BackgroundColorDisabled.a);
 		SDL_RenderFillRectF(renderer, &m_TextRectangle);
 
 		m_pTexture->SetColorMod(m_TextColorDisabled);

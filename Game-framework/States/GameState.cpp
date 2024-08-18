@@ -8,7 +8,6 @@
 #include "GameObjects/Spider.h"
 #include "GameObjects/Table.h"
 #include "Globals.h"
-//#include "Handlers/AudioHandler.h"
 #include "Handlers/FontHandler.h"
 #include "Utilities/CollisionUtilities.h"
 #include "Utilities/Random.h"
@@ -19,14 +18,11 @@ bool CGameState::OnEnter(void)
 	std::cout << "Entering game state" << std::endl;
 #endif
 
-	// Easy access to handlers so you don't have to write m_pApplication->Get_X_Handler() multiple times below
 	CTextureHandler&	textureHandler	= m_pApplication->GetTextureHandler();
 	CFontHandler&		fontHandler		= m_pApplication->GetFontHandler();
 	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
 	const SDL_FPoint	windowSize		= m_pApplication->GetWindowSize();
 
-	// Set the clear color (the background color that is shown behind the menu background and other objects)
-	// This is completely optional
 	m_pApplication->GetWindow().SetClearColor({150, 150, 200, 255});
 
 	// Create objects that should be created/started when this state is entered/started (create textures, load/start game music etc)
@@ -48,12 +44,12 @@ bool CGameState::OnEnter(void)
 	if (!m_pFont)
 		return false;
 
-//	m_pMusic = audioHandler.CreateMusic("Assets/Audio/game.mp3");
-//	if (!m_pMusic)
-//		return false;
+	e_pMusic = audioHandler.CreateMusic("Assets/Audio/game.mp3");
+	if (!e_pMusic)
+		return false;
 
-//	audioHandler.PlayMusic(m_pMusic, -1);
-//	audioHandler.SetMusicVolume(0);
+	audioHandler.PlayMusic(e_pMusic, -1);
+	audioHandler.SetMusicVolume(0);
 
 	m_pPlayer = new CPlayer(m_pApplication);
 	if (!m_pPlayer->Create("player.png", {0.0f, 0.0f}, 5))
@@ -97,13 +93,11 @@ bool CGameState::OnEnter(void)
 
 	for (uint32_t i = 0; i < 10; ++i)
 	{
-		// Create a fireball
 		CGameObject* fireball = new CFireball(m_pApplication);
 
 		if (!fireball->Create("fire_ball.png", {-500.0f, -500.0f}, 1))
 			return false;
 
-		// Place it in the fireball pool
 		m_FireballPool.push_back(fireball);
 	}
 
@@ -115,7 +109,7 @@ bool CGameState::OnEnter(void)
 
 	m_DeathFadeout = false;
 
-	m_State = Estate::COUNT_DOWN;
+	m_State = Estate::IDLE;
 
 	e_SpiderCount				= 0;
 	e_EndOfRoundPlayerKilled	= false;
@@ -129,12 +123,20 @@ void CGameState::OnExit(void)
 	std::cout << "Exiting game state" << std::endl;
 #endif
 
-	// Easy access to handlers so you don't have to write m_pApplication->Get_X_Handler() multiple times below
 	CTextureHandler&	textureHandler	= m_pApplication->GetTextureHandler();
-//	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
+	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
 	CFontHandler&		fontHandler		= m_pApplication->GetFontHandler();
 
 	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures, unload/stop game music etc)
+
+	if (m_pApplication->GetNextState() == CApplication::EState::QUIT)
+	{
+		CAudioHandler& audioHandler = m_pApplication->GetAudioHandler();
+
+		audioHandler.StopMusic();
+		audioHandler.DestroyMusic(e_pMusic);
+		e_pMusic = nullptr;
+	}
 
 	for (CGameObject* fireball : m_FireballPool)
 	{
@@ -167,9 +169,9 @@ void CGameState::OnExit(void)
 	delete m_pPlayer;
 	m_pPlayer = nullptr;
 
-//	audioHandler.StopMusic();
-//	audioHandler.DestroyMusic(m_pMusic);
-//	m_pMusic = nullptr;
+	audioHandler.StopMusic();
+	audioHandler.DestroyMusic(e_pMusic);
+	e_pMusic = nullptr;
 
 	fontHandler.DestroyFont(m_pCountdownFont);
 	fontHandler.DestroyFont(m_pFont);
@@ -186,7 +188,6 @@ void CGameState::OnExit(void)
 
 void CGameState::Update(const float deltaTime)
 {
-	// If the escape key on the keyboard is pressed, switch to the main menu
 	if (m_pApplication->GetInputHandler().KeyPressed(SDL_SCANCODE_ESCAPE))
 		m_pApplication->SetState(CApplication::EState::QUIT);
 
@@ -226,7 +227,7 @@ void CGameState::Update(const float deltaTime)
 
 	else if (m_State == Estate::ROUND_STARTED)
 	{
-		// Update the game objects here
+		// The round has started, so update the game objects here so they can move etc
 
 		m_pPlayer->HandleInput(deltaTime);
 		m_pPlayer->Update(deltaTime);
@@ -318,17 +319,15 @@ void CGameState::Update(const float deltaTime)
 
 	const CTransitionRenderer& transitionRenderer = m_pApplication->GetTransitionRenderer();
 
-	// Will fade the game music in/out whenever the game switch to/from this state
-//	if (transitionRenderer.IsTransitioning())
-//		m_pApplication->GetAudioHandler().SetMusicVolume((MIX_MAX_VOLUME - m_VolumeLimiter) - (int)((float)(MIX_MAX_VOLUME - m_VolumeLimiter) * transitionRenderer.GetTransitionValue()));
+	if (transitionRenderer.IsTransitioning())
+		m_pApplication->GetAudioHandler().SetMusicVolume((MIX_MAX_VOLUME - m_VolumeLimiter) - (int)((float)(MIX_MAX_VOLUME - m_VolumeLimiter) * transitionRenderer.GetTransitionValue()));
 }
 
 void CGameState::Render(void)
 {
-	CFontHandler&	fontHandler = m_pApplication->GetFontHandler();
-	SDL_Renderer*	renderer	= m_pApplication->GetWindow().GetRenderer();
-	CWindow&		window		= m_pApplication->GetWindow();
-	const SDL_FPoint windowCenter = m_pApplication->GetWindowCenter();
+	CFontHandler&		fontHandler		= m_pApplication->GetFontHandler();
+	SDL_Renderer*		renderer		= m_pApplication->GetWindow().GetRenderer();
+	const SDL_FPoint	windowCenter	= m_pApplication->GetWindowCenter();
 
 	// Render the game objects here
 
@@ -365,6 +364,9 @@ void CGameState::Render(void)
 	}
 	
 	fontHandler.RenderText(renderer, m_pFont, "Time: " + std::to_string((uint32_t)ceilf(m_Timer)), {10.0f, 50.0f}, {200, 0, 0, 255});
+
+	if (m_State == Estate::IDLE)
+		return;
 
 	if(m_State == Estate::COUNT_DOWN)
 	{
@@ -412,22 +414,26 @@ void CGameState::SpawnSpider(void)
 	{
 		CSpider* spider = (CSpider*)gameObject;
 
-		// Is the current spider inactive/unused?
 		if (!spider->GetIsActive())
 		{
+			// Inactive/unused spider has been found
+
 			// Spawn a spider above outside the upper part of the window, in a random horizontal- and vertical position
 			SDL_FPoint spawnPosition = {RNG->RandomFloat(windowEdgeOffset, (windowSize.x - spider->GetColliderSize().x) - windowEdgeOffset), RNG->RandomFloat(-windowEdgeOffset, -60)};
 
+			// Make sure that the new spider's random position isn't colliding with any of the other spiders
+			// This will loop until a proper x-position is found
 			while(true)
 			{
 				bool spiderCollision = false;
 
-				for (CGameObject* otherSpider : m_ActiveSpiders)
+				for (CGameObject* activeSpider : m_ActiveSpiders)
 				{
-					const SDL_FRect otherSpiderRectangle	= otherSpider->GetRectangle();
-					const SDL_FRect inactiveSpiderRectangle	= {spawnPosition.x, otherSpiderRectangle.y, spider->GetRectangle().w, spider->GetRectangle().h};
+					const SDL_FPoint	newSpiderSize			= spider->GetRectangleSize();
+					const SDL_FRect		activeSpiderRectangle	= activeSpider->GetRectangle();
+					const SDL_FRect		newSpiderRectangle		= {spawnPosition.x, activeSpiderRectangle.y, newSpiderSize.x, newSpiderSize.y};
 
-					if (QuadVsQuad(inactiveSpiderRectangle, otherSpiderRectangle))
+					if (QuadVsQuad(newSpiderRectangle, activeSpiderRectangle))
 					{
 						spiderCollision = true;
 
@@ -446,7 +452,6 @@ void CGameState::SpawnSpider(void)
 			
 			spider->Activate(spawnPosition, threadLength, (uint32_t)m_ActiveSpiders.size());
 
-			// Place the found inactive/unused spider in the m_ActiveSpiders vector
 			m_ActiveSpiders.push_back(spider);
 
 			// Should break out of the for loop now since an inactive/unused spider has been found
@@ -463,7 +468,6 @@ void CGameState::OnPlayerAttacking(void)
 	{
 		CFireball* fireball = (CFireball*)gameObject;
 
-		// Is the current fireball inactive/unused?
 		if (!fireball->GetIsActive())
 		{
 			// Inactive/unused fireball has been found
@@ -476,7 +480,6 @@ void CGameState::OnPlayerAttacking(void)
 			// Spawn the fireball a bit in front of the player
 			fireball->Activate({playerPosition.x + horizontalOffset, playerPosition.y + 20.0f}, playerFlipMethod);
 
-			// Place the found inactive/unused fireball in the m_ActiveFireballs vector
 			m_ActiveFireballs.push_back(fireball);
 
 			// Should break out of the for loop now since an inactive/unused fireball has been found

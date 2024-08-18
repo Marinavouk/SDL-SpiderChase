@@ -3,7 +3,6 @@
 
 #include "Application.h"
 #include "Globals.h"
-//#include "Handlers/AudioHandler.h"
 
 bool CEndOfRoundState::OnEnter(void)
 {
@@ -37,7 +36,7 @@ bool CEndOfRoundState::OnEnter(void)
 	m_TitleTextBlock.SetBackgroundColor({0, 0, 0, 0});
 
 	const std::string spiderString		= ((e_SpiderCount	> 1) ? " spiders!"													: " spider!");
-	const std::string spiderCountString = (e_SpiderCount	> 0) ? "You killed " + std::to_string(e_SpiderCount) + spiderString	: "0 spiders killed, better luck next time!";
+	const std::string spiderCountString = (e_SpiderCount	> 0) ? "You killed " + std::to_string(e_SpiderCount) + spiderString	: "No spiders killed, better luck next time!";
 
 	if (!m_ScoreTextBlock.Create(m_pApplication, m_pSpiderCountFont, spiderCountString, titleTextColor))
 		return false;
@@ -68,12 +67,12 @@ bool CEndOfRoundState::OnEnter(void)
 	m_QuitButton.SetTextColorHovered(buttonTextColorHovered);
 	m_QuitButton.SetTextColorPressed(buttonTextColorPressed);
 
-//	m_pMusic = audioHandler.CreateMusic("Assets/Audio/menu.mp3");
-//	if (!m_pMusic)
-//		return false;
+	e_pMusic = audioHandler.CreateMusic("Assets/Audio/end_of_round.mp3");
+	if (!e_pMusic)
+		return false;
 
-//	audioHandler.PlayMusic(m_pMusic, -1);
-//	audioHandler.SetMusicVolume(0);
+	audioHandler.PlayMusic(e_pMusic, -1);
+	audioHandler.SetMusicVolume(0);
 
 	return true;
 }
@@ -86,9 +85,9 @@ void CEndOfRoundState::OnExit(void)
 
 	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures, unload/stop end-of-round music etc)
 
-//	audioHandler.StopMusic();
-//	audioHandler.DestroyMusic(m_pMusic);
-//	m_pMusic = nullptr;
+	audioHandler.StopMusic();
+	audioHandler.DestroyMusic(e_pMusic);
+	e_pMusic = nullptr;
 
 	m_QuitButton.Destroy(m_pApplication);
 	m_MainMenuButton.Destroy(m_pApplication);
@@ -112,7 +111,7 @@ void CEndOfRoundState::Update(const float deltaTime)
 	CInputHandler&				inputHandler		= m_pApplication->GetInputHandler();
 	const CTransitionRenderer&	transitionRenderer	= m_pApplication->GetTransitionRenderer();
 
-	// Update the end-of-rounds objects here
+	// Update the end-of-round objects here
 
 	m_RestartButton.Update(inputHandler);
 	m_MainMenuButton.Update(inputHandler);
@@ -122,8 +121,8 @@ void CEndOfRoundState::Update(const float deltaTime)
 	else if (m_MainMenuButton.IsPressed(inputHandler))	m_pApplication->SetState(CApplication::EState::MAIN_MENU);
 	else if (m_QuitButton.IsPressed(inputHandler))		m_pApplication->SetState(CApplication::EState::QUIT);
 
-//	if (transitionRenderer.IsTransitioning())
-//		m_pApplication->GetAudioHandler().SetMusicVolume(MIX_MAX_VOLUME - (int)((float)MIX_MAX_VOLUME * transitionRenderer.GetTransitionValue()));
+	if (transitionRenderer.IsTransitioning())
+		m_pApplication->GetAudioHandler().SetMusicVolume(MIX_MAX_VOLUME - (int)((float)MIX_MAX_VOLUME * transitionRenderer.GetTransitionValue()));
 }
 
 void CEndOfRoundState::Render(void)

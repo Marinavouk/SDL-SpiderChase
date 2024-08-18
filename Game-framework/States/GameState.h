@@ -50,8 +50,6 @@ private:
 	TTF_Font*		m_pFont					= nullptr;
 	TTF_Font*		m_pCountdownFont		= nullptr;
 
-	Mix_Music*		m_pMusic				= nullptr;
-
 	CGameObject*	m_pPlayer				= nullptr;
 	CGameObject*	m_pTable				= nullptr;
 	CGameObject*	m_pChair				= nullptr;

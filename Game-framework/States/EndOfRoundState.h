@@ -27,8 +27,6 @@ private:
 	TTF_Font*	m_pSpiderCountFont	= nullptr;
 	TTF_Font*	m_pButtonFont		= nullptr;
 
-//	Mix_Music*	m_pMusic			= nullptr;
-
 	CButton		m_TitleTextBlock	= {};
 	CButton		m_ScoreTextBlock	= {};
 	CButton		m_RestartButton		= {};

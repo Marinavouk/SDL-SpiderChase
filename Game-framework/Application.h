@@ -42,7 +42,7 @@ public:
 	void					Update(void);
 	void					Render(void);
 
-	bool					SetState(const EState newState);
+	bool					SetState(const EState nextState);
 
 	void					OnTransitionOpaque(void);
 
@@ -63,6 +63,9 @@ public:
 
 	SDL_FPoint&				GetWindowSize(void) const				{return (SDL_FPoint&)m_pRenderTarget->GetSize();}
 	SDL_FPoint				GetWindowCenter(void) const;
+
+	EState					GetNextState(void) const				{return m_NextState;}		
+	EState					GetLastState(void) const				{return m_LastState;}		
 
 	// Call this to shutdown the game
 	void					Quit(void)								{m_Running = false;}
@@ -88,6 +91,9 @@ private:
 	CTransitionRenderer	m_TransitionRenderer		= {};
 
 	CTimer				m_Timer						= {};
+
+	EState				m_NextState					= EState::MAIN_MENU;
+	EState				m_LastState					= EState::MAIN_MENU;
 
 	bool				m_Running					= true;
 	bool				m_DebugRendering			= false;

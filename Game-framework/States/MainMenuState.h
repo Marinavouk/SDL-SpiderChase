@@ -27,8 +27,6 @@ private:
 	TTF_Font*	m_pTextFont			= nullptr;
 	TTF_Font*	m_pButtonFont		= nullptr;
 
-	Mix_Music*	m_pMusic			= nullptr;
-
 	CButton		m_TitleTextBlock	= {};
 	CButton		m_PlayButton		= {};
 	CButton		m_QuitButton		= {};
@@ -40,5 +38,7 @@ private:
 
 	float		m_LifeTime			= 0.0f;
 	float		m_SpiderAngle		= 0.0f;
+
+	bool		m_SwitchToGameState	= false;
 
 };

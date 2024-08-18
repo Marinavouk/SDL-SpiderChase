@@ -2,6 +2,7 @@
 #include "SettingsState.h"
 
 #include "Application.h"
+#include "Globals.h"
 
 bool CSettingsState::OnEnter(void)
 {
@@ -9,16 +10,14 @@ bool CSettingsState::OnEnter(void)
 	std::cout << "Entering settings state" << std::endl;
 #endif
 
-	// Easy access to handlers so you don't have to write m_pApplication->Get_X_Handler() multiple times below
 	CTextureHandler&	textureHandler	= m_pApplication->GetTextureHandler();
 	CFontHandler&		fontHandler		= m_pApplication->GetFontHandler();
-	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
 	const SDL_FPoint	windowCenter	= m_pApplication->GetWindowCenter();
 	CWindow&			rWindow			= m_pApplication->GetWindow();
 
 	rWindow.SetClearColor({0, 0, 0, 255});
 
-	// Create objects that should be created/started when this state is entered/started (create textures and buttons, load/start main-menu music etc)
+	// Create objects that should be created/started when this state is entered/started (create textures and buttons etc)
 
 	m_pBackground = textureHandler.CreateTexture("menu_background.png");
 	m_pBackground->SetSize(m_pApplication->GetWindowSize());
@@ -30,7 +29,8 @@ bool CSettingsState::OnEnter(void)
 
 	const SDL_Color titleTextColor					= {200, 0,		0,		255}; // Dark red
 	const SDL_Color buttonBackgroundColor			= {100, 100,	100,	150}; // Light gray	<-- Background color when the button is not held
-	const SDL_Color buttonBackgroundPressedColor	= {100, 100,	100,	200}; // Dark gray	<-- Background color when the button is held
+	const SDL_Color buttonBackgroundPressedColor	= {100, 100,	100,	150}; // Light gray	<-- Background color when the button is held
+	const SDL_Color buttonBackgroundDisabledColor	= {	50,	 50,	 50,	150}; // Dark gray	<-- Background color when the button is disabled
 	const SDL_Color buttonTextColor					= {255, 255,	255,	255}; // White		<-- Text color when the mouse pointer is outside the button
 	const SDL_Color buttonTextColorHovered			= {255, 0,		0,		255}; // Red		<-- Text color when the mouse pointer is inside (hovering) the button
 	const SDL_Color buttonTextColorPressed			= {255, 0,		0,		255}; // Red		<-- Text color when the button is held
@@ -58,6 +58,7 @@ bool CSettingsState::OnEnter(void)
 	m_FullscreenOnButton.SetPosition({windowCenter.x, 400.0f});
 	m_FullscreenOnButton.SetBackgroundColor(buttonBackgroundColor);
 	m_FullscreenOnButton.SetBackgroundPressedColor(buttonBackgroundPressedColor);
+	m_FullscreenOnButton.SetBackgroundDisabledColor(buttonBackgroundDisabledColor);
 	m_FullscreenOnButton.SetTextColorHovered(buttonTextColorHovered);
 	m_FullscreenOnButton.SetTextColorPressed(buttonTextColorPressed);
 	m_FullscreenOnButton.SetEnabled(!windowFullscreen);
@@ -67,6 +68,7 @@ bool CSettingsState::OnEnter(void)
 	m_FullscreenOffButton.SetPosition({windowCenter.x, 450});
 	m_FullscreenOffButton.SetBackgroundColor(buttonBackgroundColor);
 	m_FullscreenOffButton.SetBackgroundPressedColor(buttonBackgroundPressedColor);
+	m_FullscreenOffButton.SetBackgroundDisabledColor(buttonBackgroundDisabledColor);
 	m_FullscreenOffButton.SetTextColorHovered(buttonTextColorHovered);
 	m_FullscreenOffButton.SetTextColorPressed(buttonTextColorPressed);
 	m_FullscreenOffButton.SetEnabled(windowFullscreen);
@@ -76,6 +78,7 @@ bool CSettingsState::OnEnter(void)
 	m_WindowResizableOnButton.SetPosition({windowCenter.x, 580.0f});
 	m_WindowResizableOnButton.SetBackgroundColor(buttonBackgroundColor);
 	m_WindowResizableOnButton.SetBackgroundPressedColor(buttonBackgroundPressedColor);
+	m_WindowResizableOnButton.SetBackgroundDisabledColor(buttonBackgroundDisabledColor);
 	m_WindowResizableOnButton.SetTextColorHovered(buttonTextColorHovered);
 	m_WindowResizableOnButton.SetTextColorPressed(buttonTextColorPressed);
 	m_WindowResizableOnButton.SetEnabled(!windowResizable);
@@ -85,6 +88,7 @@ bool CSettingsState::OnEnter(void)
 	m_WindowResizableOffButton.SetPosition({windowCenter.x, 630});
 	m_WindowResizableOffButton.SetBackgroundColor(buttonBackgroundColor);
 	m_WindowResizableOffButton.SetBackgroundPressedColor(buttonBackgroundPressedColor);
+	m_WindowResizableOffButton.SetBackgroundDisabledColor(buttonBackgroundDisabledColor);
 	m_WindowResizableOffButton.SetTextColorHovered(buttonTextColorHovered);
 	m_WindowResizableOffButton.SetTextColorPressed(buttonTextColorPressed);
 	m_WindowResizableOffButton.SetEnabled(windowResizable);
@@ -107,11 +111,18 @@ void CSettingsState::OnExit(void)
 	std::cout << "Exiting settings state" << std::endl;
 #endif
 
-	CTextureHandler&	textureHandler	= m_pApplication->GetTextureHandler();
-	CFontHandler&		fontHandler		= m_pApplication->GetFontHandler();
-	CAudioHandler&		audioHandler	= m_pApplication->GetAudioHandler();
+	CFontHandler& fontHandler = m_pApplication->GetFontHandler();
 
-	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures and buttons, unload/stop main-menu music etc)
+	// Destroy objects that should be destroyed/stopped when this state is exited/stopped (destroy textures and buttons etc)
+
+	if (m_pApplication->GetNextState() == CApplication::EState::QUIT)
+	{
+		CAudioHandler& audioHandler = m_pApplication->GetAudioHandler();
+
+		audioHandler.StopMusic();
+		audioHandler.DestroyMusic(e_pMusic);
+		e_pMusic = nullptr;
+	}
 
 	m_BackButton.Destroy(m_pApplication);
 	m_WindowResizableOffButton.Destroy(m_pApplication);
@@ -128,14 +139,17 @@ void CSettingsState::OnExit(void)
 	m_pButtonFont		= nullptr;
 	m_pTextFont			= nullptr;
 	m_pTitleTextFont	= nullptr;
+
+	m_pApplication->GetTextureHandler().DestroyTexture(m_pBackground->GetName());
+	m_pBackground = nullptr;
 }
 
 void CSettingsState::Update(const float deltaTime)
 {
-	CInputHandler& inputHandler = m_pApplication->GetInputHandler();
-	const CTransitionRenderer& transitionRenderer = m_pApplication->GetTransitionRenderer();
+	CInputHandler&				inputHandler		= m_pApplication->GetInputHandler();
+	const CTransitionRenderer&	transitionRenderer	= m_pApplication->GetTransitionRenderer();
 
-	// Update the main-menu objects here
+	// Update the settings-menu objects here
 
 	m_FullscreenOnButton.Update(inputHandler);
 	m_FullscreenOffButton.Update(inputHandler);
@@ -160,21 +174,20 @@ void CSettingsState::Update(const float deltaTime)
 		m_WindowResizableOffButton.SetEnabled(!m_WindowResizableOffButton.GetEnabled());
 	}
 
-	// Switch state whenever any of the buttons- or a specific key on the keyboard is pressed
 	if (m_BackButton.IsPressed(inputHandler))
 		m_pApplication->SetState(CApplication::EState::MAIN_MENU);
+
+	// Will only fade in/out the menu music if the game isn't switching to/from the settings state
+	if (transitionRenderer.IsTransitioning() && (m_pApplication->GetNextState() == CApplication::EState::QUIT))
+		m_pApplication->GetAudioHandler().SetMusicVolume(MIX_MAX_VOLUME - (int)((float)MIX_MAX_VOLUME * transitionRenderer.GetTransitionValue()));
 }
 
 void CSettingsState::Render(void)
 {
-	// It's always good practice to create local variables for data that is used in multiple places in a function
-	// In this case the renderer for example is used in multiple places below
-	// By having a local variable like this, m_pApplication->GetWindow()->GetRenderer() isn't called multiple times
-	// This is an optimization and also reduces repetitive code
 	SDL_Renderer*		renderer		= m_pApplication->GetWindow().GetRenderer();
 	const SDL_FPoint	mousePosition	= m_pApplication->GetInputHandler().GetMousePosition();
 
-	// Render the main-menu objects here
+	// Render the settings-menu objects here
 
 	m_pBackground->Render({0.0f, 0.0f});
 

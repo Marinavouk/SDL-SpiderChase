@@ -31,6 +31,7 @@ public:
 
 	void		SetBackgroundColor(const SDL_Color& color)			{m_BackgroundColor = color;}
 	void		SetBackgroundPressedColor(const SDL_Color& color)	{m_BackgroundColorPressed = color;}
+	void		SetBackgroundDisabledColor(const SDL_Color& color)	{m_BackgroundColorDisabled = color;}
 	void		SetTextColor(const SDL_Color& color)				{m_TextColor = color;}
 	void		SetTextColorHovered(const SDL_Color& color)			{m_TextColorHovered = color;}
 	void		SetTextColorPressed(const SDL_Color& color)			{m_TextColorPressed = color;}
@@ -54,6 +55,7 @@ private:
 
 	SDL_Color	m_BackgroundColor			= {0,	0,		0,		255};
 	SDL_Color	m_BackgroundColorPressed	= {0,	0,		0,		255};
+	SDL_Color	m_BackgroundColorDisabled	= {0,	0,		0,		255};
 	SDL_Color	m_TextColor					= {255, 255,	255,	255};
 	SDL_Color	m_TextColorHovered			= {255, 255,	255,	255};
 	SDL_Color	m_TextColorPressed			= {255, 255,	255,	255};
