@@ -7,6 +7,13 @@ https://github.com/user-attachments/assets/b86a96ff-0cf0-434a-83d2-13c790c64391
 
 ------------------------------------
 
+
+
+https://github.com/user-attachments/assets/bf7fdb8b-1762-496e-a011-22abb6cd3a28
+
+------------------------------------
+
+
 I learned- and gained a lot of experience from this project. I learned a lot about how to organize my code in a good and logic way, to make it easy to read, understand and maintain. I also learned how to create- and use object-pooling, which is used for reusing game objects in this game. Furthermore, I also learned about animations, colliders, timers and UI.
 It was a great challenge for me and it helped me get closer to my goal, which is to learn something new every day and keep getting better at what I do.
 
